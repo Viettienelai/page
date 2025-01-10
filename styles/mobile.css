@@ -3,13 +3,12 @@ body {
     height: 100%;
     background-color: #F4EAE0;
     font-family: Arial, sans-serif;
-    overflow: hidden;
     z-index: 0;
 }
 
 #bookmark-container {
     border: 1px solid red;
-    border-radius: 20px;
+    padding-bottom: 20px;
     position: relative;
     top: 380px;
     gap: 20px;
@@ -28,6 +27,7 @@ body {
     box-sizing: border-box;
     width: 100%;
     border: 1px solid green;
+    border-radius: 20px;
     position: relative;
     display: grid;
     grid-template-columns: repeat(5, 1fr);
