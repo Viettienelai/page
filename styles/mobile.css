@@ -1,17 +1,71 @@
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f0f8ff;
-  color: #333;
-  margin: 0;
-  padding: 0;
+    position: relative;
+    height: 100%;
+    background-color: #F4EAE0;
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+    z-index: 0;
 }
 
-h1 {
-  text-align: center;
-  color: #007bff;
+#bookmark-container {
+    border: 1px solid red;
+    border-radius: 20px;
+    position: relative;
+    top: 380px;
+    gap: 20px;
+    width: 95%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 1;
 }
 
-p {
-  text-align: center;
-  font-size: 18px;
+.container {
+    background-color: #ffffff;
+    padding: 20px 20px 20px 20px;
+    box-sizing: border-box;
+    width: 100%;
+    border: 1px solid green;
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    z-index: 2;
+}
+
+.bookmark-item {
+    height: 85px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 3;
+}
+
+.bookmark-avatar {
+    width: 50px;
+    height: 50px;
+    position: relative;
+    top: 0;
+    z-index: 4;
+}
+
+.bookmark-name {
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 7px;
+    font-size: 11px;
+    color: #333;
+    position: absolute;
+}
+
+#header {
+    height: 350px;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    background-color: #FBE3BF;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
 }
