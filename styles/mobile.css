@@ -92,7 +92,7 @@ body {
     position: relative;
     display: flex;
     justify-content: center;
-    top: 260px;
+    top: 280px;
     border: 1px solid green;
     left: 50%;
     transform: translateX(-50%);
