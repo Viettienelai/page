@@ -12,7 +12,6 @@ body {
 }
 
 #bookmark-container {
-    border: 1px solid red;
     padding-bottom: 20px;
     position: absolute;
     top: 380px;
@@ -31,7 +30,6 @@ body {
     padding: 17px 15px 0px 15px;
     box-sizing: border-box;
     width: 100%;
-    border: 1px solid green;
     border-radius: 20px;
     position: relative;
     display: grid;
@@ -40,7 +38,6 @@ body {
 }
 
 .bookmark-item {
-    border: 1px solid green;
     height: 85px;
     display: flex;
     flex-direction: column;
@@ -90,11 +87,11 @@ body {
 }
 
 #bar-container {
+    pointer-events: none;
     position: relative;
     display: flex;
     justify-content: center;
     top: 270px;
-    border: 1px solid green;
     left: 50%;
     transform: translateX(-50%);
     width: 100%;
@@ -104,12 +101,11 @@ body {
 
 #sticky-bar {
     width: 100%;
-    height: 60px;
+    height: 70px;
     position: relative;
     top: 0px;
     box-sizing: border-box;
     font-size: 16px;
-    border: 1px solid #ff0000;
     background-color: #FBE3BF;
     position: sticky;
     z-index: 9;
@@ -117,15 +113,16 @@ body {
 
 #search-bar {
     width: 92%;
+    pointer-events: auto;
     height: 50px;
     top: 10px;
     left: 50%;
     transform: translateX(-50%);
+    border: none;
     padding-left: 70px;
     box-sizing: border-box;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
     font-size: 16px;
-    border: 1px solid #ff0000;
     border-radius: 20px;
     position: relative;
     z-index: 11;
@@ -133,6 +130,7 @@ body {
 
 #search-icon {
     position: absolute;
+    pointer-events: auto;
     top: 20px;
     width: 30px;
     height: 30px;
@@ -142,17 +140,17 @@ body {
     pointer-events: auto; 
     animation: icon 1s ease-out;
     transition: transform 0.2s ease, left 0.2s ease;
-  }
-  
-  #search-options {
+}
+
+#search-options {
     padding: 0;
     position: absolute;
     border-radius: 20px;
+    pointer-events: auto;
     top: 35px;
     left: 9%;
-    border: 1px solid rgba(255, 255, 255, 0.3);
     backdrop-filter: blur(30px);
-    box-shadow: 0 0px 10px rgba(0, 0, 0, 0.8);
+    box-shadow: 0 0px 10px rgba(0, 0, 0, 0.6);
     list-style: none;
     width: 200px;
     pointer-events: none;
@@ -162,19 +160,18 @@ body {
     opacity: 0;
     visibility: hidden;
     transition: all 0.3s ease;
-  }
-  
-  #search-options.active {
+}
+
+#search-options.active {
     pointer-events: auto;
     transform: scale(1);
     opacity: 1;
     z-index: 13;
     visibility: visible;
-  }
-  
-  #search-options a {
+}
+
+#search-options a {
     height: 30px;
-    border: 1px solid rgba(255, 255, 255, 0.3);
     padding: 10px 20px;
     cursor: pointer;
     font-size: 16px;
@@ -185,15 +182,15 @@ body {
     opacity: 1;
     transform: scale(1);
     transition: all 0.2s ease;
-  }
-  
-  .option-icon {
+}
+
+.option-icon {
     width: 25px;
     height: 25px;
     margin-right: 20px;
-  }
+}
 
-  #background-blur {
+#background-blur {
     position: fixed;
     top: -270;
     left: 0;
@@ -203,10 +200,10 @@ body {
     opacity: 0; /* Mặc định là ẩn */
     visibility: hidden; /* Ẩn hoàn toàn */
     transition: opacity 0.3s ease, visibility 0.3s ease; /* Hiệu ứng chuyển đổi */
-  }
-  
-  #background-blur.active {
+}
+
+#background-blur.active {
     opacity: 1; /* Hiển thị với độ mờ */
     visibility: visible; /* Làm nó có thể nhìn thấy */
     z-index: 10;
-  }
+}
