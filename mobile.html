@@ -7,17 +7,39 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
-  </head>
+</head>
 <body>
     <div id="header"> 
         <video id="header-video" autoplay muted loop>
             <source src="assets/vid/orangecat.mp4" type="video/mp4">
             Trình duyệt của bạn không hỗ trợ video.
-          </video>
+        </video>
     </div>
     <div id="bar-container">
-        <input type="text" id="search-bar" placeholder="Search...">
+        <img id="search-icon" src="assets/img/bm1.png" alt="Search Icon">
+        <ul id="search-options">
+          <li>
+            <a href="https://www.google.com/search" data-engine="https://www.google.com/search" data-icon="assets/img/bm1.png">
+              <img src="assets/img/bm1.png" alt="Google Icon" class="option-icon"> <p> Google </p> </a> </li>
+          <li>
+            <a href="https://paulgo.io/search" data-engine="https://paulgo.io/search" data-icon="assets/img/searxng.png">
+              <img src="assets/img/searxng.png" alt="SearXNG Icon" class="option-icon"> <p> SearXNG </p> </a> </li>
+          <li>
+            <a href="https://search.brave.com/search" data-engine="https://search.brave.com/search" data-icon="assets/img/brave.png">
+              <img src="assets/img/brave.png" alt="Brave Icon" class="option-icon"> <p> Brave </p> </a> </li>
+          <li>
+            <a href="https://www.bing.com/search" data-engine="https://www.bing.com/search" data-icon="assets/img/bing.png">
+              <img src="assets/img/bing.png" alt="Bing Icon" class="option-icon"> <p> Bing </p> </a> </li>
+          <li>
+            <a href="https://duckduckgo.com/" data-engine="https://duckduckgo.com/" data-icon="assets/img/duckduckgo.png">
+              <img src="assets/img/duckduckgo.png" alt="DuckDuckGo Icon" class="option-icon"> <p> DuckDuckGo </p> </a> </li>
+        </ul>
+        <form id="search-form" action="https://www.google.com/search" method="get">
+          <input type="text" id="search-bar" name="q" placeholder="Search on Google ...">
+        </form>
+        <div id="bar-inside-color"> </div>        
     </div>
+       
     <div id="bookmark-container">
         <div id="container1" class="container">
             <div class="bookmark-item">
@@ -150,7 +172,7 @@
             <div class="bookmark-item">
                 <a href="https://scholar.google.com/">
                     <img class="bookmark-avatar" src="assets/img/gscholar.png" alt="">
-                    <div class="bookmark-name">G Scholar</div> </a>
+                    <div class="bookmark-name">G Scholar</div> </a>
             </div>
             <div class="bookmark-item">
                 <a href="https://elicit.com/">
