@@ -2,6 +2,7 @@ const searchIcon = document.getElementById('search-icon');
 const searchOptions = document.getElementById('search-options');
 const searchForm = document.getElementById('search-form');
 const searchBar = document.getElementById('search-bar');
+const blur = document.getElementById('background-blur');
 
 // Placeholder mặc định theo công cụ tìm kiếm
 const placeholders = {
@@ -15,6 +16,7 @@ const placeholders = {
 // Toggle options visibility
 searchIcon.addEventListener('click', () => {
     searchOptions.classList.toggle('active');
+    blur.classList.toggle('active');
 });
 
 // Change search engine and placeholder
@@ -37,6 +39,7 @@ searchOptions.addEventListener('click', (event) => {
 
         // Ẩn menu sau khi chọn
         searchOptions.classList.remove('active');
+        blur.classList.remove('active');
     }
 });
 
@@ -44,6 +47,7 @@ searchOptions.addEventListener('click', (event) => {
 document.addEventListener('click', (event) => {
     if (!searchIcon.contains(event.target) && !searchOptions.contains(event.target)) {
         searchOptions.classList.remove('active');
+        blur.classList.remove('active');
     }
 });
 
