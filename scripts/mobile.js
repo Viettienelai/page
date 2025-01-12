@@ -3,6 +3,7 @@ const searchOptions = document.getElementById('search-options');
 const searchForm = document.getElementById('search-form');
 const searchBar = document.getElementById('search-bar');
 const blur = document.getElementById('background-blur');
+const searchLinks = searchOptions.querySelectorAll('a');
 
 // Placeholder mặc định theo công cụ tìm kiếm
 const placeholders = {
@@ -70,5 +71,43 @@ document.getElementById('search-form').addEventListener('submit', function (e) {
         // Nếu không phải URL, tìm kiếm theo công cụ đã chọn
         var searchEngineUrl = searchForm.action;
         window.location.href = searchEngineUrl + '?q=' + encodeURIComponent(query);
+    }
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    searchLinks.forEach(link => {
+        link.addEventListener('click', function (event) {
+            event.preventDefault();
+            const engine = this.getAttribute('data-engine');
+            const icon = this.getAttribute('data-icon');
+            searchForm.action = engine;
+            searchIcon.src = icon;
+            searchBar.placeholder = `Search on ${this.textContent.trim()} ...`;
+            updateOutlineColor(this.textContent.trim());
+        });
+    });
+
+    function updateOutlineColor(engineName) {
+        let color;
+        switch (engineName) {
+            case 'Google':
+                color = '#FEC319';
+                break;
+            case 'SearXNG':
+                color = 'blue';
+                break;
+            case 'Brave':
+                color = '#FF2F00';
+                break;
+            case 'Bing':
+                color = '#5083DF';
+                break;
+            case 'DuckDuckGo':
+                color = '#DE5833';
+                break;
+            default:
+                color = '#FEC319';
+        }
+        searchBar.style.outlineColor = color;
     }
 });

@@ -126,6 +126,7 @@ body {
     border-radius: 20px;
     position: relative;
     z-index: 11;
+    outline-color: #FEC319;
 }
 
 #search-icon {
