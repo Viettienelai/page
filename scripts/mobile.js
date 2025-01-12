@@ -68,4 +68,3 @@ document.getElementById('search-form').addEventListener('submit', function (e) {
         window.location.href = searchEngineUrl + '?q=' + encodeURIComponent(query);
     }
 });
-
