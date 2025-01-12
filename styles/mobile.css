@@ -204,6 +204,7 @@ body {
 }
 
 #background-blur.active {
+    pointer-events: auto;
     opacity: 1; /* Hiển thị với độ mờ */
     visibility: visible; /* Làm nó có thể nhìn thấy */
     z-index: 10;
