@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 color = '#5083DF';
                 break;
             case 'DuckDuckGo':
-                color = '#DE5833';
+                color = '#DE5933';
                 break;
             default:
                 color = '#FEC319';
