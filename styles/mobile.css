@@ -42,9 +42,47 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    opacity: 0;
     position: relative;
     z-index: 3;
+    animation: bounce 1s ease-in-out;
+    animation-fill-mode: forwards;
 }
+
+@keyframes bounce {
+    0% {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    40% {
+        opacity: 0.7;
+        transform: scale(1.2);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.bookmark-item:nth-child(5n + 1) { animation-delay: 0s; } /* Item đầu tiên của hàng */
+.bookmark-item:nth-child(5n + 2) { animation-delay: 0.1s; }
+.bookmark-item:nth-child(5n + 3) { animation-delay: 0.2s; }
+.bookmark-item:nth-child(5n + 4) { animation-delay: 0.3s; }
+.bookmark-item:nth-child(5n + 5) { animation-delay: 0.4s; }
+
+/* Hàng 2 */
+.bookmark-item:nth-child(5n + 6) { animation-delay: 0.1s; }
+.bookmark-item:nth-child(5n + 7) { animation-delay: 0.2s; }
+.bookmark-item:nth-child(5n + 8) { animation-delay: 0.3s; }
+.bookmark-item:nth-child(5n + 9) { animation-delay: 0.4s; }
+.bookmark-item:nth-child(5n + 10) { animation-delay: 0.5s; }
+
+/* Hàng 3 */
+.bookmark-item:nth-child(5n + 11) { animation-delay: 0.2s; }
+.bookmark-item:nth-child(5n + 12) { animation-delay: 0.3s; }
+.bookmark-item:nth-child(5n + 13) { animation-delay: 0.4s; }
+.bookmark-item:nth-child(5n + 14) { animation-delay: 0.5s; }
+.bookmark-item:nth-child(5n + 15) { animation-delay: 0.6s; }
 
 .bookmark-avatar {
     width: 50px;
@@ -128,8 +166,60 @@ body {
     position: relative;
     z-index: 11;
     outline-color: #FEC319;
+    transform-origin: left bottom;
+    transform: scale(0);
+    animation: search-bar 1s ease-out ;
+    opacity: 1;
+    animation-fill-mode: forwards;
 }
 
+@keyframes search-bar {
+    0% {
+      left: 50%;
+      transform: scaleX(0) scaleY(0.1) translateX(-50%);
+    }
+    10% {
+      left: 50%;
+      transform: scaleX(0.38) scaleY(0.5) translateX(-50%);
+    }
+    20% {
+      left: 50%;
+      transform: scaleX(0.63) scaleY(0.75) translateX(-50%);
+    }
+    30% {
+      left: 50%;
+      transform: scaleX(0.78) scaleY(0.88) translateX(-50%);
+    }
+    40% {
+      left: 50%;
+      transform: scaleX(0.87) scaleY(0.95) translateX(-50%);
+    }
+    50% {
+      left: 50%;
+      transform: scaleX(0.92) scaleY(0.98) translateX(-50%);
+    }
+    60% {
+      left: 50%;
+      transform: scaleX(0.957) scaleY(0.99) translateX(-50%);
+    }
+    70% {
+      left: 50%;
+      transform: scaleX(0.977) scaleY(1) translateX(-50%);
+    }
+    80% {
+      left: 50%;
+      transform: scaleX(0.99) scaleY(1) translateX(-50%);
+    }
+    90% {
+      left: 50%;
+      transform: scaleX(0.997) scaleY(1) translateX(-50%);
+    }
+    100% {
+      left: 50%;
+      transform: scaleX(1) scaleY(1) translateX(-50%);
+    }
+}
+  
 #search-icon {
     position: absolute;
     pointer-events: auto;
@@ -140,8 +230,56 @@ body {
     cursor: pointer;
     z-index: 12;
     pointer-events: auto; 
-    animation: icon 1s ease-out;
+    animation: search-icon 1s ease-out;
     transition: transform 0.2s ease, left 0.2s ease;
+    transform-origin: bottom;
+}
+
+@keyframes search-icon {
+    0% { 
+        left: 50%; 
+        transform: scaleX(0.1) scaleY(0.1); 
+    }
+    10% { 
+        left: 34.42%; 
+        transform: scaleX(0.5) scaleY(0.5); 
+    }
+    20% { 
+        left: 24.17%; 
+        transform: scaleX(0.75) scaleY(0.75); 
+    }
+    30% { 
+        left: 18.02%; 
+        transform: scaleX(0.88) scaleY(0.88); 
+    }
+    40% { 
+        left: 14.33%; 
+        transform: scaleX(0.95) scaleY(0.95); 
+    }
+    50% { 
+        left: 12.28%; 
+        transform: scaleX(0.98) scaleY(0.98); 
+    }
+    60% { 
+        left: 10.64%; 
+        transform: scaleX(0.99) scaleY(0.99); 
+    }
+    70% { 
+        left: 9.82%; 
+        transform: scaleX(1) scaleY(1); 
+    }
+    80% { 
+        left: 9.41%; 
+        transform: scaleX(1) scaleY(1); 
+    }
+    90% { 
+        left: 9%; 
+        transform: scaleX(1) scaleY(1); 
+    }
+    100% { 
+        left: 9%; 
+        transform: scaleX(1) scaleY(1); 
+    }
 }
 
 #search-options {
