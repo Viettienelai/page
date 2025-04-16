@@ -140,7 +140,6 @@ body {
     position: relative;
     top: 0;
     z-index: 4;
-    border: 1px solid green;
 }
 
 .bookmark-name {
