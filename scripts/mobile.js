@@ -7,11 +7,11 @@ const searchLinks = searchOptions.querySelectorAll('a');
 
 // Placeholder mặc định theo công cụ tìm kiếm
 const placeholders = {
-    "https://www.google.com/search": "Search on Google...",
-    "https://paulgo.io/search": "Search on SearXNG...",
-    "https://search.brave.com/search": "Search on Brave...",
-    "https://www.bing.com/search": "Search on Bing...",
-    "https://duckduckgo.com/": "Search on DuckDuckGo"
+    "https://www.google.com/search": "Search on Google . . .",
+    "https://paulgo.io/search": "Search on SearXNG . . .",
+    "https://search.brave.com/search": "Search on Brave . . .",
+    "https://www.bing.com/search": "Search on Bing . . .",
+    "https://duckduckgo.com/": "Search on DuckDuckGo . . ."
 };
 
 // Toggle options visibility
