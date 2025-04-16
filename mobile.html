@@ -175,14 +175,14 @@
         </video>
     </div>
 
-    <div id="bar-container">
+     <div id="bar-container">
         <div id="sticky-bar">
             <div id="background-blur"></div>
-            <img id="search-icon" src="assets/img/google.png" alt="Search Icon">
             <svg id="search-icon" aria-label="Search Icon">
                 <use href="#googlesvg" />
             </svg>
-
+            <!-- Removed the img tag for search icon -->
+            
             <ul id="search-options">
                 <li>
                     <a href="https://www.google.com/search" data-engine="https://www.google.com/search"
@@ -230,7 +230,7 @@
         <div id="container1" class="container">
             <div class="bookmark-item">
                 <a href="https://www.google.com/">
-                    <svg class="bookmark-avatar" viewBox="-3 -0.5 262 262" xmlns="http://www.w3.org/2000/svg"
+                    <svg class="bookmark-avatar" viewBox="-3 0 262 262" xmlns="http://www.w3.org/2000/svg"
                         preserveAspectRatio="xMidYMid">
                         <path
                             d="M255.878 133.451c0-10.734-.871-18.567-2.756-26.69H130.55v48.448h71.947c-1.45 12.04-9.283 30.172-26.69 42.356l-.244 1.622 38.755 30.023 2.685.268c24.659-22.774 38.875-56.282 38.875-96.027"
@@ -257,7 +257,7 @@
             </div>
             <div class="bookmark-item">
                 <a href="https://github.com/Viettienelai?tab=repositories">
-                    <svg class="bookmark-avatar" viewBox="0 0 100 98" xmlns="http://www.w3.org/2000/svg"
+                    <svg class="bookmark-avatar" viewBox="0 -1 98 98" xmlns="http://www.w3.org/2000/svg"
                         preserveAspectRatio="xMidYMid">
                         <path fill-rule="evenodd" clip-rule="evenodd"
                             d="M48.854 0C21.839 0 0 22 0 49.217c0 21.756 13.993 40.172 33.405 46.69 2.427.49 3.316-1.059 3.316-2.362 0-1.141-.08-5.052-.08-9.127-13.59 2.934-16.42-5.867-16.42-5.867-2.184-5.704-5.42-7.17-5.42-7.17-4.448-3.015.324-3.015.324-3.015 4.934.326 7.523 5.052 7.523 5.052 4.367 7.496 11.404 5.378 14.235 4.074.404-3.178 1.699-5.378 3.074-6.6-10.839-1.141-22.243-5.378-22.243-24.283 0-5.378 1.94-9.778 5.014-13.2-.485-1.222-2.184-6.275.486-13.038 0 0 4.125-1.304 13.426 5.052a46.97 46.97 0 0 1 12.214-1.63c4.125 0 8.33.571 12.213 1.63 9.302-6.356 13.427-5.052 13.427-5.052 2.67 6.763.97 11.816.485 13.038 3.155 3.422 5.015 7.822 5.015 13.2 0 18.905-11.404 23.06-22.324 24.283 1.78 1.548 3.316 4.481 3.316 9.126 0 6.6-.08 11.897-.08 13.526 0 1.304.89 2.853 3.316 2.364 19.412-6.52 33.405-24.935 33.405-46.691C97.707 22 75.788 0 48.854 0z"
@@ -299,14 +299,15 @@
 
             <div class="bookmark-item">
                 <a href="https://onlinegiftools.com/create-transparent-gif">
-                    <svg class="bookmark-avatar" xmlns="http://www.w3.org/2000/svg" viewBox="-3 -3 815 815">
+                    <svg class="bookmark-avatar" xmlns="http://www.w3.org/2000/svg" viewBox="0 -3 815 815">
                         <g>
                             <rect rx="150" height="810" width="810" fill="#e05745" />
-                            <rect transform="rotate(45 380.092 380.467)" rx="35" height="132" width="460" y="320"
-                                x="250" fill="#ffffff" />
-                            <ellipse ry="152" rx="152" cy="300" cx="300" fill="#ffffff" />
-                            <rect transform="rotate(45 152.445 154.523)" rx="16" height="90" width="310" y="107" x="30"
-                                fill="#e05745" />
+                            <rect transform="rotate(45 380.092 380.467)"  rx="35"
+                                height="132" width="460" y="320" x="250" fill="#ffffff" />
+                            <ellipse ry="152" rx="152" cy="300"
+                                cx="300" fill="#ffffff" />
+                            <rect transform="rotate(45 152.445 154.523)" rx="16"
+                                height="90" width="310" y="107" x="30" fill="#e05745" />
                         </g>
                     </svg>
                     <div class="bookmark-name">Gift Tools</div>
@@ -326,7 +327,7 @@
                     <div class="bookmark-name">Adobe Podcast</div>
                 </a>
             </div>
-
+  
             <div class="bookmark-item">
                 <a href="https://tinhte.vn/">
                     <svg  class="bookmark-avatar" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
@@ -352,42 +353,35 @@
                     <div class="bookmark-name">Tinh tế</div>
                 </a>
             </div>
-
+            
         </div>
-
 
         <div id="container2" class="container">
             <div class="bookmark-item">
                 <a href="https://lmarena.ai/">
                     <svg class="bookmark-avatar" viewBox="53 55 470 470" xmlns="http://www.w3.org/2000/svg" fill="none">
-                        <path d="M287.5 229L86 344.5L287.5 460L489 344.5L287.5 229Z" stroke="url(#paint0_linear_102_7)"
-                            stroke-width="59" stroke-linejoin="round" />
-                        <path d="M287.5 116L86 231.5L287.5 347L489 231.5L287.5 116Z" stroke="url(#paint1_linear_102_7)"
-                            stroke-width="59" stroke-linejoin="round" />
-                        <path d="M86 344L288 229" stroke="url(#paint2_linear_102_7)" stroke-width="59"
-                            stroke-linejoin="bevel" />
+                        <path d="M287.5 229L86 344.5L287.5 460L489 344.5L287.5 229Z" stroke="url(#paint0_linear_102_7)" stroke-width="59" stroke-linejoin="round"/>
+                        <path d="M287.5 116L86 231.5L287.5 347L489 231.5L287.5 116Z" stroke="url(#paint1_linear_102_7)" stroke-width="59" stroke-linejoin="round"/>
+                        <path d="M86 344L288 229" stroke="url(#paint2_linear_102_7)" stroke-width="59" stroke-linejoin="bevel"/>
                         <defs>
-                            <linearGradient id="paint0_linear_102_7" x1="60" y1="341" x2="429.5" y2="344"
-                                gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#F9D100" />
-                                <stop offset="1" stop-color="#F97700" />
+                            <linearGradient id="paint0_linear_102_7" x1="60" y1="341" x2="429.5" y2="344" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#F9D100"/>
+                                <stop offset="1" stop-color="#F97700"/>
                             </linearGradient>
-                            <linearGradient id="paint1_linear_102_7" x1="513.5" y1="231" x2="143.5" y2="231"
-                                gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#F9D100" />
-                                <stop offset="1" stop-color="#F97700" />
+                            <linearGradient id="paint1_linear_102_7" x1="513.5" y1="231" x2="143.5" y2="231" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#F9D100"/>
+                                <stop offset="1" stop-color="#F97700"/>
                             </linearGradient>
-                            <linearGradient id="paint2_linear_102_7" x1="60" y1="344" x2="428.987" y2="341.811"
-                                gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#F9D100" />
-                                <stop offset="1" stop-color="#F97700" />
+                            <linearGradient id="paint2_linear_102_7" x1="60" y1="344" x2="428.987" y2="341.811" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#F9D100"/>
+                                <stop offset="1" stop-color="#F97700"/>
                             </linearGradient>
                         </defs>
                     </svg>
                     <div class="bookmark-name">LLM AI</div>
                 </a>
             </div>
-
+            
             <div class="bookmark-item">
                 <a href="https://grok.com/">
                     <svg class="bookmark-avatar" xmlns="http://www.w3.org/2000/svg" shape-rendering="geometricPrecision"
@@ -535,8 +529,8 @@
             </div>
             <div class="bookmark-item">
                 <a href="https://poe.com/">
-                    <svg class="bookmark-avatar" fill="currentColor" fill-rule="evenodd" viewBox="0 0 24 24"
-                        width="1em">
+                    <svg class="bookmark-avatar" fill="currentColor"
+                        fill-rule="evenodd" viewBox="0 0 24 24" width="1em">
                         <title>Poe</title>
                         <rect x="0" y="0" width="24" height="24" rx="7" ry="7" fill="black" />
                         <path
@@ -612,7 +606,8 @@
             </div>
             <div class="bookmark-item">
                 <a href="http://espd.hanu.vn/index.php/vn">
-                    <img class="bookmark-avatar" src="assets/img/espd.png" alt="">
+                    <img class="bookmark-avatar" src="assets/img/espd.png"
+                        alt="">
                     <div class="bookmark-name">ESPD</div>
                 </a>
             </div>
