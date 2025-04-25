@@ -10,17 +10,32 @@ body {
   padding: 0;
   width: 100%;
   height: 370px;
-  background-color: #F4EAE0;
   font-family: 'Rubik', sans-serif;
   font-weight: 400;
   z-index: 0;
-  overflow-x: hidden;
+  overflow: hidden;
+}
+
+.background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.background img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 #bookmark-container {
   padding-bottom: 20px;
   position: absolute;
-  top: 380px;
+  top: 210px;
   gap: 20px;
   width: 92%;
   left: 50%;
@@ -32,10 +47,12 @@ body {
 }
 
 .container {
-  background-color: #ffffff;
+  backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.5);
   padding: 17px 15px 0px 15px;
   box-sizing: border-box;
   width: 100%;
+  max-width: 800px;
   border-radius: 20px;
   position: relative;
   display: grid;
@@ -140,7 +157,6 @@ body {
   position: relative;
   top: 0;
   z-index: 4;
-  border: 1px solid green;
 }
 
 .bookmark-name {
@@ -154,34 +170,12 @@ body {
   z-index: 5;
 }
 
-#header {
-  height: 355px;
-  position: absolute;
-  top: 0;
-  width: 100%;
-  background-color: #FBE3BF;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px;
-  z-index: 6;
-}
-
-#header-video {
-  position: absolute;
-  top: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 250px;
-  height: 250px;
-  z-index: 7;
-}
-
 #bar-container {
   pointer-events: none;
   position: relative;
   display: flex;
   justify-content: center;
-  top: 270px;
+  top: 100px;
   left: 50%;
   transform: translateX(-50%);
   width: 100%;
@@ -191,14 +185,20 @@ body {
 
 #sticky-bar {
   width: 100%;
+  max-width: 800px;
   height: 70px;
   position: relative;
   top: -1px;
   box-sizing: border-box;
   font-size: 16px;
-  background-color: #FBE3BF;
   position: sticky;
   z-index: 9;
+  transform-origin: bottom;
+  transform: scale(0);
+  animation: search-bar 1s ease-out;
+  animation-delay: 0.1s;
+  opacity: 1;
+  animation-fill-mode: forwards;
 }
 
 #search-bar {
@@ -209,76 +209,72 @@ body {
   left: 50%;
   transform: translateX(-50%);
   border: none;
-  padding-left: 15%;
+  padding-left: 10%;
+  backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.8);
   box-sizing: border-box;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
   font-size: 16px;
-  border-radius: 20px;
+  border-radius: 100px;
   position: relative;
   z-index: 11;
   outline-color: #FEC319;
-  transform-origin: left bottom;
-  transform: scale(0);
-  animation: search-bar 1s ease-out;
-  animation-delay: 0.1s;
-  opacity: 1;
-  animation-fill-mode: forwards;
 }
 
 @keyframes search-bar {
   0% {
-      left: 50%;
-      transform: scaleX(0) scaleY(0.1) translateX(-50%);
+
+      transform: scaleX(0) scaleY(0.1);
   }
 
   10% {
-      left: 50%;
-      transform: scaleX(0.38) scaleY(0.5) translateX(-50%);
+
+      transform: scaleX(0.38) scaleY(0.5);
   }
 
   20% {
-      left: 50%;
-      transform: scaleX(0.63) scaleY(0.75) translateX(-50%);
+
+      transform: scaleX(0.63) scaleY(0.75);
   }
 
   30% {
-      left: 50%;
-      transform: scaleX(0.78) scaleY(0.88) translateX(-50%);
+  
+      transform: scaleX(0.78) scaleY(0.88);
   }
 
   40% {
-      left: 50%;
-      transform: scaleX(0.87) scaleY(0.95) translateX(-50%);
+  
+      transform: scaleX(0.87) scaleY(0.95);
   }
 
   50% {
-      left: 50%;
-      transform: scaleX(0.92) scaleY(0.98) translateX(-50%);
+   
+      transform: scaleX(0.92) scaleY(0.98);
   }
 
   60% {
-      left: 50%;
-      transform: scaleX(0.957) scaleY(0.99) translateX(-50%);
+   
+      transform: scaleX(0.957) scaleY(0.99);
   }
 
   70% {
-      left: 50%;
-      transform: scaleX(0.977) scaleY(1) translateX(-50%);
+
+      transform: scaleX(0.977) scaleY(1);
   }
 
   80% {
-      left: 50%;
-      transform: scaleX(0.99) scaleY(1) translateX(-50%);
+ 
+      transform: scaleX(0.99) scaleY(1);
   }
 
   90% {
-      left: 50%;
-      transform: scaleX(0.997) scaleY(1) translateX(-50%);
+   
+      transform: scaleX(0.997) scaleY(1);
   }
 
   100% {
-      left: 50%;
-      transform: scaleX(1) scaleY(1) translateX(-50%);
+  
+      transform: scaleX(1) scaleY(1);
   }
 }
 
@@ -295,8 +291,6 @@ body {
   pointer-events: auto;
   animation: search-icon 1s ease-out forwards;
   transition: transform 0.2s ease, left 0.2s ease;
-  transform-origin: bottom;
-  animation-delay: 0.1s;
 }
 
 @keyframes search-icon {
@@ -306,52 +300,52 @@ body {
   }
 
   10% {
-      left: 34.42%;
+      left: 33.28%;
       transform: scaleX(0.5) scaleY(0.5);
   }
 
   20% {
-      left: 24.17%;
+      left: 22.28%;
       transform: scaleX(0.75) scaleY(0.75);
   }
 
   30% {
-      left: 18.02%;
+      left: 15.68%;
       transform: scaleX(0.88) scaleY(0.88);
   }
 
   40% {
-      left: 14.33%;
+      left: 11.72%;
       transform: scaleX(0.95) scaleY(0.95);
   }
 
   50% {
-      left: 12.28%;
+      left: 9.52%;
       transform: scaleX(0.98) scaleY(0.98);
   }
 
   60% {
-      left: 10.64%;
+      left: 7.76%;
       transform: scaleX(0.99) scaleY(0.99);
   }
 
   70% {opacity: 1;
-      left: 9.82%;
+      left: 6.88%;
       transform: scaleX(1) scaleY(1);
   }
 
   80% {opacity: 1;
-      left: 9.41%;
+      left: 6.44%;
       transform: scaleX(1) scaleY(1);
   }
 
   90% {opacity: 1;
-      left: 9%;
+      left: 6.1%;
       transform: scaleX(1) scaleY(1);
   }
 
   100% {opacity: 1;
-      left: 9%;
+      left: 6%;
       transform: scaleX(1) scaleY(1);
   }
 }
@@ -362,7 +356,7 @@ body {
   border-radius: 20px;
   pointer-events: auto;
   top: 35px;
-  left: 9%;
+  left: 7%;
   backdrop-filter: blur(15px);
   box-shadow: 0 0px 10px rgba(0, 0, 0, 0.5);
   background: rgba(255, 255, 255, 0.5);
@@ -404,15 +398,14 @@ body {
   width: 25px;
   height: 25px;
   margin-right: 20px;
-  border: 1px solid green
 }
 
 #background-blur {
   position: fixed;
-  top: -270;
-  left: 0;
-  width: 100%;
-  height: 300%;
+  top: -200;
+  left: -460;
+  width: 250%;
+  height: 2000%;
   backdrop-filter: blur(10px);
   opacity: 0;
   background: rgba(0, 0, 0, 0.1);
