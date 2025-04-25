@@ -13,7 +13,7 @@ body {
   font-family: 'Rubik', sans-serif;
   font-weight: 400;
   z-index: 0;
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 .background {
