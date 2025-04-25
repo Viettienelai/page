@@ -289,66 +289,66 @@ body {
   opacity: 0;
   z-index: 12;
   pointer-events: auto;
-  animation: search-icon 2s ease-out forwards;
+  animation: search-icon 1s ease-out forwards;
   transition: transform 0.2s ease, left 0.2s ease;
 }
 
 @keyframes search-icon {
   0% {
-      left: 50%;
-      transform: scaleX(0.1) scaleY(0.1);
+    left: 50%;
+    transform: scaleX(0.1) scaleY(0.1);
   }
-
+  
   10% {
-      left: 33.28%;
-      transform: scaleX(0.5) scaleY(0.5);
+    left: 33.66%;
+    transform: scaleX(0.5) scaleY(0.5);
   }
-
+  
   20% {
-      left: 22.28%;
-      transform: scaleX(0.75) scaleY(0.75);
+    left: 22.91%;
+    transform: scaleX(0.75) scaleY(0.75);
   }
-
+  
   30% {
-      left: 15.68%;
-      transform: scaleX(0.88) scaleY(0.88);
+    left: 16.46%;
+    transform: scaleX(0.88) scaleY(0.88);
   }
-
+  
   40% {
-      left: 11.72%;
-      transform: scaleX(0.95) scaleY(0.95);
+    left: 12.59%;
+    transform: scaleX(0.95) scaleY(0.95);
   }
-
-  50% {
-      left: 9.52%;
-      transform: scaleX(0.98) scaleY(0.98);
+  
+  50% {opacity: 1;
+    left: 10.44%;
+    transform: scaleX(0.98) scaleY(0.98);
   }
-
-  60% {
-      left: 7.76%;
-      transform: scaleX(0.99) scaleY(0.99);
+  
+  60% {opacity: 1;
+    left: 8.72%;
+    transform: scaleX(0.99) scaleY(0.99);
   }
-
+  
   70% {opacity: 1;
-      left: 6.88%;
-      transform: scaleX(1) scaleY(1);
+    left: 7.86%;
+    transform: scaleX(1) scaleY(1);
   }
-
+  
   80% {opacity: 1;
-      left: 6.44%;
-      transform: scaleX(1) scaleY(1);
+    left: 7.43%;
+    transform: scaleX(1) scaleY(1);
   }
-
+  
   90% {opacity: 1;
-      left: 6.1%;
-      transform: scaleX(1) scaleY(1);
+    left: 7.10%;
+    transform: scaleX(1) scaleY(1);
   }
-
+  
   100% {opacity: 1;
-      left: 6%;
-      transform: scaleX(1) scaleY(1);
+    left: 7%;
+    transform: scaleX(1) scaleY(1);
   }
-}
+}  
 
 #search-options {
   padding: 5px 0px 5px 0px;
