@@ -289,7 +289,7 @@ body {
   opacity: 0;
   z-index: 12;
   pointer-events: auto;
-  animation: search-icon 1s ease-out forwards;
+  animation: search-icon 2s ease-out forwards;
   transition: transform 0.2s ease, left 0.2s ease;
 }
 
