@@ -152,7 +152,7 @@ function updateClock() {
             const element = document.querySelector(`#${prefix}-${segment}`);
             if (element) {
                 element.style.transition = 'background 0.3s ease';
-                element.style.background = 'rgba(0, 0, 0, 0.3)';
+                element.style.background = 'rgba(0, 0, 0, 0.2)';
             } else {
                 console.warn(`Không tìm thấy phần tử #${prefix}-${segment}`);
             }
