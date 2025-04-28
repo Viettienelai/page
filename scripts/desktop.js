@@ -114,100 +114,62 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-const segmentMap = {
-    0: ['top', 'top-right', 'top-left', 'bot-right', 'bot-left', 'bot'],
+// Segment mappings for digits 0-9
+const digitSegments = {
+    0: ['top', 'top-right', 'top-left', 'bot', 'bot-right', 'bot-left'],
     1: ['top-right', 'bot-right'],
     2: ['top', 'top-right', 'between', 'bot-left', 'bot'],
     3: ['top', 'top-right', 'between', 'bot-right', 'bot'],
     4: ['top-left', 'top-right', 'between', 'bot-right'],
     5: ['top', 'top-left', 'between', 'bot-right', 'bot'],
-    6: ['top', 'top-left', 'between', 'bot-right', 'bot-left', 'bot'],
+    6: ['top', 'top-left', 'between', 'bot-right', 'bot', 'bot-left'],
     7: ['top', 'top-right', 'bot-right'],
-    8: ['top', 'top-right', 'top-left', 'between', 'bot-right', 'bot-left', 'bot'],
+    8: ['top', 'top-right', 'top-left', 'between', 'bot', 'bot-right', 'bot-left'],
     9: ['top', 'top-left', 'top-right', 'between', 'bot-right', 'bot']
 };
 
+// Function to update the clock
 function updateClock() {
+    // Get Vietnam time (UTC+7)
     const now = new Date();
-    // Lấy giờ Việt Nam (GMT+7) bằng cách sử dụng toLocaleString với múi giờ Asia/Ho_Chi_Minh
-    const vnTime = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Ho_Chi_Minh' }));
-    const hours = vnTime.getHours(); // Lấy giờ (0-23)
-    const minutes = vnTime.getMinutes();
-    const seconds = vnTime.getSeconds();
-    
-    const hourFirstDigit = Math.floor(hours / 10); // Chữ số đầu của giờ
-    const hourSecondDigit = hours % 10; // Chữ số thứ hai của giờ
-    const minuteFirstDigit = Math.floor(minutes / 10);
-    const minuteSecondDigit = minutes % 10;
-    const secondFirstDigit = Math.floor(seconds / 10);
-    const secondSecondDigit = seconds % 10;
+    const vietnamTime = new Date(now.getTime() + 7 * 60 * 60 * 1000);
+    const hours = vietnamTime.getUTCHours().toString().padStart(2, '0');
+    const minutes = vietnamTime.getUTCMinutes().toString().padStart(2, '0');
+    const seconds = vietnamTime.getUTCSeconds().toString().padStart(2, '0');
 
-    // Ghi log để kiểm tra
-    console.log(`Thời gian VN: ${hours}:${minutes}:${seconds}`);
-    console.log(`Chữ số giờ: ${hourFirstDigit}, ${hourSecondDigit}`);
+    // Update hours
+    updateDigit('h1', hours[0]);
+    updateDigit('h2', hours[1]);
 
-    // Đặt lại tất cả các đoạn và thêm hiệu ứng chuyển đổi
-    ['h1', 'h2', 'm1', 'm2', 's1', 's2'].forEach(prefix => {
-        ['top', 'top-right', 'top-left', 'between', 'bot-right', 'bot-left', 'bot'].forEach(segment => {
-            const element = document.querySelector(`#${prefix}-${segment}`);
-            if (element) {
-                element.style.transition = 'background 0.3s ease';
-                element.style.background = 'rgba(0, 0, 0, 0.2)';
+    // Update minutes
+    updateDigit('m1', minutes[0]);
+    updateDigit('m2', minutes[1]);
+
+    // Update seconds
+    updateDigit('s1', seconds[0]);
+    updateDigit('s2', seconds[1]);
+}
+
+// Function to update a single digit
+function updateDigit(prefix, digit) {
+    const segments = ['top', 'top-right', 'top-left', 'between', 'bot', 'bot-right', 'bot-left'];
+    const activeSegments = digitSegments[digit] || [];
+
+    segments.forEach(segment => {
+        const element = document.getElementById(`${prefix}-${segment}`);
+        if (element) {
+            if (activeSegments.includes(segment)) {
+                element.style.fill = 'rgba(255, 213, 0, 1)';
+                element.style.transition = 'fill 0.3s ease';
             } else {
-                console.warn(`Không tìm thấy phần tử #${prefix}-${segment}`);
+                element.style.fill = 'rgba(0, 0, 0, 0.15)';
+                element.style.transition = 'fill 0.3s ease';
             }
-        });
-    });
-
-    // Cập nhật chữ số đầu của giờ (h1)
-    segmentMap[hourFirstDigit].forEach(segment => {
-        const element = document.querySelector(`#h1-${segment}`);
-        if (element) {
-            element.style.background = 'rgb(255, 217, 0)';
-        }
-    });
-
-    // Cập nhật chữ số thứ hai của giờ (h2)
-    segmentMap[hourSecondDigit].forEach(segment => {
-        const element = document.querySelector(`#h2-${segment}`);
-        if (element) {
-            element.style.background = 'rgb(255, 217, 0)';
-        }
-    });
-
-    // Cập nhật chữ số đầu của phút (m1)
-    segmentMap[minuteFirstDigit].forEach(segment => {
-        const element = document.querySelector(`#m1-${segment}`);
-        if (element) {
-            element.style.background = 'rgb(255, 217, 0)';
-        }
-    });
-
-    // Cập nhật chữ số thứ hai của phút (m2)
-    segmentMap[minuteSecondDigit].forEach(segment => {
-        const element = document.querySelector(`#m2-${segment}`);
-        if (element) {
-            element.style.background = 'rgb(255, 217, 0)';
-        }
-    });
-
-    // Cập nhật chữ số đầu của giây (s1)
-    segmentMap[secondFirstDigit].forEach(segment => {
-        const element = document.querySelector(`#s1-${segment}`);
-        if (element) {
-            element.style.background = 'rgb(255, 217, 0)';
-        }
-    });
-
-    // Cập nhật chữ số thứ hai của giây (s2)
-    segmentMap[secondSecondDigit].forEach(segment => {
-        const element = document.querySelector(`#s2-${segment}`);
-        if (element) {
-            element.style.background = 'rgb(255, 217, 0)';
         }
     });
 }
 
-// Cập nhật đồng hồ ngay lập tức và sau đó mỗi giây
-updateClock();
+// Update clock every second
 setInterval(updateClock, 1000);
+// Initial update
+updateClock();
