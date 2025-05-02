@@ -343,7 +343,7 @@ body {
     left: 50%;
     transform: translateX(-50%);
     border: none;
-    padding-left: 55px;
+    padding-left: 13%;
     backdrop-filter: blur(20px);
     background: rgba(255, 255, 255, 0.7);
     box-sizing: border-box;
@@ -393,7 +393,7 @@ body {
 
     100% {
       opacity: 1;
-      left: 7%;
+      left: 9%;
       transform: scaleX(1) scaleY(1);
     }
   }
