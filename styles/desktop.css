@@ -164,6 +164,19 @@ body {
 }
 }
 
+@media (min-width: 300px) and (max-width: 399px) {
+  .container {
+    width: 200px;
+    grid-template-columns: repeat(5, 1fr);
+  }
+  .bookmark-item {
+    width: 32.4px;
+  }
+  #area {
+  scale: 0.4;
+}
+}
+
 @keyframes bounce {
   0% {
     opacity: 0;
