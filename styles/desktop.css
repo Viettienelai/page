@@ -166,14 +166,14 @@ body {
 
 @media (min-width: 300px) and (max-width: 399px) {
   .container {
-    width: 200px;
+    width: 300px;
     grid-template-columns: repeat(5, 1fr);
   }
   .bookmark-item {
-    width: 32.4px;
+    width: 52.4px;
   }
   #area {
-  scale: 0.4;
+  scale: 0.5;
 }
 }
 
