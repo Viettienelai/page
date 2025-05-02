@@ -138,7 +138,7 @@ body {
   }  
 }
 
-@media (max-width: 599px) {
+@media (min-width: 500px) and (max-width: 599px) {
   .container {
     width: 400px;
     grid-template-columns: repeat(5, 1fr);
@@ -147,7 +147,20 @@ body {
     width: 72.4px;
   }
   #area {
-  scale: 0.68;
+  scale: 0.6;
+}
+}
+
+@media (min-width: 400px) and (max-width: 499px) {
+  .container {
+    width: 300px;
+    grid-template-columns: repeat(5, 1fr);
+  }
+  .bookmark-item {
+    width: 52.4px;
+  }
+  #area {
+  scale: 0.5;
 }
 }
 
