@@ -174,3 +174,82 @@ setInterval(updateClock, 1000);
 // Initial update
 updateClock();
 
+
+
+
+
+
+
+
+// Function to open or close the Google popup
+function toggleGooglePopup(event) {
+    event.preventDefault(); // Ngăn hành vi mặc định của thẻ 'a'
+    event.stopPropagation(); // Ngăn sự kiện click lan truyền lên window.onclick
+
+    const googlePopup = document.getElementById('google-popup');
+    const googleBookmark = document.getElementById('google-bookmark'); // Lấy tham chiếu đến bookmark Google
+
+    if (!googlePopup || !googleBookmark) { // Kiểm tra sự tồn tại của các phần tử
+        console.error("Popup or Google bookmark element not found.");
+        return;
+    }
+
+    // Kiểm tra trạng thái hiện tại của popup
+    const isPopupOpen = googlePopup.classList.contains('active');
+
+    if (isPopupOpen) {
+        // Nếu popup đang mở, đóng nó
+        closeGooglePopup();
+    } else {
+        // Nếu popup đang đóng, mở nó
+        googlePopup.style.display = 'block'; // Hiển thị phần tử trước khi animation
+        requestAnimationFrame(() => {
+            googlePopup.classList.add('active'); // Thêm lớp active để kích hoạt animation
+        });
+    }
+}
+
+// Function to close the GooglePopup (giữ nguyên)
+function closeGooglePopup() {
+    const googlePopup = document.getElementById('google-popup');
+    if (googlePopup) {
+        googlePopup.classList.remove('active');
+        // Chờ animation đóng kết thúc trước khi ẩn hẳn phần tử
+        setTimeout(() => {
+            googlePopup.style.display = 'none';
+        }, 300); // Phải khớp với transition duration trong CSS
+    }
+}
+
+// Close popup when clicking outside the content (on the window)
+window.onclick = function(event) {
+    const googlePopup = document.getElementById('google-popup');
+    const googleBookmark = document.getElementById('google-bookmark');
+
+    // Chỉ thực hiện nếu popup đang hiển thị
+    if (googlePopup.classList.contains('active') && googlePopup.style.display === 'block') {
+        // Kiểm tra nếu click không phải là popup và không phải là con của popup
+        // VÀ KHÔNG PHẢI LÀ CHÍNH BIỂU TƯỢNG GOOGLE
+        if (!googlePopup.contains(event.target) && !googleBookmark.contains(event.target)) {
+            closeGooglePopup(); // Gọi hàm đóng
+        }
+    }
+};
+
+// Ngăn chặn việc click bên trong popup đóng nó
+document.addEventListener('DOMContentLoaded', (event) => {
+    const googlePopupContent = document.querySelector('#google-popup .popup-content');
+    const googleBookmarkElement = document.getElementById('google-bookmark');
+
+    if (googlePopupContent) {
+        googlePopupContent.addEventListener('click', function(e) {
+            e.stopPropagation(); // Ngăn chặn sự kiện click bên trong popup lan truyền lên window.onclick
+        });
+    }
+
+    // THAY ĐỔI QUAN TRỌNG: Gán hàm toggle cho sự kiện click của bookmark Google
+    // Đảm bảo phần tử tồn tại trước khi gán sự kiện
+    if (googleBookmarkElement) {
+        googleBookmarkElement.onclick = toggleGooglePopup;
+    }
+});

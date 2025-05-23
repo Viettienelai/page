@@ -92,7 +92,7 @@ body {
   left: 50%;
   transform: translateX(-50%);
   margin-top: 7px;
-  font-size: 11px;
+  font-size: 12px;
   color: #333;
   position: absolute;
   white-space: nowrap;
@@ -489,4 +489,106 @@ body {
   50% { transform: translateY(-20px) scaleX(1.5); }
   70% { transform: translateY(-40px) scale(1); }
   100% { transform: translateY(-40px) scale(1); }
+}
+
+
+
+
+
+
+
+
+/* --- Style cho Popup Container --- */
+.popup-container {
+    display: none; /* Hidden by default */
+    position: absolute; /* THAY ĐỔI LẠI THÀNH fixed: Luôn cố định trên màn hình */
+    z-index: 1000; /* Đảm bảo popup ở trên các nội dung khác */
+    top: 450px; /* Vị trí mép trên */
+    left: 300px; /* Vị trí cách trái */
+    width: 300px; /* Kích thước cố định của popup */
+    height: 400px; /* Kích thước cố định của popup */
+    transform: scale(0.1); /* Kích thước ban đầu (rất nhỏ) */
+    opacity: 0; /* Ban đầu trong suốt */
+    transform-origin: 0 0; /* Điểm gốc của scale là góc trái trên */
+    transition: transform 0.3s cubic-bezier(0.2, 0.95, 0.4, 0.95), opacity 0.3s cubic-bezier(0.2, 0.95, 0.4, 0.95); /* Hiệu ứng chuyển động */
+    pointer-events: none;
+}
+
+.popup-container.active {
+    transform: scale(1); /* Phóng to ra kích thước đầy đủ */
+    opacity: 1; /* Hiện rõ */
+    pointer-events: auto; /* Cho phép click khi hiển thị */
+}
+
+/* Style cho Nội dung Popup */
+.popup-content {
+    background-color: #fefefe;
+    border-radius: 20px;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+}
+
+/* Style cho Lưới Bookmark trong Popup */
+.popup-bookmarks-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 0fr);
+    width: 100%;
+    justify-items: center;
+    align-items: center;
+    box-sizing: border-box;
+    padding: 15px 10px;
+    border-radius: 20px;
+    border: 10px solid #E9EEF6;
+    gap: 10px 0px;
+}
+
+/* Ghi đè/điều chỉnh style cho các bookmark-item BÊN TRONG popup */
+.popup-bookmarks-grid .bookmark-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    animation: none;
+    opacity: 1;
+    height: 80px;
+    width: 75.5px;
+    position: static;
+    z-index: auto;
+    padding: 5px;
+}
+
+.popup-bookmarks-grid .bookmark-item a {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.popup-bookmarks-grid .bookmark-item .bookmark-avatar {
+    width: 45px;
+    height: 47px;
+    position: static;
+    top: 0;
+    z-index: auto;
+    transition: transform 0.3s ease;
+}
+
+.popup-bookmarks-grid .bookmark-item .bookmark-avatar:hover {
+    transform: scale(1.2) translateY(-2px);
+}
+
+.popup-bookmarks-grid .bookmark-item .bookmark-name {
+    font-size: 12px;
+    margin-top: 5px;
+    position: static;
+    transform: none;
+    left: auto;
+    z-index: auto;
+    color: #333;
 }
