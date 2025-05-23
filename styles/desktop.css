@@ -295,10 +295,7 @@ body {
   will-change: transform;
   animation: moveUp 1s ease-out infinite;
 }
-#speed {
-  stroke: #00000021;
-  stroke-width: 0.3px;
-}
+
 @media (min-width: 1000px) {
   .container {
     width: 900px;
