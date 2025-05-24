@@ -162,7 +162,7 @@ function updateDigit(prefix, digit) {
                 element.style.fill = 'rgba(255, 213, 0, 1)';
                 element.style.transition = 'fill 0.3s ease';
             } else {
-                element.style.fill = 'rgba(0, 0, 0, 0.15)';
+                element.style.fill = 'rgba(0, 0, 0, 0.1)';
                 element.style.transition = 'fill 0.3s ease';
             }
         }
