@@ -320,40 +320,65 @@ body {
     padding-left: 10%;
   }
   .bookmark-item:nth-child(10n + 1) {
-    animation-delay: 0s;
-  }
-  .bookmark-item:nth-child(10n + 2) {
-    animation-delay: 0.1s;
-  }
-  .bookmark-item:nth-child(10n + 3),
-  .bookmark-item:nth-child(10n + 11) {
-    animation-delay: 0.2s;
-  }
-  .bookmark-item:nth-child(10n + 4),
-  .bookmark-item:nth-child(10n + 12) {
-    animation-delay: 0.3s;
-  }
-  .bookmark-item:nth-child(10n + 5),
-  .bookmark-item:nth-child(10n + 13) {
-    animation-delay: 0.4s;
-  }
-  .bookmark-item:nth-child(10n + 6),
-  .bookmark-item:nth-child(10n + 14) {
-    animation-delay: 0.5s;
-  }
-  .bookmark-item:nth-child(10n + 7),
-  .bookmark-item:nth-child(10n + 15) {
-    animation-delay: 0.6s;
-  }
-  .bookmark-item:nth-child(10n + 8) {
-    animation-delay: 0.7s;
-  }
-  .bookmark-item:nth-child(10n + 9) {
-    animation-delay: 0.8s;
-  }
-  .bookmark-item:nth-child(10n + 10) {
-    animation-delay: 0.9s;
-  }
+  animation-delay: 0s;
+}
+
+.bookmark-item:nth-child(10n + 2) {
+  animation-delay: 0.1s;
+}
+
+.bookmark-item:nth-child(10n + 3) {
+  animation-delay: 0.2s;
+}
+
+.bookmark-item:nth-child(10n + 4) {
+  animation-delay: 0.3s;
+}
+
+.bookmark-item:nth-child(10n + 5) {
+  animation-delay: 0.4s;
+}
+
+.bookmark-item:nth-child(10n + 6) {
+  animation-delay: 0.5s;
+}
+
+.bookmark-item:nth-child(10n + 7) {
+  animation-delay: 0.6s;
+}
+
+.bookmark-item:nth-child(10n + 8) {
+  animation-delay: 0.7s;
+}
+
+.bookmark-item:nth-child(10n + 9) {
+  animation-delay: 0.8s;
+}
+
+.bookmark-item:nth-child(10n + 10) {
+  animation-delay: 0.9s;
+}
+
+.bookmark-item:nth-child(10n + 11) {
+  animation-delay: 1s;
+}
+
+.bookmark-item:nth-child(10n + 12) {
+  animation-delay: 0.1s;
+}
+
+.bookmark-item:nth-child(10n + 13) {
+  animation-delay: 0.2s;
+}
+
+.bookmark-item:nth-child(10n + 14) {
+  animation-delay: 0.3s;
+}
+
+.bookmark-item:nth-child(10n + 15) {
+  animation-delay: 0.4s;
+}
+
   .popup-container {
     top: -330px;
     left: 90px;
@@ -534,98 +559,112 @@ body {
 
 
 
-/* --- Style cho Popup Container --- */
+
 .popup-container {
-    display: none; /* Hidden by default */
-    position: absolute; /* THAY ĐỔI LẠI THÀNH fixed: Luôn cố định trên màn hình */
-    z-index: 1000;
-    width: 300px; /* Kích thước cố định của popup */
-    height: 400px; /* Kích thước cố định của popup */
-    transform: scale(0.1); /* Kích thước ban đầu (rất nhỏ) */
-    opacity: 0; /* Ban đầu trong suốt */
-    transform-origin: 0 0; /* Điểm gốc của scale là góc trái trên */
-    transition: transform 0.3s cubic-bezier(0.2, 0.95, 0.4, 0.95), opacity 0.3s cubic-bezier(0.2, 0.95, 0.4, 0.95); /* Hiệu ứng chuyển động */
-    pointer-events: none;
+ display: none;
+ position: absolute;
+ z-index: 1000;
+ width: 300px;
+ height: 400px;
+ transform: scale(0.1);
+ opacity: 0;
+ transform-origin: 0 0;
+ transition: transform 0.3s cubic-bezier(0.2, 0.95, 0.4, 0.95), opacity 0.3s cubic-bezier(0.2, 0.95, 0.4, 0.95);
+ pointer-events: none;
 }
 
 .popup-container.active {
-    transform: scale(1); /* Phóng to ra kích thước đầy đủ */
-    opacity: 1; /* Hiện rõ */
-    pointer-events: auto; /* Cho phép click khi hiển thị */
+ transform: scale(1);
+ opacity: 1;
+ pointer-events: auto;
 }
 
-/* Style cho Nội dung Popup */
 .popup-content {
-    background-color: #fefefe;
-    border-radius: 30px;
-    width: 100%;
-    height: 100%;
-    overflow-y: auto;
-    position: relative;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    display: flex;
-    flex-direction: column;
+ background-color: #fefefe;
+ border-radius: 30px;
+ width: 100%;
+ height: 100%;
+ overflow-y: auto;
+ position: relative;
+ box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+ display: flex;
+ flex-direction: column;
 }
 
-/* Style cho Lưới Bookmark trong Popup */
 .popup-bookmarks-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 0fr);
-    width: 100%;
-    justify-items: center;
-    align-items: center;
-    box-sizing: border-box;
-    padding: 10px;
-    border-radius: 30px;
-    border: 10px solid #E9EEF6;
+ display: grid;
+ grid-template-columns: repeat(3, 0fr);
+ width: 100%;
+ justify-items: center;
+ align-items: center;
+ box-sizing: border-box;
+ padding: 10px;
+ border-radius: 30px;
+ border: 10px solid #E9EEF6;
 }
 
-/* Ghi đè/điều chỉnh style cho các bookmark-item BÊN TRONG popup */
 .popup-bookmarks-grid .bookmark-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    animation: none;
-    opacity: 1;
-    height: 85.5px;
-    width: 86.9px;
-    position: static;
-    z-index: auto;
-    box-sizing: border-box;
-    transition: background-color 0.1s ease, transform 0.3s ease;
-    border-radius: 15px;
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ text-align: center;
+ opacity: 0; /* Initial opacity for animation */
+ transform: translateY(-20px); /* Initial position for animation */
+ height: 85.5px;
+ width: 86.9px;
+ position: static;
+ z-index: auto;
+ box-sizing: border-box;
+ transition: background-color 0.1s ease, transform 0.3s ease-out, opacity 0.3s ease-out;
+ border-radius: 15px;
+}
+
+/* Animation khi popup được kích hoạt */
+.popup-container.active .popup-bookmarks-grid .bookmark-item {
+ animation: slideUpFadeIn 0.3s ease-out forwards;
 }
 
 .popup-bookmarks-grid .bookmark-item a {
-    text-decoration: none;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    padding-top: 10px;
-    align-items: center;
+ text-decoration: none;
+ width: 100%;
+ height: 100%;
+ display: flex;
+ flex-direction: column;
+ padding-top: 10px;
+ align-items: center;
 }
 
 .popup-bookmarks-grid .bookmark-item .popup-bookmark-avatar {
-    width: 45px;
-    height: 47px;
-    position: static;
-    top: 0;
-    z-index: auto;
+ width: 45px;
+ height: 47px;
+ position: static;
+ top: 0;
+ z-index: auto;
 }
 
 .popup-bookmarks-grid .bookmark-item:hover {
-    transform: scale(1.05);
-    background-color: #d5dff4;
+ transform: scale(1.05);
+ background-color: #d5dff4;
 }
 
 .popup-bookmarks-grid .bookmark-item .bookmark-name {
-    font-size: 12px;
-    margin-top: 5px;
-    position: static;
-    transform: none;
-    left: auto;
-    z-index: auto;
-    color: #333;
+ font-size: 12px;
+ margin-top: 5px;
+ position: static;
+ transform: none;
+ left: auto;
+ z-index: auto;
+ color: #333;
+}
+
+/* Keyframes cho animation */
+@keyframes slideUpFadeIn {
+ from {
+ opacity: 0;
+ transform: translateY(-20px);
+ }
+ to {
+ opacity: 1;
+ transform: translateY(0);
+ }
 }

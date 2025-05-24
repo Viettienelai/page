@@ -7,11 +7,11 @@ const searchLinks = searchOptions.querySelectorAll('a');
 
 // Placeholder mặc định theo công cụ tìm kiếm
 const placeholders = {
-    "https://www.google.com/search": "Search on Google...",
-    "https://paulgo.io/search": "Search on SearXNG...",
-    "https://search.brave.com/search": "Search on Brave...",
-    "https://www.bing.com/search": "Search on Bing...",
-    "https://duckduckgo.com/": "Search on DuckDuckGo"
+    "https://www.google.com/search": "Search on Google . . .",
+    "https://paulgo.io/search": "Search on SearXNG . . .",
+    "https://search.brave.com/search": "Search on Brave . . .",
+    "https://www.bing.com/search": "Search on Bing . . .",
+    "https://duckduckgo.com/": "Search on DuckDuckGo . . ."
 };
 
 // Toggle options visibility
@@ -169,9 +169,7 @@ function updateDigit(prefix, digit) {
     });
 }
 
-// Update clock every second
 setInterval(updateClock, 1000);
-// Initial update
 updateClock();
 
 
@@ -183,29 +181,35 @@ updateClock();
 
 // Function to open or close the Google popup
 function toggleGooglePopup(event) {
-    event.preventDefault(); // Ngăn hành vi mặc định của thẻ 'a'
-    event.stopPropagation(); // Ngăn sự kiện click lan truyền lên window.onclick
+    event.preventDefault();
+    event.stopPropagation();
 
     const googlePopup = document.getElementById('google-popup');
-    const googleBookmark = document.getElementById('google-bookmark'); // Lấy tham chiếu đến bookmark Google
+    const googleBookmark = document.getElementById('google-bookmark');
 
-    if (!googlePopup || !googleBookmark) { // Kiểm tra sự tồn tại của các phần tử
+    if (!googlePopup || !googleBookmark) {
         console.error("Popup or Google bookmark element not found.");
         return;
     }
 
-    // Kiểm tra trạng thái hiện tại của popup
     const isPopupOpen = googlePopup.classList.contains('active');
 
     if (isPopupOpen) {
-        // Nếu popup đang mở, đóng nó
         closeGooglePopup();
     } else {
-        // Nếu popup đang đóng, mở nó
-        googlePopup.style.display = 'block'; // Hiển thị phần tử trước khi animation
+        // 1. Đảm bảo display là 'block' trước tiên để phần tử có mặt trong DOM
+        googlePopup.style.display = 'block';
+
+        // 2. Sử dụng requestAnimationFrame hoặc setTimeout ngắn
+        // để trình duyệt có thể áp dụng các kiểu ban đầu (scale 0.1, opacity 0)
+        // trước khi thêm class 'active' kích hoạt transition.
         requestAnimationFrame(() => {
-            googlePopup.classList.add('active'); // Thêm lớp active để kích hoạt animation
+            googlePopup.classList.add('active');
         });
+        // Hoặc bạn có thể dùng:
+        // setTimeout(() => {
+        //     googlePopup.classList.add('active');
+        // }, 10); // Một độ trễ nhỏ, ví dụ 10ms
     }
 }
 
@@ -222,7 +226,7 @@ function closeGooglePopup() {
 }
 
 // Close popup when clicking outside the content (on the window)
-window.onclick = function(event) {
+window.onclick = function (event) {
     const googlePopup = document.getElementById('google-popup');
     const googleBookmark = document.getElementById('google-bookmark');
 
@@ -236,13 +240,13 @@ window.onclick = function(event) {
     }
 };
 
-// Ngăn chặn việc click bên trong popup đóng nó
+// Ngăn chặn việc click bên trong popup đóng nó và gán sự kiện cho bookmark
 document.addEventListener('DOMContentLoaded', (event) => {
     const googlePopupContent = document.querySelector('#google-popup .popup-content');
     const googleBookmarkElement = document.getElementById('google-bookmark');
 
     if (googlePopupContent) {
-        googlePopupContent.addEventListener('click', function(e) {
+        googlePopupContent.addEventListener('click', function (e) {
             e.stopPropagation(); // Ngăn chặn sự kiện click bên trong popup lan truyền lên window.onclick
         });
     }
@@ -253,3 +257,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
         googleBookmarkElement.onclick = toggleGooglePopup;
     }
 });
+
+document.querySelectorAll('.popup-bookmarks-grid .bookmark-item')
+    .forEach((el, index) => {
+        const delay = Math.floor(index / 3) * 0.08;
+        el.style.animationDelay = `${delay}s`;
+    });
