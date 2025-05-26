@@ -8,7 +8,6 @@
 }
 * {
   -webkit-tap-highlight-color: transparent;
-  user-select: none;
 }
 html {
   overflow-y: scroll;
@@ -48,7 +47,6 @@ body {
   width: 100%;
   height: 124%;
   z-index: 1;
-  border: 1px solid red;
 }
 #bookmark-container {
   position: absolute;
@@ -138,8 +136,7 @@ body {
   z-index: 9;
   transform-origin: bottom;
   transform: scale(0);
-  animation: search-bar 1s cubic-bezier(0.2, 0.95, 0.4, 0.95) forwards;
-  animation-delay: 0.1s;
+  animation: sticky-bar 1s cubic-bezier(0.2, 0.95, 0.4, 0.95) forwards;
   opacity: 1;
 }
 #search-bar {
@@ -147,8 +144,7 @@ body {
   pointer-events: auto;
   height: 50px;
   top: 10px;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 10px;
   border: none;
   backdrop-filter: blur(20px);
   background: rgba(255, 255, 255, 0.7);
@@ -159,10 +155,10 @@ body {
   position: relative;
   z-index: 11;
   outline-color: #FEC319;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.250, 0.460, 0.450, 0.940);
 }
 #search-bar:hover {
-  transform: translateX(-50%) scaleY(1.1);
+  transform: translateX(calc(50% - 360px)) scaleY(1.1);
 }
 #search-icon {
   position: absolute;
@@ -170,12 +166,10 @@ body {
   top: 20px;
   width: 30px;
   height: 30px;
-  left: 9%;
   cursor: pointer;
   opacity: 0;
   z-index: 12;
   animation: search-icon 1s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
-  transition: transform 0.2s ease, left 0.2s ease;
 }
 #search-options {
   padding: 10px 0px 10px 0px;
@@ -195,7 +189,7 @@ body {
   transform: scale(0);
   opacity: 0;
   visibility: hidden;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.250, 0.460, 0.450, 0.940);
   z-index: 13;
 }
 #search-options a {
@@ -212,7 +206,7 @@ body {
   text-decoration: none;
   opacity: 1;
   transform: scale(1);
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.250, 0.460, 0.450, 0.940);
 }
 #search-options a:hover {
   transform: translateX(5px) scale(1.1);
@@ -533,13 +527,13 @@ body {
   50% { transform: scale(1.2); }
   100% { opacity: 1; transform: scale(1); }
 }
-@keyframes search-bar {
+@keyframes sticky-bar {
   0% { transform: scaleX(0) scaleY(0.1); }
   100% { transform: scaleX(1) scaleY(1); }
 }
 @keyframes search-icon {
-  0% { left: 50%; transform: scaleX(0.1) scaleY(0.1); opacity: 0; }
-  100% { left: 9%; transform: scaleX(1) scaleY(1); opacity: 1; }
+  0% { left: calc(50% - 25px); transform: scaleX(0.1) scaleY(0.1); opacity: 0; }
+  100% { left: calc(8% - 25px); transform: scaleX(1) scaleY(1); opacity: 1; }
 }
 @keyframes clock {
   0% { transform: translateY(-500px) translateX(-50%) scale(3); }
@@ -574,10 +568,10 @@ body {
  z-index: 1000;
  width: 300px;
  height: 400px;
- transform: scale(0.1);
+ transform: scale(0);
  opacity: 0;
  transform-origin: 0 0;
- transition: transform 0.3s cubic-bezier(0.2, 0.95, 0.4, 0.95), opacity 0.3s cubic-bezier(0.2, 0.95, 0.4, 0.95);
+ transition: all 0.3s cubic-bezier(0.250, 0.460, 0.450, 0.940);
  pointer-events: none;
 }
 
@@ -623,7 +617,7 @@ body {
  position: static;
  z-index: auto;
  box-sizing: border-box;
- transition: background-color 0.1s ease, transform 0.3s ease-out, opacity 0.3s ease-out;
+ transition: all 0.3s cubic-bezier(.25,.46,.45,.94);
  border-radius: 15px;
 }
 
@@ -676,3 +670,494 @@ body {
  transform: translateY(0);
  }
 }
+
+
+
+
+
+
+
+
+
+
+#chat-bubble {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  right: 10px;
+  top: 10px;
+  border-radius: 100px;
+  background: radial-gradient(ellipse at bottom, #6d97c6 0%, #dfdfc2 100%);
+  box-sizing: border-box;
+  box-shadow: 0 0px 12px rgba(0, 0, 0, 0.5);
+  transition: all 0.5s cubic-bezier(0.2, 0.95, 0.4, 0.95);
+  pointer-events: auto;
+  z-index: 1000;
+  overflow: hidden;
+}
+
+#chat-bubble.expanded {
+  width: 900px;
+  height: 480px;
+  top: 90px;
+  right: -50px;
+  border-radius: 20px;
+}
+
+.chat-bubble-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  z-index: 0;
+}
+
+#note-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 70px;
+  height: 70px;
+  border-bottom-right-radius: 100%;
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.6);
+  position: relative; 
+  overflow: hidden; 
+  cursor: pointer;
+  z-index: 2;
+  /* Bỏ transition transform ở đây nếu bạn không muốn scale khi không expanded */
+  /* transition: transform 0.3s ease-out; */ 
+}
+
+/* Pseudo-element cho hiệu ứng hover - TRẠNG THÁI EXPANDED */
+/* Đây là trạng thái mặc định của ::before, sẽ được áp dụng chỉ khi .expanded */
+#note-background::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%; 
+  height: 100%; 
+  background: #007bff; 
+  border-bottom-right-radius: 100%; 
+  transform: translateX(-45px) translateY(-45px); 
+  transition: transform 0.3s ease-in-out; 
+  z-index: 1; 
+  /* Mặc định ẩn, chỉ hiện khi #chat-bubble.expanded */
+  display: none; 
+}
+
+/* Khi hover vào #note-background VÀ chat-bubble ĐÃ EXPANDED */
+#chat-bubble.expanded #note-background:hover::before {
+  transform: translateX(0) translateY(0); /* Trượt vào khớp với parent */
+}
+
+/* Các icon (note-default và note-hover) */
+.note-icon { 
+  position: absolute;
+  top: 10px;
+  left: 12px;
+  width: 30px;
+  height: 30px;
+  z-index: 2; 
+  opacity: 0; /* Mặc định ẩn tất cả các icon */
+  transition: opacity 0.3s ease-in-out; 
+}
+
+/* ---------------------------------------------------- */
+/* CÁC THAY ĐỔI ĐỂ ĐÁP ỨNG YÊU CẦU MỚI:                */
+/* ---------------------------------------------------- */
+
+/* 1. Khi chat-bubble KHÔNG EXPANDED: */
+
+/* Đảm bảo #note-background không scale khi hover */
+#chat-bubble:not(.expanded) #note-background:hover {
+  transform: none; /* Hủy bỏ mọi hiệu ứng scale */
+}
+
+/* Đảm bảo lớp phủ ::before KHÔNG BAO GIỜ HIỂN THỊ khi chưa expanded */
+#chat-bubble:not(.expanded) #note-background::before {
+    display: none; 
+}
+
+/* Luôn hiển thị note.png và ẩn reload.png khi chat-bubble chưa expanded */
+#chat-bubble:not(.expanded) #note-default {
+    opacity: 1; /* Luôn hiển thị note.png */
+}
+#chat-bubble:not(.expanded) #note-hover {
+    opacity: 0; /* Luôn ẩn reload.png */
+}
+
+
+/* 2. Khi chat-bubble ĐÃ EXPANDED: */
+
+/* Kích hoạt lớp phủ ::before khi expanded */
+#chat-bubble.expanded #note-background::before {
+  display: block; /* Hiển thị ::before khi expanded */
+}
+
+/* Luôn hiển thị note-default khi expanded và KHÔNG HOVER */
+#chat-bubble.expanded #note-default {
+    opacity: 1; /* Mặc định note.png hiển thị */
+}
+
+/* Ẩn note-hover khi expanded và KHÔNG HOVER */
+#chat-bubble.expanded #note-hover {
+    opacity: 0; /* Mặc định reload.png ẩn */
+}
+
+/* Khi hover #note-background VÀ chat-bubble ĐÃ EXPANDED: */
+#chat-bubble.expanded #note-background:hover #note-default {
+  opacity: 0; /* Ẩn note.png */
+}
+
+#chat-bubble.expanded #note-background:hover #note-hover {
+  opacity: 1; /* Hiện reload.png */
+}
+
+#stars,
+#stars2,
+#stars3 {
+  width: 1px;
+  height: 1px;
+  background: transparent;
+  position: absolute;
+  --star-animation-height: 500px;
+  animation: animStar var(--animation-duration, 50s) linear infinite;
+}
+
+#stars:after,
+#stars2:after,
+#stars3:after {
+  content: " ";
+  position: absolute;
+  top: var(--star-animation-height);
+  width: inherit;
+  height: inherit;
+  background: transparent;
+  box-shadow: inherit;
+}
+
+#stars {
+  --animation-duration: 50s;
+}
+
+#stars2 {
+  width: 2px;
+  height: 2px;
+  --animation-duration: 100s;
+}
+
+#stars3 {
+  width: 3px;
+  height: 3px;
+  --animation-duration: 150s;
+}
+
+@keyframes animStar {
+  from {
+    transform: translateY(0px);
+  }
+  to {
+    transform: translateY(calc(-1 * var(--star-animation-height)));
+  }
+}
+
+.background-blur-chat {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(20px);
+  z-index: 8;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+#chat-bubble.expanded + .background-blur-chat {
+  opacity: 1;
+  visibility: visible;
+}
+
+.background-blur-chat.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.chat-toolbar {
+  position: absolute;
+  width: 700px;
+  top: 400px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 20px;
+  box-sizing: border-box;
+  display: flex;
+  gap: 20px;
+  z-index: 1;
+  backdrop-filter: blur(10px);
+  border-radius: 25px 25px 0px 0px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.chat-toolbar .plus-button,
+.chat-toolbar .send-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 15px;
+  padding: 10px 12px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  box-sizing: border-box;
+}
+
+.chat-toolbar .plus-button {
+  font-size: 24px;
+  width: 40px;
+  height: 40px;
+}
+
+.chat-toolbar .text-input {
+  max-height: 400px;
+  flex-grow: 1;
+  background: rgb(255, 255, 245);
+  border: none;
+  border-radius: 25px;
+  padding: 10px 15px 10px 15px;
+  font-size: 16px;
+  resize: none;
+  overflow-y: auto;
+  line-height: 1.5;
+  box-sizing: border-box;
+}
+
+.chat-toolbar .text-input:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+#chat-bubble:not(.expanded) .chat-toolbar {
+  display: none;
+}
+
+.chat-content-area {
+  width: 900px;
+  height: 480px;
+  top: 0px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  position: absolute;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-bottom: 100px;
+  padding-top: 30px;
+  align-items: flex-end;
+  z-index: 0;
+}
+.message-box {
+  margin-right: 100px;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 25px;
+  max-width: 700px;
+  width: fit-content;
+  min-height: 40px;
+  padding: 5px 15px;
+  box-sizing: border-box;
+  word-wrap: break-word;
+  flex-shrink: 0;
+  backdrop-filter: blur(10px);
+  animation: appear linear;
+  animation-timeline: view();
+  animation-range: 0% 15%;
+  position: relative;
+  align-self: flex-end;
+  z-index: 20;
+  transition: all 0.3s ease-out;
+}
+
+.message-box:hover {
+  background: rgba(255, 255, 255, 1);
+  box-shadow: 0 0px 12px rgba(0, 0, 0, 0.5);
+}
+
+.message-box p {
+  margin: 2px 0px 0px 1px;
+  font-size: 16px;
+  color: #333;
+  line-height: 1.5;
+  text-align: left;
+  white-space: pre-wrap;
+}
+
+.message-box .interaction-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  color: white;
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.2, 0.95, 0.4, 0.95);
+  overflow: hidden;
+}
+
+.message-box .interaction-button img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+.message-box .interaction-button.blue {
+  backdrop-filter: blur(200px);
+  background: rgba(0, 0, 0, 0.2);
+  right: -45px;
+  transform: translateY(-50%) translateX(-10px);
+  transition: all 0.3s ease-out;
+}
+
+.message-box .interaction-button.blue:hover {
+  background: #007bff;
+  transform: scale(1.1) translateY(-16px);
+}
+
+.message-box .interaction-button.red {
+  backdrop-filter: blur(200px);
+  background: rgba(0, 0, 0, 0.2);
+  right: -90px;
+  transform: translateY(-50%) translateX(-55px);
+}
+
+.message-box .interaction-button.red:hover {
+  background-color: #dc3545;
+  transform: scale(1.1) translateY(-16px);
+}
+
+.message-box .interaction-button.active {
+  transform: translateY(-50%) translateX(0);
+  opacity: 1;
+}
+
+.message-box .interaction-button.hide {
+  transform: translateY(-50%) translateX(-10px);
+  opacity: 0;
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+
+
+
+
+
+
+#toolbar-loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 25px 25px 0px 0px;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10; /* Đảm bảo nó nằm trên tất cả các thành phần của toolbar */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+#toolbar-loading-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Styles cho animation waterfall */
+@-webkit-keyframes waterfall {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateY(-250%);
+            transform: translateY(-250%); }
+  40%,
+  60% {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+            transform: translateY(0); }
+  100% {
+    opacity: 0;
+    -webkit-transform: translateY(250%);
+            transform: translateY(250%); } }
+@keyframes waterfall {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateY(-250%);
+            transform: translateY(-250%); }
+  40%,
+  60% {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+            transform: translateY(0); }
+  100% {
+    opacity: 0;
+    -webkit-transform: translateY(250%);
+            transform: translateY(250%); } }
+
+.waterfall div {
+  -webkit-animation: waterfall 1.5s infinite;
+          animation: waterfall 1.5s infinite;
+  background-color: var(--primary);
+  height: 20px;
+  left: 50%;
+  margin-top: -10px;
+  opacity: 0;
+  position: absolute;
+  top: 50%;
+  width: 20px;
+  border-radius: 50%; /* Làm tròn các div loading */
+}
+  .waterfall div:nth-of-type(1) {
+    -webkit-animation-delay: 0.25s;
+            animation-delay: 0.25s;
+    margin-left: -10px; }
+  .waterfall div:nth-of-type(2) {
+    -webkit-animation-delay: 0.5s;
+            animation-delay: 0.5s;
+    margin-left: 15px; }
+  .waterfall div:nth-of-type(3) {
+    -webkit-animation-delay: 0.75s;
+            animation-delay: 0.75s;
+    margin-left: -35px; }
+  .waterfall div:nth-of-type(4) {
+    -webkit-animation-delay: 1s;
+            animation-delay: 1s;
+    margin-left: 40px; }
+  .waterfall div:nth-of-type(5) {
+    -webkit-animation-delay: 1.25s;
+            animation-delay: 1.25s;
+    margin-left: -60px; }
