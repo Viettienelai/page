@@ -931,7 +931,8 @@ body {
 .chat-toolbar .text-input {
   max-height: 400px;
   flex-grow: 1;
-  background: rgb(255, 255, 245);
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(10px);
   border: none;
   border-radius: 25px;
   padding: 10px 15px 10px 15px;
@@ -953,8 +954,8 @@ body {
 
 .chat-content-area {
   width: 900px;
-  height: 480px;
-  top: 0px;
+  height: 478px;
+  top: 1px;
   box-sizing: border-box;
   overflow-y: auto;
   position: absolute;
@@ -1161,3 +1162,101 @@ body {
     -webkit-animation-delay: 1.25s;
             animation-delay: 1.25s;
     margin-left: -60px; }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /* Import font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+
+/* Reset cho loader (để không ảnh hưởng đến body chính của trang) */
+.loader * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Styles cho lớp phủ loading mới */
+.loading-overlay {
+    position: absolute; /* Quan trọng để bao phủ chat-bubble */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(10px); /* Làm mờ nền */
+    background-color: rgba(0, 0, 0, 0.8); /* Nền tối mờ */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999; /* Đảm bảo nó nằm trên tất cả các nội dung khác trong chat-bubble */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    border-radius: inherit; /* Kế thừa border-radius từ parent #chat-bubble */
+}
+
+#chat-bubble:not(.expanded) .loading-overlay.active {
+    opacity: 0; /* Giữ opacity 0 ngay cả khi active nếu bubble chưa mở */
+    visibility: hidden; /* Đảm bảo ẩn hoàn toàn */
+}
+
+/* Khi loading-overlay có active class và chat-bubble ĐÃ EXPANDED */
+#chat-bubble.expanded .loading-overlay.active {
+    opacity: 1; /* Hiện loading overlay với opacity 1 */
+    visibility: visible; /* Hiện loading overlay */
+}
+
+.loading-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Styles cho text loader */
+.loader {
+    position: relative;
+    cursor: default;
+    -webkit-box-reflect: below -25px linear-gradient(transparent, #0005);
+}
+
+.loader span {
+    position: relative;
+    display: inline-flex; /* Đảm bảo hiển thị inline nhưng vẫn có thể dùng transform */
+    font-size: 3em; /* Có thể điều chỉnh kích thước chữ nếu cần */
+    color: transparent;
+    -webkit-text-stroke: 1px #fff9;
+    text-transform: uppercase;
+    font-weight: 800;
+    animation: animate 2s ease-in-out infinite;
+    animation-delay: calc(0.15s * var(--i));
+}
+
+@keyframes animate {
+    0% {
+        transform: translateY(0px);
+        color: transparent;
+        text-shadow: none;
+    }
+    20% {
+        transform: translateY(-60px);
+        color: #fff;
+        text-shadow: 0 0 5px #fff,
+                     0 0 25px #fff,
+                     0 0 50px #fff;
+    }
+    40%, 100% {
+        transform: translateY(0px);
+        color: transparent;
+        text-shadow: none;
+    }
+}

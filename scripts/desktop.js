@@ -285,27 +285,46 @@ document.addEventListener('DOMContentLoaded', function() {
     const textInput = document.querySelector('.chat-toolbar .text-input');
     const chatContentArea = document.querySelector('.chat-content-area');
     const toolbarLoadingOverlay = document.getElementById('toolbar-loading-overlay'); 
+    const noteBackground = document.getElementById('note-background'); 
+    const syncLoadingOverlay = document.getElementById('sync-loading-overlay'); 
 
-    // Cập nhật URL Web App mới nhất của bạn
     const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyCvMLNa8Q5lXVwg2Dda_LlkmvkEvzkNEEMJTOnffrlmuHRb9vqXDVnTPwkXCEa_xDEIA/exec';
 
     let currentActiveMessageBox = null; 
-    let lastScrollTop = 0; 
-    // const messageElements = new Map(); // Hiện tại không cần Map này với cách render lại toàn bộ
 
-    // --- Tải tin nhắn ngay khi trang tải xong ---
-    loadAllMessages(true); // Tải tất cả tin nhắn và cuộn xuống cuối (lần đầu)
+    // --- SỬA ĐỔI PHẦN NÀY ĐỂ HIỂN THỊ LOADING NGAY LẬP TỨC KHI TẢI TRANG ---
+    async function initializeChat() {
+        if (syncLoadingOverlay) {
+            syncLoadingOverlay.classList.add('active'); // Hiển thị loading overlay
+        }
+        try {
+            await loadAllMessages(true); // Tải tin nhắn lần đầu
+        } catch (error) {
+            console.error("Lỗi khi tải tin nhắn ban đầu:", error);
+        } finally {
+            if (syncLoadingOverlay) {
+                syncLoadingOverlay.classList.remove('active'); // Ẩn loading overlay sau khi tải xong
+            }
+        }
+    }
+
+    initializeChat(); // Gọi hàm khởi tạo khi DOM đã sẵn sàng
+    // --- KẾT THÚC SỬA ĐỔI PHẦN NÀY ---
 
     // --- Logic Chat Bubble Expand/Collapse ---
     if (chatBubble) {
         chatBubble.addEventListener('click', function(event) {
-            event.stopPropagation();
             if (!this.classList.contains('expanded')) {
-                this.classList.add('expanded');
-                if (backgroundBlurChat) {
-                    backgroundBlurChat.classList.add('active');
+                if (!event.target.closest('#note-background') && 
+                    !event.target.closest('.chat-toolbar') && 
+                    !event.target.closest('.message-box')) 
+                {
+                    this.classList.add('expanded');
+                    if (backgroundBlurChat) {
+                        backgroundBlurChat.classList.add('active');
+                    }
+                    scrollToBottom();
                 }
-                scrollToBottom();
             }
         });
 
@@ -325,7 +344,38 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Không tìm thấy phần tử #chat-bubble. Vui lòng đảm bảo ID chính xác.");
     }
 
-    // --- Logic Tự động tăng chiều cao TextArea ---
+    // --- Logic Click vào #note-background để Sync ---
+    if (noteBackground && syncLoadingOverlay && chatBubble) { 
+        noteBackground.addEventListener('click', async function(event) {
+            event.stopPropagation(); 
+
+            if (!chatBubble.classList.contains('expanded')) {
+                chatBubble.classList.add('expanded');
+                if (backgroundBlurChat) {
+                    backgroundBlurChat.classList.add('active');
+                }
+                scrollToBottom();
+                return; 
+            } 
+            
+            if (chatBubble.classList.contains('expanded')) { 
+                syncLoadingOverlay.classList.add('active'); 
+
+                try {
+                    await loadAllMessages(true); 
+                    console.log("Đồng bộ dữ liệu từ Google Sheet thành công!");
+                } catch (error) {
+                    console.error("Lỗi khi đồng bộ dữ liệu từ Google Sheet:", error);
+                    alert("Lỗi khi đồng bộ dữ liệu: " + error.message);
+                } finally {
+                    syncLoadingOverlay.classList.remove('active'); 
+                }
+            }
+        });
+    } else {
+        console.error("Không tìm thấy #note-background, #sync-loading-overlay hoặc #chat-bubble. Vui lòng kiểm tra lại HTML.");
+    }
+
     const maxTextAreaHeight = 400;
     const minTextAreaHeight = 40;
 
@@ -352,9 +402,10 @@ document.addEventListener('DOMContentLoaded', function() {
         textInput.addEventListener('input', adjustHeight);
         adjustHeight();
         window.addEventListener('resize', adjustHeight);
+    } else {
+        console.error("Không tìm thấy phần tử .text-input. Vui lòng đảm bảo class hoặc ID chính xác.");
     }
 
-    // --- Logic Gửi Tin Nhắn ---
     if (sendButton && textInput && chatContentArea && toolbarLoadingOverlay) {
         sendButton.addEventListener('click', async function() {
             const messageText = textInput.value.trim();
@@ -377,7 +428,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         console.log('Tin nhắn đã được gửi và lưu thành công:', messageText);
                         textInput.value = '';
                         adjustHeight();
-                        await loadAllMessages(true); // Gửi tin nhắn mới thì vẫn cuộn xuống cuối
+                        await loadAllMessages(true); 
                     } else {
                         console.error('Lỗi khi lưu tin nhắn:', result.message);
                         alert('Lỗi khi gửi tin nhắn: ' + result.message);
@@ -397,9 +448,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 sendButton.click();
             }
         });
+    } else {
+        console.error("Không tìm thấy một hoặc nhiều phần tử: sendButton, textInput, chatContentArea, toolbarLoadingOverlay. Vui lòng kiểm tra lại HTML.");
     }
 
-    // --- Hàm Tải TẤT CẢ Tin Nhắn (Đã cải tiến cho hiệu ứng xóa) ---
     async function loadAllMessages(forceScrollToBottom = false) {
         if (!chatContentArea) return;
 
@@ -408,83 +460,41 @@ document.addEventListener('DOMContentLoaded', function() {
                 method: 'GET'
             });
 
-            let newMessages = await response.json();
-            
-            // Lấy danh sách tin nhắn hiện có trong DOM
-            const existingMessageBoxes = Array.from(chatContentArea.querySelectorAll('.message-box'));
-            
-            const messagesToAdd = [];
-            const messagesToKeep = new Set(); // Dùng để theo dõi những tin nhắn vẫn còn
-            
-            // Xây dựng danh sách các tin nhắn mới để thêm vào DOM
-            // Đồng thời đánh dấu những tin nhắn cũ vẫn còn tồn tại
-            newMessages.forEach((msg, newIndex) => {
-                const existingBox = existingMessageBoxes.find(box => 
-                    box.querySelector('p')?.textContent === msg // Tìm tin nhắn cũ có nội dung khớp
-                );
+            let messages = await response.json();
+            chatContentArea.innerHTML = ''; 
 
-                if (existingBox) {
-                    // Nếu tin nhắn đã tồn tại, cập nhật data-message-index
-                    existingBox.dataset.messageIndex = newIndex + 1;
-                    messagesToKeep.add(existingBox); // Đánh dấu là giữ lại
-                } else {
-                    // Tin nhắn mới, tạo element và đánh dấu để thêm vào
+            messages.forEach((msg, index) => { 
+                if (msg) {
                     const messageBox = document.createElement('div');
                     messageBox.classList.add('message-box');
+                    messageBox.dataset.messageIndex = index + 1; 
+
                     const paragraph = document.createElement('p');
                     paragraph.textContent = msg;
+
                     messageBox.appendChild(paragraph);
-                    messageBox.dataset.messageIndex = newIndex + 1;
-                    messagesToAdd.push(messageBox);
+                    chatContentArea.appendChild(messageBox);
                 }
             });
-
-            // Loại bỏ các tin nhắn không còn tồn tại trong danh sách mới (có animation)
-            existingMessageBoxes.forEach(box => {
-                if (!messagesToKeep.has(box)) {
-                    box.classList.add('removing'); // Thêm class để fade out/slide out
-                    box.addEventListener('transitionend', function handler() {
-                        box.remove();
-                        box.removeEventListener('transitionend', handler);
-                    }, { once: true });
-                }
-            });
-
-            // Thêm các tin nhắn mới vào DOM
-            messagesToAdd.forEach(box => {
-                chatContentArea.appendChild(box);
-                // Kích hoạt animation 'appear' cho tin nhắn mới (nếu có trong CSS)
-                // Timeout nhỏ để đảm bảo trình duyệt render element trước khi thêm class
-                setTimeout(() => box.classList.add('loaded'), 10); 
-            });
-
 
             if (forceScrollToBottom) {
                 scrollToBottom();
-            } else {
-                // Đảm bảo cuộn về đúng vị trí sau khi các phần tử đã được render lại và chuyển động xong
-                // Một timeout nhỏ có thể cần thiết nếu transition của removing quá dài
-                setTimeout(() => {
-                    chatContentArea.scrollTop = lastScrollTop;
-                }, 300); // 300ms = thời gian transition của .message-box
-            }
+            } 
 
-            addMessageBoxEventListeners(); // Gán lại event listeners cho các box mới/cập nhật
+            addMessageBoxEventListeners();
 
         } catch (error) {
             console.error('Lỗi khi tải tin nhắn:', error);
-        } finally {
-             // Đảm bảo loading overlay bị ẩn sau khi tất cả quá trình tải tin nhắn hoàn tất
-             toolbarLoadingOverlay.classList.remove('active');
+            // Có thể hiển thị một thông báo lỗi trên giao diện nếu muốn
         }
+        // Lưu ý: Việc ẩn loading overlay đã được chuyển ra ngoài hàm loadAllMessages
+        // để xử lý tại nơi gọi hàm này (initializeChat hoặc noteBackground click)
     }
 
-    // --- Hàm Cuộn xuống cuối ---
     function scrollToBottom() {
         chatContentArea.scrollTop = chatContentArea.scrollHeight;
     }
 
-    // --- Logic Ngôi sao ngẫu nhiên (giữ nguyên) ---
     function createBoxShadows(count, maxX, maxY) {
         let shadows = [];
         for (let i = 0; i < count; i++) {
@@ -516,13 +526,11 @@ document.addEventListener('DOMContentLoaded', function() {
         stars3Element.style.setProperty('--star-animation-height', `${expandedHeight + bufferHeight}px`);
     }
 
-    // --- Hàm Xử lý hiển thị/ẩn các nút tương tác ---
     function showInteractionButtons(messageBox) {
         hideInteractionButtons(); 
 
         currentActiveMessageBox = messageBox;
 
-        // Tạo nút Copy (Blue)
         const copyButton = document.createElement('div');
         copyButton.classList.add('interaction-button', 'blue');
         const copyImg = document.createElement('img');
@@ -531,7 +539,6 @@ document.addEventListener('DOMContentLoaded', function() {
         copyButton.appendChild(copyImg);
         messageBox.appendChild(copyButton);
 
-        // Tạo nút Delete (Red)
         const deleteButton = document.createElement('div');
         deleteButton.classList.add('interaction-button', 'red');
         const deleteImg = document.createElement('img');
@@ -562,8 +569,6 @@ document.addEventListener('DOMContentLoaded', function() {
             event.stopPropagation(); 
             const messageIndex = messageBox.dataset.messageIndex;
             
-            lastScrollTop = chatContentArea.scrollTop; // Lưu vị trí cuộn hiện tại
-
             try {
                 toolbarLoadingOverlay.classList.add('active'); 
                 
@@ -574,8 +579,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 if (result.status === 'success') {
                     console.log('Tin nhắn đã được xóa thành công.');
-                    // Gọi loadAllMessages để cập nhật và tạo hiệu ứng xóa
-                    await loadAllMessages(false); 
+                    await loadAllMessages(true); 
                 } else {
                     console.error('Lỗi khi xóa tin nhắn:', result.message);
                     alert('Lỗi khi xóa tin nhắn: ' + result.message);
@@ -584,7 +588,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.error('Lỗi kết nối hoặc API khi xóa:', error);
                 alert('Lỗi kết nối hoặc API khi xóa: ' + error.message);
             } finally {
-                // Loading overlay sẽ được ẩn trong loadAllMessages()
+                toolbarLoadingOverlay.classList.remove('active');
             }
             hideInteractionButtons(); 
         });
@@ -606,8 +610,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function addMessageBoxEventListeners() {
-        // Chỉ gán lại cho các message box không phải là 'removing'
-        document.querySelectorAll('.message-box:not(.removing)').forEach(box => {
+        document.querySelectorAll('.message-box').forEach(box => {
             box.removeEventListener('click', handleMessageBoxClick);
             box.addEventListener('click', handleMessageBoxClick);
         });
