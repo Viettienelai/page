@@ -287,6 +287,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const toolbarLoadingOverlay = document.getElementById('toolbar-loading-overlay'); 
     const noteBackground = document.getElementById('note-background'); 
     const syncLoadingOverlay = document.getElementById('sync-loading-overlay'); 
+    const scrollToBottomBtn = document.getElementById('scroll-to-bottom-btn');
 
     const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyCvMLNa8Q5lXVwg2Dda_LlkmvkEvzkNEEMJTOnffrlmuHRb9vqXDVnTPwkXCEa_xDEIA/exec';
 
@@ -311,6 +312,52 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeChat(); // Gọi hàm khởi tạo khi DOM đã sẵn sàng
     // --- KẾT THÚC SỬA ĐỔI PHẦN NÀY ---
 
+    // --- Scroll to Bottom Button Functions ---
+    function isAtBottom() {
+        if (!chatContentArea) return true;
+        const threshold = 100; // 100px từ cuối
+        return chatContentArea.scrollTop + chatContentArea.clientHeight >= chatContentArea.scrollHeight - threshold;
+    }
+
+    function updateScrollButton() {
+        if (!scrollToBottomBtn || !chatBubble.classList.contains('expanded')) {
+            if (scrollToBottomBtn) scrollToBottomBtn.classList.remove('show');
+            return;
+        }
+        
+        if (isAtBottom()) {
+            scrollToBottomBtn.classList.remove('show');
+        } else {
+            scrollToBottomBtn.classList.add('show');
+        }
+    }
+
+    function scrollToBottom() {
+        if (chatContentArea) {
+            chatContentArea.scrollTo({
+                top: chatContentArea.scrollHeight,
+                behavior: 'smooth'
+            });
+        }
+    }
+
+    // Event listener cho scroll
+    if (chatContentArea) {
+        chatContentArea.addEventListener('scroll', updateScrollButton);
+    }
+
+    // Event listener cho nút scroll to bottom
+    if (scrollToBottomBtn) {
+        scrollToBottomBtn.addEventListener('click', function(event) {
+            event.stopPropagation();
+            scrollToBottom();
+            // Ẩn nút sau khi scroll
+            setTimeout(() => {
+                updateScrollButton();
+            }, 300);
+        });
+    }
+
     // --- Logic Chat Bubble Expand/Collapse ---
     if (chatBubble) {
         chatBubble.addEventListener('click', function(event) {
@@ -324,6 +371,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         backgroundBlurChat.classList.add('active');
                     }
                     scrollToBottom();
+                    // Cập nhật scroll button sau khi expand
+                    setTimeout(updateScrollButton, 100);
                 }
             }
         });
@@ -337,6 +386,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 chatBubble.classList.remove('expanded');
                 if (backgroundBlurChat) {
                     backgroundBlurChat.classList.remove('active');
+                }
+                // Ẩn scroll button khi collapse
+                if (scrollToBottomBtn) {
+                    scrollToBottomBtn.classList.remove('show');
                 }
             }
         });
@@ -355,6 +408,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     backgroundBlurChat.classList.add('active');
                 }
                 scrollToBottom();
+                setTimeout(updateScrollButton, 100);
                 return; 
             } 
             
@@ -381,14 +435,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (textInput) {
         function adjustHeight() {
+            // Lưu chiều cao hiện tại
+            const currentHeight = parseInt(textInput.style.height) || minTextAreaHeight;
+            
+            // Tạm thời disable transition để đo chiều cao chính xác
+            textInput.style.transition = 'none';
             textInput.style.height = 'auto';
-            let newHeight = Math.ceil(textInput.scrollHeight);
-            const paddingBuffer = 2;
-            newHeight = newHeight + paddingBuffer;
-
-            if (newHeight < minTextAreaHeight) {
-                newHeight = minTextAreaHeight;
-            }
+            
+            let newHeight = Math.max(Math.ceil(textInput.scrollHeight), minTextAreaHeight);
 
             if (newHeight > maxTextAreaHeight) {
                 newHeight = maxTextAreaHeight;
@@ -396,7 +450,24 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 textInput.style.overflowY = 'hidden';
             }
-            textInput.style.height = newHeight + 'px';
+            
+            // Chỉ animate nếu chiều cao thực sự thay đổi đáng kể
+            if (Math.abs(newHeight - currentHeight) > 3) {
+                // Set lại chiều cao hiện tại trước khi bật transition
+                textInput.style.height = currentHeight + 'px';
+                
+                // Force reflow để đảm bảo style được áp dụng
+                textInput.offsetHeight;
+                
+                // Bật lại transition
+                textInput.style.transition = 'height 0.3s ease';
+                
+                // Set chiều cao mới
+                textInput.style.height = newHeight + 'px';
+            } else {
+                // Nếu thay đổi không đáng kể, set trực tiếp không cần animation
+                textInput.style.height = newHeight + 'px';
+            }
         }
 
         textInput.addEventListener('input', adjustHeight);
@@ -455,6 +526,10 @@ document.addEventListener('DOMContentLoaded', function() {
     async function loadAllMessages(forceScrollToBottom = false) {
         if (!chatContentArea) return;
 
+        // Lưu vị trí scroll hiện tại
+        const currentScrollTop = chatContentArea.scrollTop;
+        const currentScrollHeight = chatContentArea.scrollHeight;
+
         try {
             const response = await fetch(GAS_WEB_APP_URL, {
                 method: 'GET'
@@ -479,9 +554,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
             if (forceScrollToBottom) {
                 scrollToBottom();
-            } 
+            } else {
+                // Khôi phục vị trí scroll tương đối
+                const newScrollHeight = chatContentArea.scrollHeight;
+                const scrollRatio = currentScrollTop / currentScrollHeight;
+                chatContentArea.scrollTop = scrollRatio * newScrollHeight;
+            }
 
             addMessageBoxEventListeners();
+            
+            // Cập nhật scroll button sau khi load messages
+            setTimeout(updateScrollButton, 100);
 
         } catch (error) {
             console.error('Lỗi khi tải tin nhắn:', error);
@@ -489,10 +572,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         // Lưu ý: Việc ẩn loading overlay đã được chuyển ra ngoài hàm loadAllMessages
         // để xử lý tại nơi gọi hàm này (initializeChat hoặc noteBackground click)
-    }
-
-    function scrollToBottom() {
-        chatContentArea.scrollTop = chatContentArea.scrollHeight;
     }
 
     function createBoxShadows(count, maxX, maxY) {
@@ -579,7 +658,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 if (result.status === 'success') {
                     console.log('Tin nhắn đã được xóa thành công.');
-                    await loadAllMessages(true); 
+                    // Thay đổi ở đây: không tự động scroll xuống cuối khi xóa
+                    await loadAllMessages(false); // Đặt forceScrollToBottom = false
                 } else {
                     console.error('Lỗi khi xóa tin nhắn:', result.message);
                     alert('Lỗi khi xóa tin nhắn: ' + result.message);
