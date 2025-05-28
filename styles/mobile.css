@@ -1135,7 +1135,7 @@ body {
   transition: all 0.3s ease;
 }
 
-.plus-button{
+.plus-button {
   position: absolute;
   height: 50px;
   width: 50px;
@@ -1183,7 +1183,7 @@ body {
 .text-area {
   position: relative;
   margin: 20px 0px;
-  width: 400px;
+  width: 550px;
   left: 75px;
   border-radius: 25px;
   display: inline-block;
@@ -1224,7 +1224,7 @@ body {
   opacity: 0;
   filter: blur(10px);
   border-radius: 25px;
-  background: linear-gradient(to left, #7cc6ff, #81ff9a,#fff895, #ffacb4, #df9bff,#7cc6ff, #81ff9a,#fff895, #ffacb4, #df9bff, #7cc6ff);
+  background: linear-gradient(to left, #7cc6ff, #81ff9a, #fff895, #ffacb4, #df9bff, #7cc6ff, #81ff9a, #fff895, #ffacb4, #df9bff, #7cc6ff);
   background-position: 100% 0%;
   background-size: 200% 100%;
   animation: gradientAnimation 1s linear infinite;
@@ -1244,7 +1244,7 @@ body {
   height: 100%;
   opacity: 0;
   border-radius: 25px;
-  background: linear-gradient(to left, #7cc6ff, #81ff9a,#fff895, #ffacb4, #df9bff,#7cc6ff, #81ff9a,#fff895, #ffacb4, #df9bff, #7cc6ff);
+  background: linear-gradient(to left, #7cc6ff, #81ff9a, #fff895, #ffacb4, #df9bff, #7cc6ff, #81ff9a, #fff895, #ffacb4, #df9bff, #7cc6ff);
   background-position: 100% 0%;
   background-size: 200% 100%;
   animation: gradientAnimation 1s linear infinite;
@@ -1280,16 +1280,16 @@ body {
   padding-top: 30px;
   align-items: flex-end;
   z-index: 0;
+  border: none;
 }
 
 .message-box {
   margin-right: 100px;
   background: rgba(255, 255, 255, 0.6);
-  border-radius: 25px;
+  border-radius: 20px;
   max-width: 700px;
   width: fit-content;
   min-height: 40px;
-  padding: 5px 15px;
   box-sizing: border-box;
   word-wrap: break-word;
   flex-shrink: 0;
@@ -1301,6 +1301,9 @@ body {
   align-self: flex-end;
   z-index: 20;
   transition: all 0.3s ease-out;
+  display: flex;
+  justify-content: center; /* Căn giữa ngang */
+  align-items: center; 
 }
 
 .message-box:hover {
@@ -1315,9 +1318,66 @@ body {
   line-height: 1.5;
   text-align: left;
   white-space: pre-wrap;
+  margin: 5px 15px;
 }
 
-.message-box .interaction-button {
+/* Styles cho ảnh trong message-box */
+.chat-image {
+  max-width: 300px; /* Chiều rộng tối đa */
+  max-height: 200px; /* Chiều cao tối đa */
+  height: auto; /* Đảm bảo tỷ lệ khung hình được duy trì */
+  display: block; /* Loại bỏ khoảng trắng thừa dưới ảnh */
+  border-radius: 15px; /* Bo tròn góc cho ảnh */
+  object-fit: contain;
+  margin: 10px; /* Khoảng cách trên dưới cho ảnh */
+}
+
+/* Styles cho file box */
+.file-content {
+  display: flex;
+  align-items: center; /* Căn giữa theo chiều dọc */
+  min-width: 300px; /* Đảm bảo đủ rộng cho nội dung */
+  max-width: 400px; /* Chiều rộng cố định */
+  height: 100px; /* Chiều cao cố định */
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+}
+
+.file-avatar {
+  width: 80px;
+  height: 80px;
+  margin-right: 20px; /* Cách bên phải 20px */
+  flex-shrink: 0; /* Ngăn avatar bị co lại */
+}
+
+.file-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex-grow: 1; /* Cho phép container này mở rộng */
+  overflow: hidden; /* Ẩn nội dung tràn */
+}
+
+.file-name {
+  font-size: 16px;
+  color: #333;
+  font-weight: 500;
+  white-space: nowrap; /* Ngăn tên file xuống dòng */
+  overflow: hidden; /* Ẩn phần tên file bị tràn */
+  text-overflow: ellipsis; /* Hiển thị dấu ba chấm nếu tràn */
+  margin-bottom: 5px;
+}
+
+.file-size {
+  font-size: 14px;
+  color: #666;
+}
+
+
+.interaction-button {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -1334,13 +1394,13 @@ body {
   overflow: hidden;
 }
 
-.message-box .interaction-button img {
+.interaction-button img {
   width: 20px;
   height: 20px;
   object-fit: contain;
 }
 
-.message-box .interaction-button.blue {
+.interaction-button.blue {
   backdrop-filter: blur(200px);
   background: rgba(0, 0, 0, 0.2);
   right: -45px;
@@ -1348,29 +1408,29 @@ body {
   transition: all 0.3s ease-out;
 }
 
-.message-box .interaction-button.blue:hover {
+.interaction-button.blue:hover {
   background: #007bff;
   transform: scale(1.1) translateY(-16px);
 }
 
-.message-box .interaction-button.red {
+.interaction-button.red {
   backdrop-filter: blur(200px);
   background: rgba(0, 0, 0, 0.2);
   right: -90px;
   transform: translateY(-50%) translateX(-55px);
 }
 
-.message-box .interaction-button.red:hover {
+.interaction-button.red:hover {
   background-color: #dc3545;
   transform: scale(1.1) translateY(-16px);
 }
 
-.message-box .interaction-button.active {
+.interaction-button.active {
   transform: translateY(-50%) translateX(0);
   opacity: 1;
 }
 
-.message-box .interaction-button.hide {
+.interaction-button.hide {
   transform: translateY(-50%) translateX(-10px);
   opacity: 0;
 }
@@ -1448,8 +1508,8 @@ body {
   width: 20px;
   border-radius: 50%;
   box-shadow: 0 0 5px var(--primary),
-    0 0 25px var(--primary),
-    0 0 50px var(--primary);
+  0 0 25px var(--primary),
+  0 0 50px var(--primary);
 }
 
 .waterfall div:nth-of-type(5) {
@@ -1584,8 +1644,8 @@ body {
     transform: translateY(-60px);
     color: #fff;
     text-shadow: 0 0 5px #fff,
-      0 0 25px #fff,
-      0 0 50px #fff;
+    0 0 25px #fff,
+    0 0 50px #fff;
   }
 
   40%,
@@ -1599,43 +1659,43 @@ body {
 
 
 .scroll-to-bottom-btn {
-    position: absolute;
-    top: 340px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: rgba(0, 0, 0, 0.1);
-    border: none;
-    cursor: pointer;
-    z-index: 10;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s ease-out;
-    backdrop-filter: blur(10px);
-}
-
-.scroll-to-bottom-btn svg{
-  transform: translateX(-0.5px);
-}
-.scroll-to-bottom-btn:hover {
-    background: rgba(0, 102, 255, 0.7);
-    transform: translateX(-50%) scale(1.1);
-}
-
-.scroll-to-bottom-btn.show {
-    opacity: 1;
-    visibility: visible;
+  position: absolute;
+  top: 340px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.1);
+  border: none;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease-out;
+  backdrop-filter: blur(10px);
 }
 
 .scroll-to-bottom-btn svg {
-    transition: transform 0.2s ease;
+  transform: translateX(-0.5px);
+}
+.scroll-to-bottom-btn:hover {
+  background: rgba(0, 102, 255, 0.7);
+  transform: translateX(-50%) scale(1.1);
+}
+
+.scroll-to-bottom-btn.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.scroll-to-bottom-btn svg {
+  transition: transform 0.2s ease;
 }
 
 .scroll-to-bottom-btn:hover svg {
-    transform: translateY(2px);
+  transform: translateY(2px);
 }

@@ -1183,7 +1183,7 @@ body {
 .text-area {
   position: relative;
   margin: 20px 0px;
-  width: 400px;
+  width: 550px;
   left: 75px;
   border-radius: 25px;
   display: inline-block;
@@ -1286,11 +1286,10 @@ body {
 .message-box {
   margin-right: 100px;
   background: rgba(255, 255, 255, 0.6);
-  border-radius: 25px;
+  border-radius: 20px;
   max-width: 700px;
   width: fit-content;
   min-height: 40px;
-  padding: 5px 15px;
   box-sizing: border-box;
   word-wrap: break-word;
   flex-shrink: 0;
@@ -1302,6 +1301,9 @@ body {
   align-self: flex-end;
   z-index: 20;
   transition: all 0.3s ease-out;
+  display: flex;
+  justify-content: center; /* Căn giữa ngang */
+  align-items: center; 
 }
 
 .message-box:hover {
@@ -1316,6 +1318,7 @@ body {
   line-height: 1.5;
   text-align: left;
   white-space: pre-wrap;
+  margin: 5px 15px;
 }
 
 /* Styles cho ảnh trong message-box */
@@ -1324,17 +1327,13 @@ body {
   max-height: 200px; /* Chiều cao tối đa */
   height: auto; /* Đảm bảo tỷ lệ khung hình được duy trì */
   display: block; /* Loại bỏ khoảng trắng thừa dưới ảnh */
-  border-radius: 8px; /* Bo tròn góc cho ảnh */
-  object-fit: contain; /* Đảm bảo ảnh không bị bóp méo và vừa với khung.
-                          'contain' sẽ làm ảnh nằm gọn trong khung (có thể có khoảng trắng).
-                          'cover' sẽ làm ảnh lấp đầy khung (có thể bị cắt).
-                          'contain' phù hợp với yêu cầu "không bị bóp méo" và "lấp đầy 1 trong 2 giới hạn".
-                        */
-  margin: 5px 0; /* Khoảng cách trên dưới cho ảnh */
+  border-radius: 15px; /* Bo tròn góc cho ảnh */
+  object-fit: contain;
+  margin: 10px; /* Khoảng cách trên dưới cho ảnh */
 }
 
 /* Styles cho file box */
-.message-box .file-content {
+.file-content {
   display: flex;
   align-items: center; /* Căn giữa theo chiều dọc */
   min-width: 300px; /* Đảm bảo đủ rộng cho nội dung */
@@ -1347,14 +1346,14 @@ body {
   box-sizing: border-box;
 }
 
-.message-box .file-avatar {
+.file-avatar {
   width: 80px;
   height: 80px;
   margin-right: 20px; /* Cách bên phải 20px */
   flex-shrink: 0; /* Ngăn avatar bị co lại */
 }
 
-.message-box .file-info {
+.file-info {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -1362,7 +1361,7 @@ body {
   overflow: hidden; /* Ẩn nội dung tràn */
 }
 
-.message-box .file-name {
+.file-name {
   font-size: 16px;
   color: #333;
   font-weight: 500;
@@ -1372,13 +1371,13 @@ body {
   margin-bottom: 5px;
 }
 
-.message-box .file-size {
+.file-size {
   font-size: 14px;
   color: #666;
 }
 
 
-.message-box .interaction-button {
+.interaction-button {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -1395,13 +1394,13 @@ body {
   overflow: hidden;
 }
 
-.message-box .interaction-button img {
+.interaction-button img {
   width: 20px;
   height: 20px;
   object-fit: contain;
 }
 
-.message-box .interaction-button.blue {
+.interaction-button.blue {
   backdrop-filter: blur(200px);
   background: rgba(0, 0, 0, 0.2);
   right: -45px;
@@ -1409,29 +1408,29 @@ body {
   transition: all 0.3s ease-out;
 }
 
-.message-box .interaction-button.blue:hover {
+.interaction-button.blue:hover {
   background: #007bff;
   transform: scale(1.1) translateY(-16px);
 }
 
-.message-box .interaction-button.red {
+.interaction-button.red {
   backdrop-filter: blur(200px);
   background: rgba(0, 0, 0, 0.2);
   right: -90px;
   transform: translateY(-50%) translateX(-55px);
 }
 
-.message-box .interaction-button.red:hover {
+.interaction-button.red:hover {
   background-color: #dc3545;
   transform: scale(1.1) translateY(-16px);
 }
 
-.message-box .interaction-button.active {
+.interaction-button.active {
   transform: translateY(-50%) translateX(0);
   opacity: 1;
 }
 
-.message-box .interaction-button.hide {
+.interaction-button.hide {
   transform: translateY(-50%) translateX(-10px);
   opacity: 0;
 }
