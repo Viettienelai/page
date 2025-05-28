@@ -370,7 +370,7 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(() => console.log('Copied to clipboard:', textToCopy))
             .catch(err => {
               console.error('Failed to copy:', err);
-              alert('Failed to copy. Please try again or copy manually.');
+              alert('Copy thất bại. Vui lòng thử lại.');
             });
         }
       }
@@ -395,11 +395,11 @@ document.addEventListener('DOMContentLoaded', function() {
             await loadAllMessages(false);
           } else {
             console.error('Error deleting message:', result.message);
-            alert('Error deleting message: ' + result.message);
+            alert('Lỗi xóa tin nhắn: ' + result.message);
           }
         } catch (error) {
-          console.error('Connection or API error during delete:', error);
-          alert('Connection or API error during delete: ' + error.message);
+          console.error('Lỗi kết nối hoặc API khi xóa:', error);
+          alert('Lỗi kết nối hoặc API khi xóa: ' + error.message);
         } finally {
           toolbarLoadingOverlay.classList.remove('active');
         }
@@ -420,7 +420,7 @@ document.addEventListener('DOMContentLoaded', function() {
     try {
       await loadAllMessages(true);
     } catch (error) {
-      console.error("Error loading initial messages:", error);
+      console.error("Lỗi tải tin nhắn ban đầu:", error);
     } finally {
       if (syncLoadingOverlay) syncLoadingOverlay.classList.remove('active');
     }
@@ -492,7 +492,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   } else {
-    console.error("Element #chat-bubble not found.");
+    console.error("Không tìm thấy phần tử #chat-bubble.");
   }
 
   if (noteBackground && syncLoadingOverlay && chatBubble) {
@@ -508,16 +508,16 @@ document.addEventListener('DOMContentLoaded', function() {
       syncLoadingOverlay.classList.add('active');
       try {
         await loadAllMessages(true);
-        console.log("Data synced from Google Sheet successfully!");
+        console.log("Đồng bộ dữ liệu từ Google Sheet thành công!");
       } catch (error) {
-        console.error("Error syncing data from Google Sheet:", error);
-        alert("Error syncing data: " + error.message);
+        console.error("Lỗi đồng bộ dữ liệu từ Google Sheet:", error);
+        alert("Lỗi đồng bộ dữ liệu: " + error.message);
       } finally {
         syncLoadingOverlay.classList.remove('active');
       }
     });
   } else {
-    console.error("Element #note-background, #sync-loading-overlay, or #chat-bubble not found.");
+    console.error("Không tìm thấy phần tử #note-background, #sync-loading-overlay, hoặc #chat-bubble.");
   }
 
   const maxTextAreaHeight = 400;
@@ -548,7 +548,7 @@ document.addEventListener('DOMContentLoaded', function() {
     adjustHeight();
     window.addEventListener('resize', adjustHeight);
   } else {
-    console.error("Element .text-input not found.");
+    console.error("Không tìm thấy phần tử .text-input.");
   }
 
   if (sendButton && textInput && chatContentArea && toolbarLoadingOverlay) {
@@ -564,17 +564,17 @@ document.addEventListener('DOMContentLoaded', function() {
           });
           const result = await response.json();
           if (result.status === 'success') {
-            console.log('Message sent and saved:', messageText);
+            console.log('Tin nhắn đã gửi và lưu:', messageText);
             textInput.value = '';
             adjustHeight();
             await loadAllMessages(true);
           } else {
-            console.error('Error saving message:', result.message);
-            alert('Error sending message: ' + result.message);
+            console.error('Lỗi lưu tin nhắn:', result.message);
+            alert('Lỗi gửi tin nhắn: ' + result.message);
           }
         } catch (error) {
-          console.error('Connection or API error:', error);
-          alert('Connection or API error: ' + error.message);
+          console.error('Lỗi kết nối hoặc API:', error);
+          alert('Lỗi kết nối hoặc API: ' + error.message);
         } finally {
           toolbarLoadingOverlay.classList.remove('active');
         }
@@ -588,7 +588,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   } else {
-    console.error("One or more elements (sendButton, textInput, chatContentArea, toolbarLoadingOverlay) not found.");
+    console.error("Không tìm thấy một hoặc nhiều phần tử (sendButton, textInput, chatContentArea, toolbarLoadingOverlay).");
   }
 
   if (plusButton) {
@@ -608,10 +608,10 @@ document.addEventListener('DOMContentLoaded', function() {
       const file = await fileChosenPromise;
       document.body.removeChild(fileInput);
       if (!file) {
-        console.log("User cancelled file selection.");
+        console.log("Người dùng hủy chọn file.");
         return;
       }
-      console.log("File selected:", file.name, file.type, file.size);
+      console.log("File đã chọn:", file.name, file.type, file.size);
       const maxFileSize = 50 * 1024 * 1024;
       if (file.size > maxFileSize) {
         alert('File quá lớn! Vui lòng chọn file nhỏ hơn 50MB.');
@@ -619,17 +619,17 @@ document.addEventListener('DOMContentLoaded', function() {
       }
       toolbarLoadingOverlay.classList.add('active');
       try {
-        console.log('Trying Base64 upload method...');
-        let success = await tryBase64Upload(file, 2); // Thử 2 lần
+        console.log('Thử phương thức tải lên Base64...');
+        let success = await tryBase64Upload(file, 2);
         if (!success) {
-          console.log('Base64 failed, trying FormData method...');
+          console.log('Base64 thất bại, thử phương thức FormData...');
           success = await tryFormDataUpload(file);
         }
         if (!success) {
           throw new Error('Tất cả phương thức tải lên thất bại');
         }
       } catch (error) {
-        console.error('Upload error:', error);
+        console.error('Lỗi tải lên:', error);
         alert('Lỗi tải file: ' + error.message);
       } finally {
         toolbarLoadingOverlay.classList.remove('active');
@@ -639,7 +639,7 @@ document.addEventListener('DOMContentLoaded', function() {
     async function tryBase64Upload(file, retries = 2) {
       for (let attempt = 1; attempt <= retries; attempt++) {
         try {
-          console.log(`Base64 upload attempt ${attempt}...`);
+          console.log(`Thử tải lên Base64 lần ${attempt}...`);
           const base64Data = await fileToBase64(file);
           const requestData = {
             action: 'uploadFileBase64',
@@ -648,28 +648,20 @@ document.addEventListener('DOMContentLoaded', function() {
             fileSize: file.size,
             fileData: base64Data
           };
-          console.log('Sending Base64 request...', { ...requestData, fileData: '[BASE64_DATA_' + base64Data.length + '_CHARS]' });
+          console.log('Gửi yêu cầu Base64...', { ...requestData, fileData: '[BASE64_DATA_' + base64Data.length + '_CHARS]' });
           const response = await fetch(GAS_WEB_APP_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(requestData)
           });
-          console.log('Response status:', response.status);
+          console.log('Trạng thái phản hồi:', response.status);
           if (!response.ok) {
             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
           }
-          const responseText = await response.text();
-          console.log('Raw response:', responseText.substring(0, 500));
-          let result;
-          try {
-            result = JSON.parse(responseText);
-          } catch (parseError) {
-            console.error('JSON parse error:', parseError);
-            throw new Error('Phản hồi JSON không hợp lệ từ server');
-          }
+          const result = await response.json();
           if (result.status === 'success') {
-            console.log('✅ Base64 upload SUCCESS:', result.message);
-            console.log('File info:', { fileId: result.fileId, fileName: result.fileName, fileSize: result.fileSize });
+            console.log('✅ Tải lên Base64 THÀNH CÔNG:', result.message);
+            console.log('Thông tin file:', { fileId: result.fileId, fileName: result.fileName, fileSize: result.fileSize });
             if (textInput) {
               textInput.value = '';
               adjustHeight();
@@ -677,13 +669,13 @@ document.addEventListener('DOMContentLoaded', function() {
             await loadAllMessages(true);
             return true;
           } else {
-            console.log('❌ Base64 upload FAILED:', result.message);
-            if (result.debug) console.log('Debug info:', result.debug);
+            console.log('❌ Tải lên Base64 THẤT BẠI:', result.message);
+            if (result.debug) console.log('Thông tin debug:', result.debug);
             if (attempt === retries) return false;
-            await new Promise(resolve => setTimeout(resolve, 1000)); // Đợi 1 giây trước khi thử lại
+            await new Promise(resolve => setTimeout(resolve, 1000));
           }
         } catch (error) {
-          console.log(`❌ Base64 upload ERROR (attempt ${attempt}):`, error.message);
+          console.log(`❌ Lỗi tải lên Base64 (lần ${attempt}):`, error.message);
           if (attempt === retries) return false;
           await new Promise(resolve => setTimeout(resolve, 1000));
         }
@@ -694,28 +686,20 @@ document.addEventListener('DOMContentLoaded', function() {
     async function tryFormDataUpload(file) {
       try {
         const formData = new FormData();
-        formData.append('file', file, file.name); // Đổi key thành 'file'
-        console.log('Sending FormData request...');
+        formData.append('file', file, file.name);
+        console.log('Gửi yêu cầu FormData...');
         console.log('FormData entries:', [...formData.entries()]);
         const response = await fetch(GAS_WEB_APP_URL, {
           method: 'POST',
           body: formData
         });
-        console.log('Response status:', response.status);
+        console.log('Trạng thái phản hồi:', response.status);
         if (!response.ok) {
           throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
-        const responseText = await response.text();
-        console.log('Raw response:', responseText.substring(0, 500));
-        let result;
-        try {
-          result = JSON.parse(responseText);
-        } catch (parseError) {
-          console.error('JSON parse error:', parseError);
-          throw new Error('Phản hồi JSON không hợp lệ từ server');
-        }
+        const result = await response.json();
         if (result.status === 'success') {
-          console.log('✅ FormData upload SUCCESS:', result.message);
+          console.log('✅ Tải lên FormData THÀNH CÔNG:', result.message);
           if (textInput) {
             textInput.value = '';
             adjustHeight();
@@ -723,12 +707,12 @@ document.addEventListener('DOMContentLoaded', function() {
           await loadAllMessages(true);
           return true;
         } else {
-          console.log('❌ FormData upload FAILED:', result.message);
-          if (result.debug) console.log('Debug info:', result.debug);
+          console.log('❌ Tải lên FormData THẤT BẠI:', result.message);
+          if (result.debug) console.log('Thông tin debug:', result.debug);
           return false;
         }
       } catch (error) {
-        console.log('❌ FormData upload ERROR:', error.message);
+        console.log('❌ Lỗi tải lên FormData:', error.message);
         return false;
       }
     }
@@ -754,98 +738,109 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     }
   } else {
-    console.error("Element .plus-button not found.");
+    console.error("Không tìm thấy phần tử .plus-button.");
   }
 
-  async function loadAllMessages(forceScrollToBottom = false) {
+  async function loadAllMessages(forceScrollToBottom = false, retries = 2) {
     if (!chatContentArea) return;
     const currentScrollTop = chatContentArea.scrollTop;
     const currentScrollHeight = chatContentArea.scrollHeight;
-    try {
-      const response = await fetch(GAS_WEB_APP_URL + '?action=getAllMessages', {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' }
-      });
-      const messages = await response.json();
-      chatContentArea.innerHTML = '';
-      messages.sort((a, b) => {
-        const timeA = a.timestamp ? new Date(a.timestamp).getTime() : 0;
-        const timeB = b.timestamp ? new Date(b.timestamp).getTime() : 0;
-        return timeA - timeB;
-      });
-      messages.forEach((msgObj, index) => {
-        if (msgObj) {
-          const messageBox = document.createElement('div');
-          messageBox.classList.add('message-box');
-          messageBox.dataset.messageIndex = index;
-          if (msgObj.type === 'text') {
-            const paragraph = document.createElement('p');
-            paragraph.textContent = msgObj.content;
-            messageBox.appendChild(paragraph);
-          } else if (msgObj.type === 'file' || msgObj.type === 'image') {
-            const fileLink = msgObj.fileUrl;
-            const fileId = msgObj.fileId;
-            const fileName = msgObj.fileName;
-            const fileSize = msgObj.fileSize;
-            const mimeType = msgObj.mimeType;
-            messageBox.dataset.fileId = fileId;
-            messageBox.dataset.fileUrl = fileLink;
-            if (msgObj.type === 'image' && mimeType.startsWith('image/')) {
-              const img = document.createElement('img');
-              img.src = `https://drive.google.com/uc?export=view&id=${fileId}`;
-              img.alt = fileName;
-              img.classList.add('chat-image');
-              img.onerror = () => {
-                console.error(`Failed to load image: ${img.src}.`);
-                img.src = 'assets/img/file_broken.png';
-              };
-              messageBox.appendChild(img);
-            } else if (mimeType.startsWith('video/')) {
-              const videoElement = document.createElement('video');
-              videoElement.src = `https://drive.google.com/uc?export=download&id=${fileId}`;
-              videoElement.controls = true;
-              videoElement.classList.add('chat-video');
-              videoElement.onerror = () => {
-                console.error(`Failed to load video: ${videoElement.src}.`);
-              };
-              messageBox.appendChild(videoElement);
-            } else {
-              const fileContentDiv = document.createElement('div');
-              fileContentDiv.classList.add('file-content');
-              const fileAvatar = document.createElement('img');
-              fileAvatar.src = 'assets/img/file.png';
-              fileAvatar.alt = 'File Icon';
-              fileAvatar.classList.add('file-avatar');
-              fileContentDiv.appendChild(fileAvatar);
-              const fileInfoDiv = document.createElement('div');
-              fileInfoDiv.classList.add('file-info');
-              const fileNameP = document.createElement('p');
-              fileNameP.classList.add('file-name');
-              fileNameP.textContent = fileName;
-              fileInfoDiv.appendChild(fileNameP);
-              const fileSizeP = document.createElement('p');
-              fileSizeP.classList.add('file-size');
-              fileSizeP.textContent = formatFileSize(fileSize);
-              fileInfoDiv.appendChild(fileSizeP);
-              fileContentDiv.appendChild(fileInfoDiv);
-              messageBox.appendChild(fileContentDiv);
-            }
-          }
-          chatContentArea.appendChild(messageBox);
+    for (let attempt = 1; attempt <= retries; attempt++) {
+      try {
+        console.log(`Tải tin nhắn, lần thử ${attempt}...`);
+        const response = await fetch(GAS_WEB_APP_URL + '?action=getAllMessages', {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
-      });
-      if (forceScrollToBottom) {
-        scrollToBottom();
-      } else {
-        const newScrollHeight = chatContentArea.scrollHeight;
-        const scrollRatio = currentScrollTop / currentScrollHeight;
-        chatContentArea.scrollTop = scrollRatio * newScrollHeight;
+        const messages = await response.json();
+        chatContentArea.innerHTML = '';
+        messages.sort((a, b) => {
+          const timeA = a.timestamp ? new Date(a.timestamp).getTime() : 0;
+          const timeB = b.timestamp ? new Date(b.timestamp).getTime() : 0;
+          return timeA - timeB;
+        });
+        messages.forEach((msgObj, index) => {
+          if (msgObj) {
+            const messageBox = document.createElement('div');
+            messageBox.classList.add('message-box');
+            messageBox.dataset.messageIndex = index;
+            if (msgObj.type === 'text') {
+              const paragraph = document.createElement('p');
+              paragraph.textContent = msgObj.content;
+              messageBox.appendChild(paragraph);
+            } else if (msgObj.type === 'file' || msgObj.type === 'image') {
+              const fileLink = msgObj.fileUrl;
+              const fileId = msgObj.fileId;
+              const fileName = msgObj.fileName;
+              const fileSize = msgObj.fileSize;
+              const mimeType = msgObj.mimeType;
+              messageBox.dataset.fileId = fileId;
+              messageBox.dataset.fileUrl = fileLink;
+              if (msgObj.type === 'image' && mimeType.startsWith('image/')) {
+                const img = document.createElement('img');
+                img.src = `https://drive.google.com/uc?export=view&id=${fileId}`;
+                img.alt = fileName;
+                img.classList.add('chat-image');
+                img.onerror = () => {
+                  console.error(`Lỗi tải ảnh: ${img.src}.`);
+                  img.src = 'assets/img/file_broken.png';
+                };
+                messageBox.appendChild(img);
+              } else if (mimeType.startsWith('video/')) {
+                const videoElement = document.createElement('video');
+                videoElement.src = `https://drive.google.com/uc?export=download&id=${fileId}`;
+                videoElement.controls = true;
+                videoElement.classList.add('chat-video');
+                videoElement.onerror = () => {
+                  console.error(`Lỗi tải video: ${videoElement.src}.`);
+                };
+                messageBox.appendChild(videoElement);
+              } else {
+                const fileContentDiv = document.createElement('div');
+                fileContentDiv.classList.add('file-content');
+                const fileAvatar = document.createElement('img');
+                fileAvatar.src = 'assets/img/file.png';
+                fileAvatar.alt = 'File Icon';
+                fileAvatar.classList.add('file-avatar');
+                fileContentDiv.appendChild(fileAvatar);
+                const fileInfoDiv = document.createElement('div');
+                fileInfoDiv.classList.add('file-info');
+                const fileNameP = document.createElement('p');
+                fileNameP.classList.add('file-name');
+                fileNameP.textContent = fileName;
+                fileInfoDiv.appendChild(fileNameP);
+                const fileSizeP = document.createElement('p');
+                fileSizeP.classList.add('file-size');
+                fileSizeP.textContent = formatFileSize(fileSize);
+                fileInfoDiv.appendChild(fileSizeP);
+                fileContentDiv.appendChild(fileInfoDiv);
+                messageBox.appendChild(fileContentDiv);
+              }
+            }
+            chatContentArea.appendChild(messageBox);
+          }
+        });
+        if (forceScrollToBottom) {
+          scrollToBottom();
+        } else {
+          const newScrollHeight = chatContentArea.scrollHeight;
+          const scrollRatio = currentScrollTop / currentScrollHeight;
+          chatContentArea.scrollTop = scrollRatio * newScrollHeight;
+        }
+        addMessageBoxEventListeners();
+        setTimeout(updateScrollButton, 100);
+        return;
+      } catch (error) {
+        console.error(`Lỗi tải tin nhắn (lần ${attempt}):`, error);
+        if (attempt === retries) {
+          alert('Lỗi tải tin nhắn: ' + error.message);
+          return;
+        }
+        await new Promise(resolve => setTimeout(resolve, 1000));
       }
-      addMessageBoxEventListeners();
-      setTimeout(updateScrollButton, 100);
-    } catch (error) {
-      console.error('Error loading messages:', error);
-      alert('Lỗi tải tin nhắn: ' + error.message);
     }
   }
 
