@@ -358,18 +358,18 @@ document.addEventListener('DOMContentLoaded', function() {
         if (fileId) {
           const downloadUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
           window.open(downloadUrl, '_blank');
-          console.log('Downloading file from Drive:', downloadUrl);
+          console.log('Tải file từ Drive:', downloadUrl);
         } else if (fileUrl) {
           window.open(fileUrl, '_blank');
-          console.log('Opening file from Drive:', fileUrl);
+          console.log('Mở file từ Drive:', fileUrl);
         }
       } else {
         const textToCopy = messageBox.querySelector('p') ? messageBox.querySelector('p').textContent : '';
         if (textToCopy) {
           navigator.clipboard.writeText(textToCopy)
-            .then(() => console.log('Copied to clipboard:', textToCopy))
+            .then(() => console.log('Đã copy vào clipboard:', textToCopy))
             .catch(err => {
-              console.error('Failed to copy:', err);
+              console.error('Lỗi copy:', err);
               alert('Copy thất bại. Vui lòng thử lại.');
             });
         }
@@ -391,10 +391,10 @@ document.addEventListener('DOMContentLoaded', function() {
           const result = await response.json();
 
           if (result.status === 'success') {
-            console.log('Message deleted successfully.');
+            console.log('Xóa tin nhắn thành công.');
             await loadAllMessages(false);
           } else {
-            console.error('Error deleting message:', result.message);
+            console.error('Lỗi xóa tin nhắn:', result.message);
             alert('Lỗi xóa tin nhắn: ' + result.message);
           }
         } catch (error) {
@@ -406,6 +406,14 @@ document.addEventListener('DOMContentLoaded', function() {
         hideInteractionButtons();
       }
     });
+  }
+
+  function handleMessageBoxClick(event) {
+    event.stopPropagation();
+    if (currentActiveMessageBox && currentActiveMessageBox !== this) {
+      hideInteractionButtons();
+    }
+    showInteractionButtons(this);
   }
 
   function addMessageBoxEventListeners() {
