@@ -399,6 +399,11 @@ const fileIcons = {
         class: 'file-icon-pptx'
     },
 
+    'application/vnd.android.package-archive': { // .apk
+    svg: '<svg viewBox="0 0 100 100"><path fill="#fefefe" d="m70 0 20 20v70q0 10-10 10H20q-10 0-10-10V10Q10 0 20 0Z"/><path fill="#d5d5d5" d="m70 0 20 20H73q-3 0-3-3Z"/><path fill="#3ddc84" d="M60 32q0 3-3 3H10v7q-4 0-4-5V13q0-3 3-3h48q3 0 3 3Z"/><path fill="#3ddc84" stroke="#fff" stroke-width="3" stroke-linejoin="round" d="m13 28.5 4.5-12h2l4.5 12-1.3-3.5h-8.4Zm17 0v-12h5c4 0 4 7.5 0 7.5h-5Z"/><path stroke="#fff" stroke-width="3" stroke-linejoin="round" d="M44 16.5v12V25l8-8.5-4 4.5 4 7.5-4-7.5-4 4Z"/><g transform="translate(0 -1)" fill="#7ee8ad"><path d="M25 71a26 26 0 0 1 50 0Z"/><path stroke="#7ee8ad" stroke-width="3" stroke-linejoin="round" d="m39 57-6-9Zm23 0 6-9Z"/><circle cx="41" cy="63" r="3" fill="#fff"/><circle cx="59" cy="63" r="3" fill="#fff"/><path d="M25 75h50v15H25z"/></g></svg>',
+    class: 'file-icon-apk'
+},
+
 };
 
 // --- HÀM HỖ TRỢ LẤY ICON FILE DỰA TRÊN MIME TYPE HOẶC TÊN FILE ---
@@ -415,6 +420,7 @@ function getFileIcon(mimeType, fileName) {
 
         // Map phần mở rộng tới MIME type
         const extensionToMimeType = {
+            'apk': 'application/vnd.android.package-archive',
             'pdf': 'application/pdf',
             'js': 'application/javascript',
             'javascript': 'application/javascript',
