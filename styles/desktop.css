@@ -1367,7 +1367,15 @@ body {
   padding: 10px 20px;
   box-sizing: border-box;
   border-radius: 20px;
-  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.message-box:has(.file-content) {
+  background-color: rgba(80, 80, 80, 0.3);
+}
+
+.message-box:has(.file-content):hover {
+  background-color: rgba(80, 80, 80, 0.6);
+  box-shadow: 0 0px 20px rgba(255, 255, 255, 0.5);
 }
 
 .message-box .file-info {
@@ -1402,36 +1410,51 @@ body {
   height: 100%;
 }
 
-.file-icon-pdf path {
-  /* Ví dụ: có thể thay đổi màu nếu muốn */
-  /* fill: #dc3545; */
+
+/* Định dạng cho Audio Box bên trong message-box */
+.message-box .chat-audio {
+    position: absolute;
+    bottom: 10px;
+    display: block; /* Đảm bảo audio element là một block */
+    max-width: 800px; /* Chiều rộng tối đa */
+    width: 580px; /* Chiều rộng tương đối, sẽ chiếm toàn bộ không gian có sẵn trong message-box */
+    height: 40px;
+    border-radius: 0px;
+    overflow: hidden; /* Ẩn nội dung tràn */
+    background-color: transparent;
 }
 
-.file-icon-docx path {
+/* Định dạng cho tên file trong Audio Box, nằm bên trong message-box */
+.message-box .chat-audio + .file-name {
+    position: absolute;
+    top: 8px;
+    left: 10px; /* Căn lề trái cho tên file */
+    width: 580px;
+    display: -webkit-box; /* Cho phép hiển thị nhiều dòng */
+    -webkit-line-clamp: 2; /* Giới hạn 2 dòng */
+    -webkit-box-orient: vertical;
+    text-overflow: ellipsis; /* Hiển thị dấu ba chấm nếu tràn */
+    max-height: 2.8em; /* Chiều cao tối đa cho 2 dòng (khoảng 1.4em mỗi dòng) */
+    font-size: 17; /* Kích thước font nhỏ hơn một chút */
+    color: #ffffff;
+    word-break: break-word; /* Ngắt từ nếu tên quá dài để tránh tràn */
+    line-height: 1.5;
+    display: flex;
+    justify-content: center;
+    font-weight: 500;
 }
 
-.file-icon-js path {
-  /* fill: #ffc107; */
+/* Điều chỉnh lại chiều cao tổng thể của message-box khi nó chứa audio */
+.message-box:has(.chat-audio) {
+    width: 600px;
+    height: 100px;
+    border-radius: 30px;
+    background-color: rgba(80, 80, 80, 0.3);
 }
 
-.file-icon-html path {
-  /* fill: #fd7e14; */
-}
-
-.file-icon-css path {
-  /* fill: #007bff; */
-}
-
-.file-icon-zip path {
-  /* fill: #6c757d; */
-}
-
-.file-icon-exe path {
-  /* fill: #6f42c1; */
-}
-
-.file-icon-default path {
-  /* fill: #99aab5; */
+.message-box:has(.chat-audio):hover {
+  background-color: rgba(80, 80, 80, 0.5);
+  box-shadow: 0 0px 20px rgba(255, 255, 255, 0.5);
 }
 
 .temporary-notification {
@@ -1782,3 +1805,4 @@ body {
 body.no-scroll {
     overflow: hidden;
 }
+

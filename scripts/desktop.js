@@ -279,7 +279,7 @@ document.querySelectorAll('.popup-bookmarks-grid .bookmark-item')
 
 // Cấu hình Google Apps Script Web App URL
 // <<< THAY THẾ BẰNG URL THỰC CỦA BẠN TỪ GOOGLE APPS SCRIPT SAU KHI TRIỂN KHAI >>>
-const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwYI-4gxCDTAyeVdb7MJHLYCfeEGH72rdZO_fxzF4VczUaqx1KpsxbCmfkQCx5P3OGy/exec';
+const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzNvrO9iuBSwtkM0rzrnGH1wldU5miMKsNIGuMv0mx8AufL9oxv9OQfQZHErD6M8oG5mQ/exec';
 
 // Cấu hình Cloudinary
 // <<< THAY THẾ BẰNG CLOUD NAME CỦA BẠN >>>
@@ -395,9 +395,9 @@ const fileIcons = {
     },
 
     'application/vnd.openxmlformats-officedocument.presentationml.presentation': { // .pptx
-    svg: '<svg viewBox="0 0 100 100"><path fill="#fefefe" d="m70 0 20 20v70q0 10-10 10H20q-10 0-10-10V10Q10 0 20 0Z"/><path fill="#d5d5d5" d="m70 0 20 20H73q-3 0-3-3Z"/><path fill="#F97316" d="M60 32q0 3-3 3H10v7q-4 0-4-5V13q0-3 3-3h48q3 0 3 3Z"/><path fill="#F97316" stroke="#fff" stroke-width="3" stroke-linejoin="round" d="M15 28.5V16.6l5-.1c4 0 4 7.5 0 7.5h-5Zm14 0V16.6l5-.1c4 0 4 7.5 0 7.5h-5Z"/><path stroke="#fff" stroke-width="3" stroke-linejoin="round" d="M52 16.5h-9 4.5v12-12Z"/><g fill="#FFC875"><circle cx="50" cy="68" r="20"/><path stroke-width="4" stroke="#fff" d="M52 66V44a22 22 0 0 1 22 22Z"/></g></svg>',
-    class: 'file-icon-pptx'
-},
+        svg: '<svg viewBox="0 0 100 100"><path fill="#fefefe" d="m70 0 20 20v70q0 10-10 10H20q-10 0-10-10V10Q10 0 20 0Z"/><path fill="#d5d5d5" d="m70 0 20 20H73q-3 0-3-3Z"/><path fill="#F97316" d="M60 32q0 3-3 3H10v7q-4 0-4-5V13q0-3 3-3h48q3 0 3 3Z"/><path fill="#F97316" stroke="#fff" stroke-width="3" stroke-linejoin="round" d="M15 28.5V16.6l5-.1c4 0 4 7.5 0 7.5h-5Zm14 0V16.6l5-.1c4 0 4 7.5 0 7.5h-5Z"/><path stroke="#fff" stroke-width="3" stroke-linejoin="round" d="M52 16.5h-9 4.5v12-12Z"/><g fill="#FFC875"><circle cx="50" cy="68" r="20"/><path stroke-width="4" stroke="#fff" d="M52 66V44a22 22 0 0 1 22 22Z"/></g></svg>',
+        class: 'file-icon-pptx'
+    },
 
 };
 
@@ -460,7 +460,13 @@ function formatFileSize(bytes) {
 }
 
 // --- HÀM HỖ TRỢ RÚT GỌN TÊN FILE ---
-function shortenFileName(fileName, maxLength = 30) {
+// Thêm tham số isAudioFile để kiểm soát việc rút gọn
+function shortenFileName(fileName, maxLength = 30, isAudioFile = false) {
+    // Nếu là tệp âm thanh, trả về tên gốc không rút gọn
+    if (isAudioFile) {
+        return fileName;
+    }
+
     const parts = fileName.split('.');
     const extension = parts.length > 1 ? '.' + parts.pop() : '';
     let nameWithoutExt = parts.join('.');
@@ -470,7 +476,8 @@ function shortenFileName(fileName, maxLength = 30) {
         const charsToShow = maxLength - extension.length - 3; // -3 cho '...'
 
         if (charsToShow <= 0) { // Trường hợp tên quá ngắn, chỉ hiển thị phần đầu
-            return fileName.substring(0, maxLength - 3) + '...';
+            // Đảm bảo không trả về chuỗi rỗng hoặc lỗi khi maxLength quá nhỏ
+            return fileName.substring(0, Math.max(0, maxLength - 3)) + '...';
         }
         return nameWithoutExt.substring(0, charsToShow) + '...' + extension;
     }
@@ -720,62 +727,62 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // --- Logic Chat Bubble Expand/Collapse ---
     // Logic Chat Bubble Expand/Collapse
-if (chatBubble) {
-    chatBubble.addEventListener('click', function (event) {
-        if (!this.classList.contains('expanded')) {
-            if (!event.target.closest('#note-background') &&
-                !event.target.closest('.chat-toolbar') &&
-                !event.target.closest('.message-box')) {
-                this.classList.add('expanded');
-                document.body.classList.add('no-scroll'); // Thêm dòng này để khóa scroll
-                if (backgroundBlurChat) {
-                    backgroundBlurChat.classList.add('active');
+    if (chatBubble) {
+        chatBubble.addEventListener('click', function (event) {
+            if (!this.classList.contains('expanded')) {
+                if (!event.target.closest('#note-background') &&
+                    !event.target.closest('.chat-toolbar') &&
+                    !event.target.closest('.message-box')) {
+                    this.classList.add('expanded');
+                    document.body.classList.add('no-scroll'); // Thêm dòng này để khóa scroll
+                    if (backgroundBlurChat) {
+                        backgroundBlurChat.classList.add('active');
+                    }
+                    scrollToBottom(); // Gọi hàm toàn cục [cite: 95]
+                    setTimeout(updateScrollButton, 100);
                 }
-                scrollToBottom(); // Gọi hàm toàn cục [cite: 95]
-                setTimeout(updateScrollButton, 100);
             }
-        }
-    });
-    document.addEventListener('click', function (event) {
-        if (currentActiveMessageBox && !currentActiveMessageBox.contains(event.target)) {
-            hideInteractionButtons();
-        }
+        });
+        document.addEventListener('click', function (event) {
+            if (currentActiveMessageBox && !currentActiveMessageBox.contains(event.target)) {
+                hideInteractionButtons();
+            }
 
-        if (
-            chatBubble.classList.contains('expanded') &&
-            !chatBubble.contains(event.target) &&
-            !event.target.closest('.chat-toolbar') && // đề phòng người dùng click vào thanh công cụ
-            !isPickingFile // <-- dòng quan trọng để ngăn collapse [cite: 96]
-        ) {
-            chatBubble.classList.remove('expanded');
-            document.body.classList.remove('no-scroll'); // Thêm dòng này để bỏ khóa scroll
-            if (backgroundBlurChat) {
-                backgroundBlurChat.classList.remove('active');
+            if (
+                chatBubble.classList.contains('expanded') &&
+                !chatBubble.contains(event.target) &&
+                !event.target.closest('.chat-toolbar') && // đề phòng người dùng click vào thanh công cụ
+                !isPickingFile // <-- dòng quan trọng để ngăn collapse [cite: 96]
+            ) {
+                chatBubble.classList.remove('expanded');
+                document.body.classList.remove('no-scroll'); // Thêm dòng này để bỏ khóa scroll
+                if (backgroundBlurChat) {
+                    backgroundBlurChat.classList.remove('active');
+                }
+                if (scrollToBottomBtn) {
+                    scrollToBottomBtn.classList.remove('show');
+                }
             }
-            if (scrollToBottomBtn) {
-                scrollToBottomBtn.classList.remove('show');
-            }
-        }
-    });
-} else {
+        });
+    } else {
         console.error("Không tìm thấy phần tử #chat-bubble. Vui lòng đảm bảo ID chính xác.");
     }
 
     // --- Logic Click vào #note-background để Sync ---
     if (noteBackground && syncLoadingOverlay && chatBubble) {
-    noteBackground.addEventListener('click', async function (event) {
-        event.stopPropagation();
+        noteBackground.addEventListener('click', async function (event) {
+            event.stopPropagation();
 
-        if (!chatBubble.classList.contains('expanded')) {
-            chatBubble.classList.add('expanded');
-            document.body.classList.add('no-scroll'); // Thêm dòng này để khóa scroll
-            if (backgroundBlurChat) {
-                backgroundBlurChat.classList.add('active');
+            if (!chatBubble.classList.contains('expanded')) {
+                chatBubble.classList.add('expanded');
+                document.body.classList.add('no-scroll'); // Thêm dòng này để khóa scroll
+                if (backgroundBlurChat) {
+                    backgroundBlurChat.classList.add('active');
+                }
+                scrollToBottom(); // Gọi hàm toàn cục [cite: 100]
+                setTimeout(updateScrollButton, 100);
+                return;
             }
-            scrollToBottom(); // Gọi hàm toàn cục [cite: 100]
-            setTimeout(updateScrollButton, 100);
-            return;
-        }
 
             if (chatBubble.classList.contains('expanded')) {
                 syncLoadingOverlay.classList.add('active');
@@ -885,30 +892,30 @@ if (chatBubble) {
 
     // --- XỬ LÝ NÚT PLUS VÀ TẢI FILE LÊN CLOUDINARY HOẶC GOOGLE DRIVE (QUA APPS SCRIPT) ---
     if (plusButton) {
-    plusButton.addEventListener('click', async function (event) {
-        event.stopPropagation();
+        plusButton.addEventListener('click', async function (event) {
+            event.stopPropagation();
 
-        const fileInput = document.createElement('input');
-        fileInput.type = 'file';
-        fileInput.style.display = 'none';
-        document.body.appendChild(fileInput);
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.style.display = 'none';
+            document.body.appendChild(fileInput);
 
-        isPickingFile = true; // Đánh dấu đang chọn file
+            isPickingFile = true; // Đánh dấu đang chọn file
 
-        const fileChosenPromise = new Promise(resolve => {
-            fileInput.addEventListener('change', function handler(e) {
-                fileInput.removeEventListener('change', handler);
-                resolve(e.target.files[0]);
-            }, { once: true });
-        });
+            const fileChosenPromise = new Promise(resolve => {
+                fileInput.addEventListener('change', function handler(e) {
+                    fileInput.removeEventListener('change', handler);
+                    resolve(e.target.files[0]);
+                }, { once: true });
+            });
 
-        fileInput.click();
+            fileInput.click();
 
-        const file = await fileChosenPromise;
-        document.body.removeChild(fileInput);
-        isPickingFile = false; // Reset sau khi chọn xong
+            const file = await fileChosenPromise;
+            document.body.removeChild(fileInput);
+            isPickingFile = false; // Reset sau khi chọn xong
 
-        if (!file) return;
+            if (!file) return;
 
             console.log("File được chọn:", file.name, file.type, file.size);
             toolbarLoadingOverlay.classList.add('active');
@@ -1135,18 +1142,18 @@ if (chatBubble) {
                             video.alt = fileName;
                             video.classList.add('chat-video');
                             messageBox.appendChild(video);
-                        } else if (msgObj.type === 'audio') {
+                        } else if (msgObj.type === 'audio') { // Thêm phần này để xử lý audio
                             const audio = document.createElement('audio');
                             audio.src = fileLink;
-                            audio.controls = true;
-                            audio.preload = 'metadata';
+                            audio.controls = true; // Hiển thị thanh điều khiển
+                            audio.preload = 'metadata'; // Tải metadata để hiển thị thời lượng
                             audio.alt = fileName;
-                            audio.classList.add('chat-audio');
+                            audio.classList.add('chat-audio'); // Class cho audio box
                             messageBox.appendChild(audio);
 
                             const audioFileNameP = document.createElement('p');
-                            audioFileNameP.classList.add('file-name');
-                            audioFileNameP.textContent = shortenFileName(fileName, 25);
+                            audioFileNameP.classList.add('file-name'); // Class cho tên file
+                            audioFileNameP.textContent = shortenFileName(fileName, 25, true); // Rút gọn tên file nếu cần
                             messageBox.appendChild(audioFileNameP);
                         } else { // Xử lý các file khác, bao gồm PDF và RAR
                             const fileContentDiv = document.createElement('div');
