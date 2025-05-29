@@ -1777,3 +1777,8 @@ body {
 .scroll-to-bottom-btn:hover svg {
   transform: translateY(2px);
 }
+
+
+body.no-scroll {
+    overflow: hidden;
+}

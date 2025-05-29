@@ -279,7 +279,7 @@ document.querySelectorAll('.popup-bookmarks-grid .bookmark-item')
 
 // Cấu hình Google Apps Script Web App URL
 // <<< THAY THẾ BẰNG URL THỰC CỦA BẠN TỪ GOOGLE APPS SCRIPT SAU KHI TRIỂN KHAI >>>
-const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbz3iDnOF9B6e-tOnjFm-Rqg1R4qM9HgtKlUwOda-ZrDFreSEESK3D261Z5SDkUrETiqLQ/exec';
+const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxT8FV7-tRKdIdfqC-BT8Euu080yCmcZyTa8FkPAPokuBPJFJvMSlGw-38OnYr5WXr2/exec';
 
 // Cấu hình Cloudinary
 // <<< THAY THẾ BẰNG CLOUD NAME CỦA BẠN >>>
@@ -364,7 +364,7 @@ const fileIcons = {
 
     // EXE Files
     'application/x-msdownload': { // .exe
-        svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="#6f42c1" d="M495.9 166.6c3.1 3.1 6.2 7 9.1 11.4c2.9 4.3 5.4 9 7.3 14.1s3.4 10.3 4.6 15.6s1.8 10.6 1.8 16.1s-.6 11.2-1.8 16.1s-2.7 10.8-4.6 16.1s-4.4 9.8-7.3 14.1s-6 8.3-9.1 11.4l-112 112c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L400.6 272 272 143.4c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L495.9 166.6zM0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V288H256c-35.3 0-64 28.7-64 64V512H64c-35.3 0-64-28.7-64-64V64zm384 64V0L256 128H384z"/></svg>',
+        svg: '<svg viewBox="0 0 100 100"><path fill="#fefefe" d="m70 0 20 20v70q0 10-10 10H20q-10 0-10-10V10Q10 0 20 0Z"/><path fill="#d5d5d5" d="m70 0 20 20H73q-3 0-3-3Z"/><path fill="#01e200" d="M60 32q0 3-3 3H10v7q-4 0-4-5V13q0-3 3-3h48q3 0 3 3Z"/><path stroke="#fff" stroke-width="3" stroke-linejoin="round" d="M23 16.5h-8v6h8-8v6h8-8v-12Zm6 12 9-12-4.5 6-4.5-6 9 12-4.5-6Zm23-12h-8v6h8-8v6h8-8v-12Z"/><rect x="22" y="46" width="48" height="35" rx="5" ry="5" fill="#78FC5A"/><rect x="25" y="49" width="42" height="24" rx="3" ry="3" fill="#fff"/><rect x="29" y="53" width="48" height="35" rx="5" ry="5" fill="#78FC5A"/><rect x="32" y="56" width="42" height="24" rx="3" ry="3" fill="#fff"/></svg>',
         class: 'file-icon-exe'
     },
     'application/octet-stream': { // .exe (alternative MIME type)
@@ -378,13 +378,13 @@ const fileIcons = {
         class: 'file-icon-json'
     },
 
-     'application/x-rar-compressed': { // .rar
+    'application/x-rar-compressed': { // .rar
         svg: '<svg viewBox="0 0 100 100"><path fill="#fefefe" d="m70 0 20 20v70q0 10-10 10H20q-10 0-10-10V10Q10 0 20 0Z"/><path fill="#d5d5d5" d="m70 0 20 20H73q-3 0-3-3Z"/><path fill="#700BFD" d="M60 32q0 3-3 3H10v7q-4 0-4-5V13q0-3 3-3h48q3 0 3 3Z"/><path d="M15 28.5v-12h5c5 0 5 7 0 7h-5Zv-5h4.5l4 5-4-5m10 5 4-12H35l4 12-1.2-3.5h-7.1Zm15.5 0v-12h5c5 0 5 7 0 7h-5Zv-5h4.5l4 5-4-5" fill="#700BFD" stroke="#fff" stroke-width="3" stroke-linejoin="round"/><g fill="#a26bfa" stroke="#a26bfa"><path stroke-width="13" d="M25 50h30M25 65h30M25 80h30"/><path stroke-width="6" d="M57 46.5h11"/><path d="M57 51.5h11v13h-4V58h-3v6.5h-4" stroke="none"/><path stroke-width="20" d="M57 76.5h11"/><path stroke-width="13" d="M70 50h5m-5 15h5m-5 15h5"/></g></svg>',
         class: 'file-icon-rar'
     },
 
     'text/plain': {
-        svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path fill="#6c757d" d="M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V64zM384 128L256 0H64c-17.7 0-32 14.3-32 32V480c0 17.7 14.3 32 32 32H320c17.7 0 32-14.3 32-32V128z"/></svg>',
+        svg: '<svg viewBox="0 0 100 100"><path fill="#fefefe" d="m70 0 20 20v70q0 10-10 10H20q-10 0-10-10V10Q10 0 20 0Z"/><path fill="#d5d5d5" d="m70 0 20 20H73q-3 0-3-3Z"/><path fill="#0086fe" d="M60 32q0 3-3 3H10v7q-4 0-4-5V13q0-3 3-3h48q3 0 3 3Z"/><path stroke="#fff" stroke-width="3" stroke-linejoin="round" d="M23 16.5h-9 4.5v12-12Z"/><path fill="#F97316" stroke="#fff" stroke-width="3" stroke-linejoin="round" d="m29 28.5 8.5-12-4.25 6-4.25-6 8.5 12-4.25-6Z"/><path stroke="#fff" stroke-width="3" stroke-linejoin="round" d="M52 16.5h-9 4.5v12-12Z"/><path fill="#63bffe" d="M30 45h40v10h-4l-1-6h-7.5v37l7.5 1v3H35v-3l7.5-1V49H35l-1 6h-4Z"/></svg>',
         class: 'file-icon-txt'
     },
 
@@ -392,7 +392,13 @@ const fileIcons = {
     'default': {
         svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path fill="#6c757d" d="M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V64zm384 64L256 0H64c-22.1 0-40 17.9-40 40V472c0 22.1 17.9 40 40 40H320c22.1 0 40-17.9 40-40V128z"/></svg>',
         class: 'file-icon-default'
-    }
+    },
+
+    'application/vnd.openxmlformats-officedocument.presentationml.presentation': { // .pptx
+    svg: '<svg viewBox="0 0 100 100"><path fill="#fefefe" d="m70 0 20 20v70q0 10-10 10H20q-10 0-10-10V10Q10 0 20 0Z"/><path fill="#d5d5d5" d="m70 0 20 20H73q-3 0-3-3Z"/><path fill="#F97316" d="M60 32q0 3-3 3H10v7q-4 0-4-5V13q0-3 3-3h48q3 0 3 3Z"/><path fill="#F97316" stroke="#fff" stroke-width="3" stroke-linejoin="round" d="M15 28.5V16.6l5-.1c4 0 4 7.5 0 7.5h-5Zm14 0V16.6l5-.1c4 0 4 7.5 0 7.5h-5Z"/><path stroke="#fff" stroke-width="3" stroke-linejoin="round" d="M52 16.5h-9 4.5v12-12Z"/><g fill="#FFC875"><circle cx="50" cy="68" r="20"/><path stroke-width="4" stroke="#fff" d="M52 66V44a22 22 0 0 1 22 22Z"/></g></svg>',
+    class: 'file-icon-pptx'
+},
+
 };
 
 // --- HÀM HỖ TRỢ LẤY ICON FILE DỰA TRÊN MIME TYPE HOẶC TÊN FILE ---
@@ -421,7 +427,7 @@ function getFileIcon(mimeType, fileName) {
             'exe': 'application/x-msdownload',
             'json': 'application/json',
             'txt': 'text/plain',
-            'rar': 'application/x-rar-compressed' 
+            'rar': 'application/x-rar-compressed'
         };
 
         const detectedMimeType = extensionToMimeType[extension];
@@ -472,7 +478,7 @@ function shortenFileName(fileName, maxLength = 30) {
 }
 
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const chatBubble = document.getElementById('chat-bubble');
     const backgroundBlurChat = document.querySelector('.background-blur-chat');
     const sendButton = document.querySelector('.chat-toolbar .send-button');
@@ -484,6 +490,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const scrollToBottomBtn = document.getElementById('scroll-to-bottom-btn');
     const plusButton = document.querySelector('.plus-button');
 
+    let isPickingFile = false;
 
     // --- HÀM HIỂN THỊ THÔNG BÁO TẠM THỜI (Ví dụ: "Đã lưu vào Google Drive") ---
     function showTemporaryNotification(message) {
@@ -580,7 +587,7 @@ document.addEventListener('DOMContentLoaded', function() {
             deleteButton.classList.add('active');
         }, 10);
 
-        copyDownloadButton.addEventListener('click', function(event) {
+        copyDownloadButton.addEventListener('click', function (event) {
             event.stopPropagation();
             if (this.dataset.action === 'download') {
                 const fileUrl = messageBox.dataset.fileUrl;
@@ -606,7 +613,7 @@ document.addEventListener('DOMContentLoaded', function() {
             hideInteractionButtons();
         });
 
-        deleteButton.addEventListener('click', async function(event) {
+        deleteButton.addEventListener('click', async function (event) {
             event.stopPropagation();
             // index là 0-based, tương ứng với vị trí trong mảng messages trả về từ Apps Script
             const messageIndex = messageBox.dataset.messageIndex;
@@ -702,7 +709,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     if (scrollToBottomBtn) {
-        scrollToBottomBtn.addEventListener('click', function(event) {
+        scrollToBottomBtn.addEventListener('click', function (event) {
             event.stopPropagation();
             scrollToBottom();
             setTimeout(() => {
@@ -712,55 +719,63 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // --- Logic Chat Bubble Expand/Collapse ---
-    if (chatBubble) {
-        chatBubble.addEventListener('click', function(event) {
-            if (!this.classList.contains('expanded')) {
-                if (!event.target.closest('#note-background') &&
-                    !event.target.closest('.chat-toolbar') &&
-                    !event.target.closest('.message-box')) {
-                    this.classList.add('expanded');
-                    if (backgroundBlurChat) {
-                        backgroundBlurChat.classList.add('active');
-                    }
-                    scrollToBottom(); // Gọi hàm toàn cục
-                    setTimeout(updateScrollButton, 100);
-                }
-            }
-        });
-
-        document.addEventListener('click', function(event) {
-            if (currentActiveMessageBox && !currentActiveMessageBox.contains(event.target)) {
-                hideInteractionButtons();
-            }
-
-            if (chatBubble.classList.contains('expanded') && !chatBubble.contains(event.target)) {
-                chatBubble.classList.remove('expanded');
+    // Logic Chat Bubble Expand/Collapse
+if (chatBubble) {
+    chatBubble.addEventListener('click', function (event) {
+        if (!this.classList.contains('expanded')) {
+            if (!event.target.closest('#note-background') &&
+                !event.target.closest('.chat-toolbar') &&
+                !event.target.closest('.message-box')) {
+                this.classList.add('expanded');
+                document.body.classList.add('no-scroll'); // Thêm dòng này để khóa scroll
                 if (backgroundBlurChat) {
-                    backgroundBlurChat.classList.remove('active');
+                    backgroundBlurChat.classList.add('active');
                 }
-                if (scrollToBottomBtn) {
-                    scrollToBottomBtn.classList.remove('show');
-                }
+                scrollToBottom(); // Gọi hàm toàn cục [cite: 95]
+                setTimeout(updateScrollButton, 100);
             }
-        });
-    } else {
+        }
+    });
+    document.addEventListener('click', function (event) {
+        if (currentActiveMessageBox && !currentActiveMessageBox.contains(event.target)) {
+            hideInteractionButtons();
+        }
+
+        if (
+            chatBubble.classList.contains('expanded') &&
+            !chatBubble.contains(event.target) &&
+            !event.target.closest('.chat-toolbar') && // đề phòng người dùng click vào thanh công cụ
+            !isPickingFile // <-- dòng quan trọng để ngăn collapse [cite: 96]
+        ) {
+            chatBubble.classList.remove('expanded');
+            document.body.classList.remove('no-scroll'); // Thêm dòng này để bỏ khóa scroll
+            if (backgroundBlurChat) {
+                backgroundBlurChat.classList.remove('active');
+            }
+            if (scrollToBottomBtn) {
+                scrollToBottomBtn.classList.remove('show');
+            }
+        }
+    });
+} else {
         console.error("Không tìm thấy phần tử #chat-bubble. Vui lòng đảm bảo ID chính xác.");
     }
 
     // --- Logic Click vào #note-background để Sync ---
     if (noteBackground && syncLoadingOverlay && chatBubble) {
-        noteBackground.addEventListener('click', async function(event) {
-            event.stopPropagation();
+    noteBackground.addEventListener('click', async function (event) {
+        event.stopPropagation();
 
-            if (!chatBubble.classList.contains('expanded')) {
-                chatBubble.classList.add('expanded');
-                if (backgroundBlurChat) {
-                    backgroundBlurChat.classList.add('active');
-                }
-                scrollToBottom(); // Gọi hàm toàn cục
-                setTimeout(updateScrollButton, 100);
-                return;
+        if (!chatBubble.classList.contains('expanded')) {
+            chatBubble.classList.add('expanded');
+            document.body.classList.add('no-scroll'); // Thêm dòng này để khóa scroll
+            if (backgroundBlurChat) {
+                backgroundBlurChat.classList.add('active');
             }
+            scrollToBottom(); // Gọi hàm toàn cục [cite: 100]
+            setTimeout(updateScrollButton, 100);
+            return;
+        }
 
             if (chatBubble.classList.contains('expanded')) {
                 syncLoadingOverlay.classList.add('active');
@@ -819,7 +834,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // --- XỬ LÝ GỬI TIN NHẮN (VĂN BẢN) ---
     if (sendButton && textInput && chatContentArea && toolbarLoadingOverlay) {
-        sendButton.addEventListener('click', async function() {
+        sendButton.addEventListener('click', async function () {
             const messageText = textInput.value.trim();
 
             if (messageText) {
@@ -858,7 +873,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        textInput.addEventListener('keydown', function(event) {
+        textInput.addEventListener('keydown', function (event) {
             if (event.key === 'Enter' && !event.shiftKey) {
                 event.preventDefault();
                 sendButton.click();
@@ -870,179 +885,183 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // --- XỬ LÝ NÚT PLUS VÀ TẢI FILE LÊN CLOUDINARY HOẶC GOOGLE DRIVE (QUA APPS SCRIPT) ---
     if (plusButton) {
-        plusButton.addEventListener('click', async function(event) {
-            event.stopPropagation();
+    plusButton.addEventListener('click', async function (event) {
+        event.stopPropagation();
 
-            const fileInput = document.createElement('input');
-            fileInput.type = 'file';
-            fileInput.style.display = 'none';
-            document.body.appendChild(fileInput);
+        const fileInput = document.createElement('input');
+        fileInput.type = 'file';
+        fileInput.style.display = 'none';
+        document.body.appendChild(fileInput);
 
-            const fileChosenPromise = new Promise(resolve => {
-                fileInput.addEventListener('change', function handler(e) {
-                    fileInput.removeEventListener('change', handler);
-                    resolve(e.target.files[0]);
-                }, {
-                    once: true
-                });
-            });
+        isPickingFile = true; // Đánh dấu đang chọn file
 
-            fileInput.click();
+        const fileChosenPromise = new Promise(resolve => {
+            fileInput.addEventListener('change', function handler(e) {
+                fileInput.removeEventListener('change', handler);
+                resolve(e.target.files[0]);
+            }, { once: true });
+        });
 
-            const file = await fileChosenPromise;
+        fileInput.click();
 
-            document.body.removeChild(fileInput);
+        const file = await fileChosenPromise;
+        document.body.removeChild(fileInput);
+        isPickingFile = false; // Reset sau khi chọn xong
 
-            if (!file) {
-                console.log("Người dùng đã hủy chọn file.");
-                return;
-            }
+        if (!file) return;
 
             console.log("File được chọn:", file.name, file.type, file.size);
-            toolbarLoadingOverlay.classList.add('active'); // Kích hoạt loading
-
-            let storagePlatform = 'Google Drive'; // Mặc định là Google Drive
-            let useCloudinary = true;
+            toolbarLoadingOverlay.classList.add('active');
 
             try {
-                // --- KIỂM TRA ĐIỀU KIỆN CLOUDINARY TRÊN FRONTEND ---
-                if (file.type.startsWith('image/') && file.size > CLOUDINARY_MAX_IMAGE_SIZE) {
-                    console.warn(`File ảnh quá lớn (${formatFileSize(file.size)}). Chuyển sang Google Drive.`);
-                    useCloudinary = false;
-                } else if (file.type.startsWith('video/') && file.size > CLOUDINARY_MAX_VIDEO_SIZE) {
-                    console.warn(`File video quá lớn (${formatFileSize(file.size)}). Chuyển sang Google Drive.`);
-                    useCloudinary = false;
-                } else if (!file.type.startsWith('image/') && !file.type.startsWith('video/') && file.size > CLOUDINARY_MAX_RAW_SIZE) {
-                    console.warn(`File khác quá lớn (${formatFileSize(file.size)}). Chuyển sang Google Drive.`);
-                    useCloudinary = false;
-                }
+                let uploaded = false;
 
-                // Kiểm tra xem CLOUDINARY_CLOUD_NAME và CLOUDINARY_UPLOAD_PRESET có được cấu hình không
-                if (useCloudinary && CLOUDINARY_CLOUD_NAME && CLOUDINARY_UPLOAD_PRESET) {
+                // --- Ưu tiên Cloudinary ---
+                if (file.size <= CLOUDINARY_MAX_RAW_SIZE && CLOUDINARY_UPLOAD_PRESET && CLOUDINARY_CLOUD_NAME) {
                     try {
-                        // --- BƯỚC 1A: Tải file lên Cloudinary ---
                         const formData = new FormData();
                         formData.append('file', file);
                         formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
-                        formData.append('cloud_name', CLOUDINARY_CLOUD_NAME);
 
-                        const cloudinaryResponse = await fetch(CLOUDINARY_UPLOAD_URL, {
+                        const response = await fetch(CLOUDINARY_UPLOAD_URL, {
                             method: 'POST',
                             body: formData
                         });
 
-                        const cloudinaryResult = await cloudinaryResponse.json();
+                        const result = await response.json();
+                        if (!result.secure_url) throw new Error('Upload Cloudinary thất bại');
 
-                        if (cloudinaryResult.error) {
-                            console.warn('Lỗi từ Cloudinary, thử tải lên Google Drive:', cloudinaryResult.error.message);
-                            useCloudinary = false; // Chuyển sang Google Drive
-                        } else {
-                            storagePlatform = 'Cloudinary';
-                            const fileUrl = cloudinaryResult.secure_url;
-                            const resourceType = cloudinaryResult.resource_type; // 'image', 'video', 'raw'
-                            const cloudinaryFormat = cloudinaryResult.format; // 'jpg', 'mp4', 'rar'
+                        const fileUrl = result.secure_url;
+                        const fileData = {
+                            type: result.resource_type,
+                            fileName: file.name,
+                            mimeType: file.type,
+                            fileSize: file.size,
+                            fileUrl: fileUrl
+                        };
 
-                            let detectedMimeType;
-                            if (resourceType === 'image') {
-                                detectedMimeType = `image/${cloudinaryFormat}`;
-                            } else if (resourceType === 'video') {
-                                detectedMimeType = `video/${cloudinaryFormat}`;
-                            } else if (resourceType === 'raw') {
-                                // Đối với raw files (bao gồm .rar), sử dụng ánh xạ hoặc fallback về type gốc nếu cần
-                                const extension = file.name.toLowerCase().split('.').pop();
-                                const extensionToMimeTypeMap = {
-                                    'rar': 'application/x-rar-compressed',
-                                    'zip': 'application/zip',
-                                    'pdf': 'application/pdf', // Đảm bảo PDF cũng được xử lý nếu nó là 'raw'
-                                    // Thêm các ánh xạ khác nếu cần
-                                };
-                                detectedMimeType = extensionToMimeTypeMap[extension] || file.type;
-                            } else {
-                                detectedMimeType = file.type; // Fallback về MIME type gốc từ trình duyệt
-                            }
+                        const resMeta = await fetch(GAS_WEB_APP_URL, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                            body: JSON.stringify({
+                                action: 'saveFileMetadata',
+                                platform: 'cloudinary',
+                                fileData: fileData
+                            })
+                        });
 
+                        const resJson = await resMeta.json();
+                        if (resJson.status !== 'success') throw new Error('Cloudinary metadata lỗi');
 
-                            const fileSize = cloudinaryResult.bytes;
-                            const fileName = file.name;
-
-                            console.log('File đã tải lên Cloudinary:', fileUrl);
-                            console.log('Detected MIME Type for Cloudinary:', detectedMimeType); // Log để kiểm tra
-
-                            // --- BƯỚC 2A: Lưu metadata file Cloudinary vào Google Sheet qua Apps Script ---
-                            const saveMetadataResponse = await fetch(GAS_WEB_APP_URL, {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'text/plain;charset=utf-8'
-                                },
-                                body: JSON.stringify({
-                                    action: 'saveFileMetadata',
-                                    platform: 'cloudinary',
-                                    fileData: {
-                                        type: resourceType, // Gửi resource type của Cloudinary
-                                        fileName: fileName,
-                                        mimeType: detectedMimeType, // Gửi MIME type đã xử lý
-                                        fileSize: fileSize,
-                                        fileUrl: fileUrl
-                                    }
-                                })
-                            });
-
-                            const saveMetadataResult = await saveMetadataResponse.json();
-
-                            if (saveMetadataResult.status === 'success') {
-                                console.log('Thông tin file Cloudinary đã được lưu vào Sheet:', saveMetadataResult.message);
-                                showTemporaryNotification(`Đã lưu file vào Cloudinary!`);
-                            } else {
-                                console.error('Lỗi khi lưu thông tin file Cloudinary vào Sheet:', saveMetadataResult.message);
-                                alert('Lỗi khi lưu thông tin file Cloudinary vào Sheet: ' + saveMetadataResult.message);
-                                useCloudinary = false; // Nếu lưu metadata thất bại, coi như Cloudinary thất bại
-                            }
-                        }
-                    } catch (cloudinaryUploadError) {
-                        console.warn('Lỗi kết nối Cloudinary, thử tải lên Google Drive:', cloudinaryUploadError);
-                        useCloudinary = false;
+                        showTemporaryNotification('Đã lưu file vào Cloudinary!');
+                        uploaded = true;
+                    } catch (err) {
+                        console.warn('Cloudinary lỗi:', err.message);
                     }
-                } else {
-                    // Nếu Cloudinary không được cấu hình hoặc file quá lớn, buộc phải dùng Google Drive
-                    useCloudinary = false;
                 }
 
+                // --- Fallback sang Dropbox nếu Cloudinary lỗi ---
+                if (!uploaded) {
+                    try {
+                        const DROPBOX_ACCESS_TOKEN = 'sl.u.AFwk4txsPjnqWXHKd-xXgBM-ieVQMBk9S6HDgJZvfX3ip92mCVrjVxR77mBiYCSygbw8zB9HXYgPKNedXZkge86jRZUugl_JLRxCqk5AQftnNXwYHJj9JvhPYsIT4AgHjbtO4wUAf7uvrCfJ7BErES2sitsanCWmloQM4afR7xU_GmgaIIQx-cgB_ZhG5TUeAeXhhCuGSKd7IVlRVV7pXntnhQki9_cBSnz2vWvl3tg4Pg0zKjSnA-T4tBRztxwce0kf3Qsiv5E1v6T5BE5GwupYuavUqTVVycDwOOHE2uSLW5ZE8DSKE8zIeDik2rwSADNdg7zourd-evGKXyjh-b9s2cFb9uF328ALDvZY6Qs4IgYZUp7tbc36K4M93-4ig6a4o2APjITeCChzMe_G0t2gTQFJmw3Gl5jUjqxnvoY5_947ltV7JXLGUmihB97QW8liUn1z864J0XxILGXFAPvbeQqqzUzpDUGtzDd905Gop1V_oCqUeikQ6kCEcpqmlnMhbzfy_wOWj2FSbzMawn_riX0e-U5S5KvviL6ERkcA4BUkcWzMO6Sd7bRZI8PkB9My25C0sZRI84MFvXcqIpllBKUtp3I_gG4sTFkwZhzymqXZJFWHKZWJg6MJpKqwRKVtzk9QrSF19jfisOMUEkbB_IjJaTSro5jftMcLGpe-0ccgZg7uhMcXN_WB6RDfeM-nnjeXPRP7nFdB8f7sOEmwypTumypOGKW2jGtLvBfe_wmA9emmC49b6j3-S_nWRxXKVYgRkmMfvPOp4SpDkjxbZV3-OKqQT_E7rf-laXUq32kQ8TYVkNGjbUsivEmTOjXFth7w1hLOqKFd3pRdepov_yFFaFBsAVU6VRD7Uv-SGO6KcUeQK3Mcwe_Sr8eE85prNx3a91zRsmsahei1WHjB6QuYFxvu7Xqbmh-eetAAv8JMPdXNs_BPPYwywOupD98xNw0KGnz9mzH_HDxmFJ5L3cO6Uw_lSCC6wH-OhQZHDXciWBEoJ_P5Pg4Yl1z6238nkLonoEzNWZP2jGjk8Q1hi573JWHw6o7MZZ-z2BkVBdmCuBkjrOMgQwfcD4i3o1UV8H8pvJHAE5ARmGAxQLKtlaoNyt4Wt3wu6Mjo_e-vGTXxO7fI84n9ToSc5AuhJdgT4tfn9Rok3SRidzjsWmYf_IGsSV4OSQyPhrkpXMJhpKgPENhMne13ZNDA-IbAa5e904zomG_3lZ7KqIyGpjYzv7hPZ44uelRz3hzY1PQDbRYSqbSRIdzna9NkhrI3aGC9rrfiH_Ri0r_DGa8utDHR'; // <-- thay bằng token thật
 
-                if (!useCloudinary) {
-                    // --- BƯỚC 1B: Tải file lên Google Drive QUA APPS SCRIPT ---
-                    storagePlatform = 'Google Drive';
+                        const sanitizedFileName = sanitizeFileName(file.name);
 
-                    const formData = new FormData();
-                    formData.append('action', 'uploadFileToDrive'); // Thêm action cho Apps Script
-                    formData.append('file', file); // Thêm file trực tiếp vào FormData
+                        const uploadRes = await fetch('https://content.dropboxapi.com/2/files/upload', {
+                            method: 'POST',
+                            headers: {
+                                'Authorization': 'Bearer ' + DROPBOX_ACCESS_TOKEN,
+                                'Dropbox-API-Arg': JSON.stringify({
+                                    path: '/' + sanitizedFileName,
+                                    mode: 'add',
+                                    autorename: true
+                                }),
+                                'Content-Type': 'application/octet-stream'
+                            },
+                            body: await file.arrayBuffer()
+                        });
 
-                    const driveUploadResponse = await fetch(GAS_WEB_APP_URL, {
+
+                        if (!uploadRes.ok) throw new Error('Upload Dropbox lỗi');
+                        const uploadJson = await uploadRes.json();
+
+                        const shareRes = await fetch('https://api.dropboxapi.com/2/sharing/create_shared_link_with_settings', {
+                            method: 'POST',
+                            headers: {
+                                'Authorization': 'Bearer ' + DROPBOX_ACCESS_TOKEN,
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                path: uploadJson.path_lower,
+                                settings: { requested_visibility: 'public' }
+                            })
+                        });
+
+                        const shareJson = await shareRes.json();
+
+                        // ✅ Fix hiển thị ảnh Dropbox:
+                        let fileUrl = shareJson.url
+                            .replace('www.dropbox.com', 'dl.dropboxusercontent.com')
+                            .replace('?dl=0', ''); // Xóa ?dl=0 để được link raw ảnh
+
+                        const fileData = {
+                            type: file.type.startsWith('image/') ? 'image' :
+                                file.type.startsWith('video/') ? 'video' : 'file',
+                            fileName: file.name,
+                            mimeType: file.type,
+                            fileSize: file.size,
+                            fileUrl: fileUrl
+                        };
+
+                        const resMeta = await fetch(GAS_WEB_APP_URL, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                            body: JSON.stringify({
+                                action: 'saveFileMetadata',
+                                platform: 'dropbox',
+                                fileData: fileData
+                            })
+                        });
+
+
+                        const resJson = await resMeta.json();
+                        if (resJson.status !== 'success') throw new Error('Dropbox metadata lỗi');
+
+                        showTemporaryNotification('Đã lưu file vào Dropbox!');
+                        uploaded = true;
+                    } catch (err) {
+                        console.warn('Dropbox lỗi:', err.message);
+                    }
+                }
+
+                // --- Cuối cùng: fallback sang Google Drive ---
+                if (!uploaded) {
+                    const base64 = await fileToBase64(file);
+                    const form = new URLSearchParams();
+                    form.append('action', 'uploadFileToDrive');
+                    form.append('fileName', file.name);
+                    form.append('mimeType', file.type);
+                    form.append('fileSize', file.size);
+                    form.append('base64Data', base64.split(',')[1]);
+
+                    const response = await fetch(GAS_WEB_APP_URL, {
                         method: 'POST',
-                        body: formData // Gửi FormData trực tiếp
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: form
                     });
 
-                    const driveUploadResult = await driveUploadResponse.json();
+                    const result = await response.json();
+                    if (result.status !== 'success') throw new Error('Drive upload lỗi');
 
-                    if (driveUploadResult.status === 'success') {
-                        console.log('File đã được tải lên Google Drive qua Apps Script:', driveUploadResult);
-                        showTemporaryNotification(`Đã lưu file vào Google Drive!`);
-                        // Apps Script đã tự lưu metadata, không cần gọi lại
-                    } else {
-                        console.error('Lỗi khi tải file lên Google Drive qua Apps Script:', driveUploadResult.message);
-                        alert('Lỗi khi tải file lên Google Drive: ' + driveUploadResult.message);
-                    }
+                    showTemporaryNotification('Đã lưu file vào Google Drive!');
                 }
 
-                // Luôn làm sạch UI và tải lại tin nhắn sau khi upload xong (hoặc thất bại)
-                textInput.value = '';
-                adjustHeight();
                 await loadAllMessages(true);
-
-            } catch (mainError) {
-                console.error('Lỗi tổng quan trong quá trình tải file:', mainError);
-                alert('Lỗi tổng quan khi tải file: ' + mainError.message);
+            } catch (err) {
+                alert('Lỗi tải file: ' + err.message);
+                console.error('Tải file lỗi:', err);
             } finally {
-                toolbarLoadingOverlay.classList.remove('active'); // Tắt loading
+                toolbarLoadingOverlay.classList.remove('active');
             }
         });
     } else {
@@ -1076,7 +1095,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     const messageBox = document.createElement('div');
                     messageBox.classList.add('message-box');
                     // Gán index + 1 vì Apps Script dùng 1-based index cho hàng
-                    messageBox.dataset.messageIndex = index + 1;
+                    messageBox.dataset.messageIndex = index;
 
                     // Xử lý tin nhắn văn bản
                     if (msgObj.type === 'text') {
@@ -1215,3 +1234,16 @@ document.addEventListener('DOMContentLoaded', function() {
         stars3Element.style.setProperty('--star-animation-height', `${expandedHeight + bufferHeight}px`);
     }
 });
+
+function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = e => resolve(e.target.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+}
+
+function sanitizeFileName(name) {
+    return name.replace(/[^a-zA-Z0-9_.\-]/g, '_');
+}
