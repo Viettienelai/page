@@ -308,6 +308,11 @@ const fileIcons = {
     class: 'file-icon-pdf'
   },
   
+  'image/pdf': {
+  svg: '<svg viewBox="0 0 100 100"><path fill="#fefefe" d="m70 0 20 20v70q0 10-10 10H20q-10 0-10-10V10Q10 0 20 0Z"/><path fill="#d5d5d5" d="m70 0 20 20H73q-3 0-3-3Z"/><path fill="red" d="M60 32q0 3-3 3H10v7q-4 0-4-5V13q0-3 3-3h48q3 0 3 3Z"/><path d="M13.5 28.5v-12h4c7 0 7 7.5 0 7.5h-4Zm15.5-12v12h4c8 0 8-12 0-12Zm24 0h-8v6h8-8v6-12Z" fill="red" stroke="#fff" stroke-width="3" stroke-linejoin="round"/><path fill="#fff" stroke="#fd797d" stroke-width="3" d="M46 51q9 24-15 38c-4 2-8.3 1-4-4q17-18 47-8c5 1.5 7 6.5-1 5q-24-5-34-32c-2.5-8 4-8 7 1Z"/></svg>',
+  class: 'file-icon-pdf'
+},
+
   // Word Documents
   'application/vnd.openxmlformats-officedocument.wordprocessingml.document': { // .docx
     svg: '<svg viewBox="0 0 100 100"><path fill="#fefefe" d="m70 0 20 20v70q0 10-10 10H20q-10 0-10-10V10Q10 0 20 0Z"/><path fill="#d5d5d5" d="m70 0 20 20H73q-3 0-3-3Z"/><path fill="#068EFE" d="M60 32q0 3-3 3H10v7q-4 0-4-5V13q0-3 3-3h48q3 0 3 3Z"/><g fill="#068EFE" stroke="#fff" stroke-width="3" stroke-linejoin="round" transform="translate(-1)"><path d="M13 16.5v12h3c9 0 9-12 0-12Z"/><circle cx="34" cy="22.5" r="6"/><path d="m55 27 .5-.5a6 6 0 1 1 0-8L55 18" fill="none"/></g><path d="M25 50h35Zm0 9h35Zm0 9h50Zm0 9h50Zm0 9h50Z" stroke="#A4E1FD" stroke-width="3" stroke-linejoin="round"/></svg>',
@@ -396,6 +401,7 @@ function getFileIcon(mimeType, fileName) {
     
     // Map phần mở rộng tới MIME type
     const extensionToMimeType = {
+      'pdf': 'application/pdf',
       'js': 'application/javascript',
       'javascript': 'application/javascript',
       'zip': 'application/zip',
@@ -1029,129 +1035,128 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // --- TẢI TẤT CẢ TIN NHẮN (BAO GỒM VĂN BẢN VÀ FILE) ---
   async function loadAllMessages(forceScrollToBottom = false) {
-    if (!chatContentArea) return;
+  if (!chatContentArea) return;
 
-    const currentScrollTop = chatContentArea.scrollTop;
-    const currentScrollHeight = chatContentArea.scrollHeight;
+  const currentScrollTop = chatContentArea.scrollTop;
+  const currentScrollHeight = chatContentArea.scrollHeight;
 
-    try {
-      const response = await fetch(GAS_WEB_APP_URL + '?action=getAllMessages', {
-        method: 'GET'
-      });
+  try {
+    const response = await fetch(GAS_WEB_APP_URL + '?action=getAllMessages', {
+      method: 'GET'
+    });
 
-      const messages = await response.json(); // Nhận mảng các đối tượng tin nhắn/file
-      chatContentArea.innerHTML = ''; // Xóa nội dung cũ
+    const messages = await response.json();
+    chatContentArea.innerHTML = '';
 
-      // Sắp xếp tin nhắn theo Timestamp nếu có, nếu không thì theo thứ tự nhận được
-      messages.sort((a, b) => {
-        const timeA = a.timestamp ? new Date(a.timestamp).getTime() : 0;
-        const timeB = b.timestamp ? new Date(b.timestamp).getTime() : 0;
-        return timeA - timeB;
-      });
+    messages.sort((a, b) => {
+      const timeA = a.timestamp ? new Date(a.timestamp).getTime() : 0;
+      const timeB = b.timestamp ? new Date(b.timestamp).getTime() : 0;
+      return timeA - timeB;
+    });
 
-      messages.forEach((msgObj, index) => {
-        if (msgObj) {
-          const messageBox = document.createElement('div');
-          messageBox.classList.add('message-box');
-          // dataset.messageIndex để dễ dàng xác định hàng trong Google Sheet để xóa
-          messageBox.dataset.messageIndex = index + 1; // +1 vì Apps Script dùng index 1 dựa
+    messages.forEach((msgObj, index) => {
+      if (msgObj) {
+        const messageBox = document.createElement('div');
+        messageBox.classList.add('message-box');
+        messageBox.dataset.messageIndex = index + 1;
 
-          if (msgObj.type === 'text') {
-            const paragraph = document.createElement('p');
-            paragraph.textContent = msgObj.content;
-            messageBox.appendChild(paragraph);
-          } else { // Đây là một loại file (image, video, audio, file)
-            const fileLink = msgObj.fileUrl;
-            const fileName = msgObj.fileName;
-            const fileSize = msgObj.fileSize;
-            const mimeType = msgObj.mimeType; // Lấy mimeType để xác định icon
+        // Xử lý tin nhắn văn bản
+        if (msgObj.type === 'text') {
+          const paragraph = document.createElement('p');
+          paragraph.textContent = msgObj.content;
+          messageBox.appendChild(paragraph);
+        } else { // Xử lý file (bao gồm image/pdf)
+          const fileLink = msgObj.fileUrl;
+          const fileName = msgObj.fileName;
+          const fileSize = msgObj.fileSize;
+          let mimeType = msgObj.mimeType;
 
-            // Luôn gán fileUrl vào dataset cho nút download/copy
-            messageBox.dataset.fileUrl = fileLink;
-
-            // Xử lý hiển thị dựa trên type
-            if (msgObj.type === 'image') {
-              const img = document.createElement('img');
-              img.src = fileLink;
-              img.alt = fileName;
-              img.classList.add('chat-image'); // Thêm class để áp dụng CSS
-              messageBox.appendChild(img);
-            } else if (msgObj.type === 'video') {
-              const video = document.createElement('video');
-              video.src = fileLink;
-              video.controls = true; // Cho phép điều khiển video
-              video.preload = 'metadata'; // Tải metadata để hiển thị thumbnail
-              video.alt = fileName;
-              video.classList.add('chat-video'); // Thêm class để áp dụng CSS
-              messageBox.appendChild(video);
-            } else if (msgObj.type === 'audio') {
-              const audio = document.createElement('audio');
-              audio.src = fileLink;
-              audio.controls = true; // Cho phép điều khiển âm thanh
-              audio.preload = 'metadata'; // Tải metadata
-              audio.alt = fileName;
-              audio.classList.add('chat-audio'); // Thêm class nếu bạn có CSS cho audio
-              messageBox.appendChild(audio);
-
-              // Thêm tên file cho audio để người dùng dễ nhận biết (tùy chọn)
-              const audioFileNameP = document.createElement('p');
-              audioFileNameP.classList.add('file-name');
-              audioFileNameP.textContent = shortenFileName(fileName, 25); // Áp dụng hàm rút gọn tên file
-              messageBox.appendChild(audioFileNameP);
-
-            } else { // Các loại file khác (type === 'file' hoặc bất kỳ type nào chưa được xử lý đặc biệt)
-              const fileContentDiv = document.createElement('div');
-              fileContentDiv.classList.add('file-content');
-
-              // --- XÁC ĐỊNH VÀ CHÈN ICON SVG ---
-              const fileIconInfo = fileIcons[mimeType] || fileIcons['default'];
-              const iconContainer = document.createElement('div');
-              iconContainer.classList.add('file-avatar-container');
-              if (fileIconInfo.class) {
-                iconContainer.classList.add(fileIconInfo.class); // Thêm class riêng cho icon
-              }
-              iconContainer.innerHTML = fileIconInfo.svg; // Chèn SVG trực tiếp
-
-              fileContentDiv.appendChild(iconContainer);
-              // --- HẾT XÁC ĐỊNH VÀ CHÈN ICON SVG ---
-
-              const fileInfoDiv = document.createElement('div');
-              fileInfoDiv.classList.add('file-info');
-
-              const fileNameP = document.createElement('p');
-              fileNameP.classList.add('file-name');
-              fileNameP.textContent = shortenFileName(fileName, 25); // Áp dụng hàm rút gọn tên file
-              fileInfoDiv.appendChild(fileNameP);
-
-              const fileSizeP = document.createElement('p');
-              fileSizeP.classList.add('file-size');
-              fileSizeP.textContent = formatFileSize(fileSize);
-              fileInfoDiv.appendChild(fileSizeP);
-
-              fileContentDiv.appendChild(fileInfoDiv);
-              messageBox.appendChild(fileContentDiv);
-            }
+          // Sửa MIME type cho PDF
+          if (mimeType === 'image/pdf') {
+            mimeType = 'application/pdf';
           }
-          chatContentArea.appendChild(messageBox);
+
+          messageBox.dataset.fileUrl = fileLink;
+
+          // Xử lý hiển thị dựa trên type
+          if (msgObj.type === 'image' && mimeType !== 'application/pdf') {
+            const img = document.createElement('img');
+            img.src = fileLink;
+            img.alt = fileName;
+            img.classList.add('chat-image');
+            messageBox.appendChild(img);
+          } else if (msgObj.type === 'video') {
+            const video = document.createElement('video');
+            video.src = fileLink;
+            video.controls = true;
+            video.preload = 'metadata';
+            video.alt = fileName;
+            video.classList.add('chat-video');
+            messageBox.appendChild(video);
+          } else if (msgObj.type === 'audio') {
+            const audio = document.createElement('audio');
+            audio.src = fileLink;
+            audio.controls = true;
+            audio.preload = 'metadata';
+            audio.alt = fileName;
+            audio.classList.add('chat-audio');
+            messageBox.appendChild(audio);
+
+            const audioFileNameP = document.createElement('p');
+            audioFileNameP.classList.add('file-name');
+            audioFileNameP.textContent = shortenFileName(fileName, 25);
+            messageBox.appendChild(audioFileNameP);
+          } else { // Xử lý các file khác, bao gồm PDF
+            const fileContentDiv = document.createElement('div');
+            fileContentDiv.classList.add('file-content');
+
+            const fileIconInfo = getFileIcon(mimeType, fileName);
+            const iconContainer = document.createElement('div');
+            iconContainer.classList.add('file-avatar-container');
+            if (fileIconInfo.class) {
+              iconContainer.classList.add(fileIconInfo.class);
+            }
+            iconContainer.innerHTML = fileIconInfo.svg;
+
+            fileContentDiv.appendChild(iconContainer);
+
+            const fileInfoDiv = document.createElement('div');
+            fileInfoDiv.classList.add('file-info');
+
+            const fileNameP = document.createElement('p');
+            fileNameP.classList.add('file-name');
+            fileNameP.textContent = shortenFileName(fileName, 25);
+            fileInfoDiv.appendChild(fileNameP);
+
+            const fileSizeP = document.createElement('p');
+            fileSizeP.classList.add('file-size');
+            fileSizeP.textContent = formatFileSize(fileSize);
+            fileInfoDiv.appendChild(fileSizeP);
+
+            fileContentDiv.appendChild(fileInfoDiv);
+            messageBox.appendChild(fileContentDiv);
+          }
         }
-      });
-
-      if (forceScrollToBottom) {
-        scrollToBottom();
-      } else {
-        const newScrollHeight = chatContentArea.scrollHeight;
-        const scrollRatio = currentScrollTop / currentScrollHeight;
-        chatContentArea.scrollTop = scrollRatio * newScrollHeight;
+        chatContentArea.appendChild(messageBox);
       }
+    });
 
-      addMessageBoxEventListeners();
-      setTimeout(updateScrollButton, 100);
-
-    } catch (error) {
-      console.error('Lỗi khi tải tin nhắn:', error);
-      alert('Lỗi khi tải tin nhắn: ' + error.message);
+    if (forceScrollToBottom) {
+      scrollToBottom();
+    } else {
+      const newScrollHeight = chatContentArea.scrollHeight;
+      const scrollRatio = currentScrollTop / currentScrollHeight;
+      chatContentArea.scrollTop = scrollRatio * newScrollHeight;
     }
+
+    addMessageBoxEventListeners();
+    setTimeout(updateScrollButton, 100);
+
+  } catch (error) {
+    console.error('Lỗi khi tải tin nhắn:', error);
+    alert('Lỗi khi tải tin nhắn: ' + error.message);
   }
+}
 
 
   // Khởi tạo các ngôi sao
