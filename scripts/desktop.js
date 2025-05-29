@@ -279,7 +279,7 @@ document.querySelectorAll('.popup-bookmarks-grid .bookmark-item')
 
 // Cấu hình Google Apps Script Web App URL
 // <<< THAY THẾ BẰNG URL THỰC CỦA BẠN TỪ GOOGLE APPS SCRIPT SAU KHI TRIỂN KHAI >>>
-const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxT8FV7-tRKdIdfqC-BT8Euu080yCmcZyTa8FkPAPokuBPJFJvMSlGw-38OnYr5WXr2/exec';
+const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwYI-4gxCDTAyeVdb7MJHLYCfeEGH72rdZO_fxzF4VczUaqx1KpsxbCmfkQCx5P3OGy/exec';
 
 // Cấu hình Cloudinary
 // <<< THAY THẾ BẰNG CLOUD NAME CỦA BẠN >>>
