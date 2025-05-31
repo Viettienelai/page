@@ -338,7 +338,7 @@ const fileIcons = {
 
     // HTML Files
     'text/html': { // .html
-        svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path fill="#E34F26" d="M0 32l34.9 395.8L192 480l157.1-52.2L384 32H0zm308.2 114.9L192 216.5 75.8 146.9 64 36.5h256l-11.8 110.4zM192 373.8l-68.1-18.5-4.7-47.5H57.4l11.6 117 123 34.1 123-34.1 11.6-117H303.4l-4.7 47.5-68.1 18.5z"/></svg>',
+        svg: '<svg viewBox="0 0 100 100"><path fill="#fefefe" d="m70 0 20 20v70q0 10-10 10H20q-10 0-10-10V10Q10 0 20 0Z"/><path fill="#d5d5d5" d="m70 0 20 20H73q-3 0-3-3Z"/><path fill="#FE490F" d="M60 32q0 3-3 3H10v7q-4 0-4-5V13q0-3 3-3h48q3 0 3 3Z"/><path stroke="#fff" stroke-width="3" stroke-linejoin="round" d="M13 22.5v-6 12-6h6v-6 12-6m5-6h6-3v12-12ZM35 24v4.5-12l3 7.5 3-7.5v12V24m5-7.5v12h6-6Z"/><path fill="#FD7D3A" d="M56 50h5L44 85h-5Zm24 21-15 8v-5l15-8-15-8v5l10 5.66L80 66m-60 5 15 8v-5l-15-8 15-8v5l-10 5.66L20 66"/></svg>',
         class: 'file-icon-html'
     },
 
@@ -384,7 +384,7 @@ const fileIcons = {
     },
 
     'text/plain': {
-        svg: '<svg viewBox="0 0 100 100"><path fill="#fefefe" d="m70 0 20 20v70q0 10-10 10H20q-10 0-10-10V10Q10 0 20 0Z"/><path fill="#d5d5d5" d="m70 0 20 20H73q-3 0-3-3Z"/><path fill="#69bee3" d="M60 32q0 3-3 3H10v7q-4 0-4-5V13q0-3 3-3h48q3 0 3 3Z"/><path stroke="#fff" stroke-width="3" stroke-linejoin="round" d="M23 16.5h-9 4.5v12-12Z"/><path fill="#F97316" stroke="#fff" stroke-width="3" stroke-linejoin="round" d="m29 28.5 8.5-12-4.25 6-4.25-6 8.5 12-4.25-6Z"/><path stroke="#fff" stroke-width="3" stroke-linejoin="round" d="M52 16.5h-9 4.5v12-12Z"/><path fill="#a9daea" d="M30 45h40v10h-4l-1-6h-7.5v37l7.5 1v3H35v-3l7.5-1V49H35l-1 6h-4Z"/></svg>',
+        svg: '<svg viewBox="0 0 100 100"><path fill="#fefefe" d="m70 0 20 20v70q0 10-10 10H20q-10 0-10-10V10Q10 0 20 0Z"/><path fill="#d5d5d5" d="m70 0 20 20H73q-3 0-3-3Z"/><path fill="#0086fe" d="M60 32q0 3-3 3H10v7q-4 0-4-5V13q0-3 3-3h48q3 0 3 3Z"/><path stroke="#fff" stroke-width="3" stroke-linejoin="round" d="M23 16.5h-9 4.5v12-12Z"/><path fill="#F97316" stroke="#fff" stroke-width="3" stroke-linejoin="round" d="m29 28.5 8.5-12-4.25 6-4.25-6 8.5 12-4.25-6Z"/><path stroke="#fff" stroke-width="3" stroke-linejoin="round" d="M52 16.5h-9 4.5v12-12Z"/><path fill="#63bffe" d="M30 45h40v10h-4l-1-6h-7.5v37l7.5 1v3H35v-3l7.5-1V49H35l-1 6h-4Z"/></svg>',
         class: 'file-icon-txt'
     },
 
@@ -1012,7 +1012,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                         const shareJson = await shareRes.json();
 
-                        // ✅ Fix hiển thị ảnh Dropbox:
+                        // Fix hiển thị ảnh Dropbox:
                         let fileUrl = shareJson.url
                             .replace('www.dropbox.com', 'dl.dropboxusercontent.com')
                             .replace('?dl=0', ''); // Xóa ?dl=0 để được link raw ảnh
