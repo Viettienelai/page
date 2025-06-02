@@ -830,7 +830,7 @@ body {
   border-radius: 100px;
   background: radial-gradient(ellipse at bottom, #6d97c6 0%, #dfdfc2 100%);
   box-sizing: border-box;
-  transition: all 0.5s cubic-bezier(0.2, 0.95, 0.4, 0.95);
+  transition: all 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940);
   pointer-events: auto;
   z-index: 10000;
   overflow: hidden;
@@ -859,13 +859,7 @@ body {
   z-index: 9;
   /* Đặt dưới chat-bubble nhưng trên background-blur-chat */
   opacity: 0;
-  /* Mặc định ẩn */
-  transition: width 0.5s cubic-bezier(0.2, 0.95, 0.4, 0.95),
-    height 0.5s cubic-bezier(0.2, 0.95, 0.4, 0.95),
-    top 0.5s cubic-bezier(0.2, 0.95, 0.4, 0.95),
-    right 0.5s cubic-bezier(0.2, 0.95, 0.4, 0.95),
-    border-radius 0.5s cubic-bezier(0.2, 0.95, 0.4, 0.95),
-    opacity 0.3s ease;
+  transition: all 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940);
   /* Thêm transition cho opacity */
 }
 
