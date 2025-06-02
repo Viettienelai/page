@@ -275,7 +275,7 @@ body {
   transform: translateX(-50%);
   width: 650px;
   height: 150px;
-  z-index: 14;
+  z-index: 4;
   animation: clock 1s cubic-bezier(0.2, 0.95, 0.4, 0.95) forwards;
 }
 
@@ -832,7 +832,7 @@ body {
   box-sizing: border-box;
   transition: all 0.5s cubic-bezier(0.2, 0.95, 0.4, 0.95);
   pointer-events: auto;
-  z-index: 1000;
+  z-index: 10000;
   overflow: hidden;
 }
 
@@ -903,8 +903,8 @@ body {
 /* Khi chat-bubble.expanded, điều chỉnh border-effect theo */
 #chat-bubble.expanded+.chat-bubble-border-effect {
   width: 910px;
-  height: 490px;
-  top: 85px;
+  height: 710px;
+  top: -115px;
   right: -55px;
   border-radius: 25px;
   /* Hình vuông/chữ nhật với góc bo */
@@ -914,10 +914,11 @@ body {
 
 #chat-bubble.expanded {
   width: 900px;
-  height: 480px;
-  top: 90px;
+  height: 700px;
+  top: -110px;
   right: -50px;
   border-radius: 20px;
+  z-index: 1000001;
 }
 
 .chat-bubble-background {
@@ -1267,7 +1268,7 @@ body {
 
 .chat-content-area {
   width: 900px;
-  height: 478px;
+  height: 700px;
   top: 0px;
   box-sizing: border-box;
   overflow-y: auto;
@@ -1786,7 +1787,7 @@ body {
 
 .scroll-to-bottom-btn {
   position: absolute;
-  top: 340px;
+  top: 560px;
   left: 50%;
   transform: translateX(-50%);
   width: 40px;
