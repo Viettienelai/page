@@ -1124,8 +1124,7 @@ body {
   position: absolute;
   width: 700px;
   bottom: 0px;
-  left: 50%;
-  transform: translateX(-50%);
+  right: 100px;
   box-sizing: border-box;
   gap: 20px;
   z-index: 1;
@@ -1276,12 +1275,11 @@ body {
   z-index: 1;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 15px;
   padding-bottom: 100px;
   padding-top: 30px;
   align-items: flex-end;
   z-index: 0;
-  border: none;
 }
 
 .message-box {
@@ -1313,169 +1311,197 @@ body {
   box-shadow: 0 0px 12px rgba(0, 0, 0, 0.5);
 }
 
-.message-box p {
-  margin: 2px 0px 0px 1px;
-  font-size: 16px;
-  color: #333;
-  line-height: 1.5;
-  text-align: left;
-  white-space: pre-wrap;
-  margin: 5px 15px;
+/* Styles cho tin nhắn văn bản */
+.message-box .message-content p {
+    margin: 5px 15px; /* Giữ margin của bạn */
+    font-size: 16px;
+    color: #333; /* Màu chữ cho tin nhắn văn bản, thường là đen hoặc xám đậm */
+    line-height: 1.5;
+    text-align: left;
+    white-space: pre-wrap; /* Giữ định dạng khoảng trắng và xuống dòng */
 }
 
 /* Styles cho ảnh trong message-box */
 .chat-image {
-  max-width: 400px;
-  /* Chiều rộng tối đa */
-  max-height: 200px;
-  /* Chiều cao tối đa */
-  height: auto;
-  /* Đảm bảo tỷ lệ khung hình được duy trì */
-  display: block;
-  /* Loại bỏ khoảng trắng thừa dưới ảnh */
-  border-radius: 15px;
-  /* Bo tròn góc cho ảnh */
-  object-fit: contain;
-  margin: 10px;
-  /* Khoảng cách trên dưới cho ảnh */
+    max-width: 400px;
+    /* Chiều rộng tối đa */
+    max-height: 200px;
+    /* Chiều cao tối đa */
+    height: auto;
+    /* Đảm bảo tỷ lệ khung hình được duy trì */
+    display: block;
+    /* Loại bỏ khoảng trắng thừa dưới ảnh */
+    border-radius: 15px;
+    /* Bo tròn góc cho ảnh */
+    object-fit: contain;
 }
 
+/* Styles cho video trong message-box */
 .chat-video {
-  max-width: 400px;
-  /* Chiều rộng tối đa */
-  max-height: 200px;
-  /* Chiều cao tối đa */
-  height: auto;
-  /* Đảm bảo tỷ lệ khung hình được duy trì */
-  display: block;
-  /* Loại bỏ khoảng trắng thừa dưới video */
-  border-radius: 15px;
-  /* Bo tròn góc cho video */
-  object-fit: contain;
-  /* Đảm bảo video hiển thị đầy đủ trong khung */
-  margin: 10px;
-  /* Khoảng cách trên dưới cho video */
+    max-width: 400px;
+    /* Chiều rộng tối đa */
+    max-height: 200px;
+    /* Chiều cao tối đa */
+    height: auto;
+    /* Đảm bảo tỷ lệ khung hình được duy trì */
+    display: block;
+    /* Loại bỏ khoảng trắng thừa dưới video */
+    border-radius: 15px;
+    /* Bo tròn góc cho video */
+    object-fit: contain;
+    /* Đảm bảo video hiển thị đầy đủ trong khung */
 }
 
-/* Styles cho file box */
-.file-content {
-  display: flex;
-  align-items: center;
-  min-width: 200px;
-  max-width: 400px;
-  height: 80px;
-  padding: 10px 20px;
-  box-sizing: border-box;
-  border-radius: 20px;
+/* Styles chung cho box chứa file (không phải ảnh/video/audio) */
+.chat-file {
+    display: flex;
+    align-items: center;
+    min-width: 200px;
+    max-width: 400px;
+    height: 80px; /* Chiều cao cố định cho box file */
+    padding: 10px 20px;
+    box-sizing: border-box;
+    border-radius: 20px;
+    background-color: rgba(80, 80, 80, 0.3); /* Màu nền mặc định cho file box */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.message-box:has(.file-content) {
-  background-color: rgba(80, 80, 80, 0.3);
+.chat-file:hover {
+    background-color: rgba(80, 80, 80, 0.6);
+    box-shadow: 0 0px 20px rgba(255, 255, 255, 0.5);
 }
 
-.message-box:has(.file-content):hover {
-  background-color: rgba(80, 80, 80, 0.6);
-  box-shadow: 0 0px 20px rgba(255, 255, 255, 0.5);
+.message-box:has(.chat-file) {
+  background-color: transparent;
 }
 
-.message-box .file-info {
-  height: 55px;
+.message-box:has(.chat-file):hover {
+  box-shadow: 0 0px 12px rgba(255, 255, 255, 0.5);
+}
+/* Styles cho phần thông tin file (icon, tên, kích thước) */
+.file-info {
+    display: flex;
+    align-items: center;
+    flex-grow: 1; /* Cho phép phần info chiếm đủ không gian */
+    height: 55px;
 }
 
-.message-box .file-info .file-name {
-  font-size: 17px;
-  margin: 0px;
-  color: #ffffff;
-  font-weight: 500;
+/* Styles cho tên file */
+.file-details .file-name {
+    font-size: 17px;
+    position: relative;
+    top: 0px;
+    color: #ffffff; /* Màu chữ trắng cho tên file */
+    font-weight: 500;
+    white-space: nowrap; /* Ngăn tên file xuống dòng */
+    overflow: hidden; /* Ẩn phần tràn */
+    text-overflow: ellipsis;
 }
 
-.message-box .file-info .file-size {
-  font-size: 14px;
-  margin: 7px;
-  color: #dcdcdc;
+/* Styles cho kích thước file */
+.file-details .file-size {
+    font-size: 14px;
+    margin-top: 10px; /* Khoảng cách với tên file */
+    color: #dcdcdc; /* Màu chữ xám nhạt cho kích thước file */
+    display: block; /* Đảm bảo kích thước file nằm trên dòng mới */
 }
 
+/* Styles cho container icon file SVG */
 .file-avatar-container {
-  width: 55px;
-  height: 55px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  margin-right: 13px;
+    width: 55px;
+    height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-right: 13px;
 }
 
 .file-avatar-container svg {
-  width: 100%;
-  height: 100%;
+    width: 55px; /* Điều chỉnh kích thước icon bên trong container */
+    height: 55px;
 }
 
-
-/* Định dạng cho Audio Box bên trong message-box */
-.message-box .chat-audio {
-    position: absolute;
-    bottom: 10px;
-    display: block; /* Đảm bảo audio element là một block */
-    max-width: 800px; /* Chiều rộng tối đa */
-    width: 580px; /* Chiều rộng tương đối, sẽ chiếm toàn bộ không gian có sẵn trong message-box */
-    height: 40px;
-    border-radius: 0px;
-    overflow: hidden; /* Ẩn nội dung tràn */
-    background-color: transparent;
+.message-box:has(.chat-audio) {
+  border-radius: 25px;
+  background-color: transparent;
 }
 
-/* Định dạng cho tên file trong Audio Box, nằm bên trong message-box */
-.message-box .chat-audio + .file-name {
-    position: absolute;
-    top: 8px;
-    left: 10px; /* Căn lề trái cho tên file */
-    width: 580px;
-    display: -webkit-box; /* Cho phép hiển thị nhiều dòng */
-    -webkit-line-clamp: 2; /* Giới hạn 2 dòng */
-    -webkit-box-orient: vertical;
-    text-overflow: ellipsis; /* Hiển thị dấu ba chấm nếu tràn */
-    max-height: 2.8em; /* Chiều cao tối đa cho 2 dòng (khoảng 1.4em mỗi dòng) */
-    font-size: 17; /* Kích thước font nhỏ hơn một chút */
-    color: #ffffff;
-    word-break: break-word; /* Ngắt từ nếu tên quá dài để tránh tràn */
-    line-height: 1.5;
-    display: flex;
-    justify-content: center;
-    font-weight: 500;
+.message-box:has(.chat-audio):hover {
+  box-shadow: none;
 }
 
-/* Điều chỉnh lại chiều cao tổng thể của message-box khi nó chứa audio */
+.chat-audio {
+    display: flex; /* Sử dụng flexbox để căn chỉnh các phần tử bên trong */
+    align-items: center;
+    width: 500px; /* Chiều rộng tối đa */
+    height: 130px; /* Chiều cao cố định cho audio box */
+    padding: 10px 15px;
+    box-sizing: border-box;
+    border-radius: 25px;
+    background-color: rgba(80, 80, 80, 0.3);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.chat-audio:hover {
+    background-color: rgba(80, 80, 80, 0.6);
+    box-shadow: 0 0px 20px rgba(255, 255, 255, 0.5);
+}
+
+.chat-audio .file-avatar-container {
+  position: absolute;
+  top: 0px;
+  left: -70px;
+}
+
+.chat-audio .file-info {
+  position: absolute;
+  top: 15px;
+  left: 90px;
+}
+.chat-audio audio {
+  position: absolute;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+    width: 94%; /* Chiều rộng cố định cho audio control */
+    height: 40px; /* Chiều cao của audio control */
+}
+
+/* Điều chỉnh lại chiều cao tổng thể của message-box khi nó chứa audio
+   Không cần điều chỉnh `message-box` dựa trên `.chat-audio` bằng :has()
+   vì `.chat-audio` đã là một phần tử có kích thước xác định
+*/
+/*
 .message-box:has(.chat-audio) {
     width: 600px;
     height: 100px;
     border-radius: 30px;
     background-color: rgba(80, 80, 80, 0.3);
 }
+*/
 
-.message-box:has(.chat-audio):hover {
-  background-color: rgba(80, 80, 80, 0.5);
-  box-shadow: 0 0px 20px rgba(255, 255, 255, 0.5);
-}
-
+/* Styles cho thông báo tạm thời */
 .temporary-notification {
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%) translateY(100%);
-  background-color: rgba(0, 0, 0, 0.7);
-  color: white;
-  padding: 10px 20px;
-  border-radius: 5px;
-  opacity: 0;
-  transition: transform 0.3s ease-out, opacity 0.3s ease-out;
-  z-index: 1000;
-  font-size: 0.9em;
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100%);
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    opacity: 0;
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+    z-index: 1000;
+    font-size: 0.9em;
 }
 
 .temporary-notification.show {
-  transform: translateX(-50%) translateY(0);
-  opacity: 1;
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
 }
+
 
 .interaction-button {
   position: absolute;

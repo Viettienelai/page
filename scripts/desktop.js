@@ -277,176 +277,124 @@ document.querySelectorAll('.popup-bookmarks-grid .bookmark-item')
 
 
 
-// Cấu hình Google Apps Script Web App URL
-// <<< THAY THẾ BẰNG URL THỰC CỦA BẠN TỪ GOOGLE APPS SCRIPT SAU KHI TRIỂN KHAI >>>
-const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzNvrO9iuBSwtkM0rzrnGH1wldU5miMKsNIGuMv0mx8AufL9oxv9OQfQZHErD6M8oG5mQ/exec';
-
-// Cấu hình Cloudinary
-// <<< THAY THẾ BẰNG CLOUD NAME CỦA BẠN >>>
-const CLOUDINARY_CLOUD_NAME = 'dxwwkauuj';
-// <<< THAY THẾ BẰNG TÊN UPLOAD PRESET MÀ BẠN ĐÃ TẠO VỚI 'Unsigned' >>>
-const CLOUDINARY_UPLOAD_PRESET = 'my_chat_upload'; // Ví dụ: 'my_chat_upload'
-
-// URL upload của Cloudinary (dùng cho unsigned uploads)
-const CLOUDINARY_UPLOAD_URL = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/upload`;
-
-// Google Drive Folder ID (chỉ để hiển thị cho biết, không dùng để upload trực tiếp từ JS)
-// Upload giờ sẽ qua Apps Script.
-const DRIVE_FOLDER_ID_INFO = '10hazXwlU-Lg_22FxYstRkI3ABvpYh4nM'; // Đây chỉ là biến thông tin, không dùng trong upload
-
-// --- GIỚI HẠN CLOUDINARY (Bytes) ---
-const CLOUDINARY_MAX_IMAGE_SIZE = 10 * 1024 * 1024; // 10 MB
-const CLOUDINARY_MAX_VIDEO_SIZE = 100 * 1024 * 1024; // 100 MB
-const CLOUDINARY_MAX_RAW_SIZE = 10 * 1024 * 1024; // 10 MB
-
-// Khai báo biến này ở phạm vi toàn cục
-let currentActiveMessageBox = null;
-let chatContentArea = null; // Khai báo biến chatContentArea ở phạm vi toàn cục
-
-// --- ĐỐI TƯỢNG CHỨA CÁC ICON SVG CHO TỪNG LOẠI FILE DỰA TRÊN MIME TYPE ---
-const fileIcons = {
-    // PDF Files
-    'application/pdf': {
-        svg: '<svg viewBox="0 0 100 100"><path fill="#fefefe" d="m70 0 20 20v70q0 10-10 10H20q-10 0-10-10V10Q10 0 20 0Z"/><path fill="#d5d5d5" d="m70 0 20 20H73q-3 0-3-3Z"/><path fill="red" d="M60 32q0 3-3 3H10v7q-4 0-4-5V13q0-3 3-3h48q3 0 3 3Z"/><path d="M13.5 28.5v-12h4c7 0 7 7.5 0 7.5h-4Zm15.5-12v12h4c8 0 8-12 0-12Zm24 0h-8v6h8-8v6-12Z" fill="red" stroke="#fff" stroke-width="3" stroke-linejoin="round"/><path fill="#fff" stroke="#fd797d" stroke-width="3" d="M46 51q9 24-15 38c-4 2-8.3 1-4-4q17-18 47-8c5 1.5 7 6.5-1 5q-24-5-34-32c-2.5-8 4-8 7 1Z"/></svg>',
-        class: 'file-icon-pdf'
-    },
-
-    'image/pdf': { // Vẫn giữ cái này để fallback nếu mimeType từ backend bị sai
-        svg: '<svg viewBox="0 0 100 100"><path fill="#fefefe" d="m70 0 20 20v70q0 10-10 10H20q-10 0-10-10V10Q10 0 20 0Z"/><path fill="#d5d5d5" d="m70 0 20 20H73q-3 0-3-3Z"/><path fill="red" d="M60 32q0 3-3 3H10v7q-4 0-4-5V13q0-3 3-3h48q3 0 3 3Z"/><path d="M13.5 28.5v-12h4c7 0 7 7.5 0 7.5h-4Zm15.5-12v12h4c8 0 8-12 0-12Zm24 0h-8v6h8-8v6-12Z" fill="red" stroke="#fff" stroke-width="3" stroke-linejoin="round"/><path fill="#fff" stroke="#fd797d" stroke-width="3" d="M46 51q9 24-15 38c-4 2-8.3 1-4-4q17-18 47-8c5 1.5 7 6.5-1 5q-24-5-34-32c-2.5-8 4-8 7 1Z"/></svg>',
-        class: 'file-icon-pdf'
-    },
-
-    // Word Documents
-    'application/vnd.openxmlformats-officedocument.wordprocessingml.document': { // .docx
-        svg: '<svg viewBox="0 0 100 100"><path fill="#fefefe" d="m70 0 20 20v70q0 10-10 10H20q-10 0-10-10V10Q10 0 20 0Z"/><path fill="#d5d5d5" d="m70 0 20 20H73q-3 0-3-3Z"/><path fill="#068EFE" d="M60 32q0 3-3 3H10v7q-4 0-4-5V13q0-3 3-3h48q3 0 3 3Z"/><g fill="#068EFE" stroke="#fff" stroke-width="3" stroke-linejoin="round" transform="translate(-1)"><path d="M13 16.5v12h3c9 0 9-12 0-12Z"/><circle cx="34" cy="22.5" r="6"/><path d="m55 27 .5-.5a6 6 0 1 1 0-8L55 18" fill="none"/></g><path d="M25 50h35Zm0 9h35Zm0 9h50Zm0 9h50Zm0 9h50Z" stroke="#A4E1FD" stroke-width="3" stroke-linejoin="round"/></svg>',
-        class: 'file-icon-docx'
-    },
-    'application/msword': { // .doc
-        svg: '<svg viewBox="0 0 100 100"><path fill="#fefefe" d="m70 0 20 20v70q0 10-10 10H20q-10 0-10-10V10Q10 0 20 0Z"/><path fill="#d5d5d5" d="m70 0 20 20H73q-3 0-3-3Z"/><path fill="#068EFE" d="M60 32q0 3-3 3H10v7q-4 0-4-5V13q0-3 3-3h48q3 0 3 3Z"/><g fill="#068EFE" stroke="#fff" stroke-width="3" stroke-linejoin="round" transform="translate(-1)"><path d="M13 16.5v12h3c9 0 9-12 0-12Z"/><circle cx="34" cy="22.5" r="6"/><path d="m55 27 .5-.5a6 6 0 1 1 0-8L55 18" fill="none"/></g><path d="M25 50h35Zm0 9h35Zm0 9h50Zm0 9h50Zm0 9h50Z" stroke="#A4E1FD" stroke-width="3" stroke-linejoin="round"/></svg>',
-        class: 'file-icon-docx'
-    },
-
-    // JavaScript Files
-    'application/javascript': { // .js
-        svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="#F7DF1E" d="M0 32V480c0 17.7 14.3 32 32 32H416c17.7 0 32-14.3 32-32V32c0-17.7-14.3-32-32-32H32C14.3 0 0 14.3 0 32zM204.6 179.8c-10.4 0-16.7-10.2-16.7-19.4c0-10.9 8.3-17.6 20.3-17.6c11.9 0 20.3 6.7 20.3 17.6c-.1 9.2-6.5 19.4-19.9 19.4zm-48.4 20.2c16.1 12 50.1 10.4 50.1-51.4c0-30.8-21.6-47.5-49.4-47.5c-42.5 0-77 34.3-77 90.9c0 58.7 34.3 90.8 77 90.8c27.8 0 49.4-16.7 49.4-47.5c0-62.1-34.3-50.5-50.1-51.4zm236.4-1.6c-10.4 0-16.7-10.2-16.7-19.4c0-10.9 8.3-17.6 20.3-17.6c11.9 0 20.3 6.7 20.3 17.6c0 9.2-6.5 19.4-19.9 19.4zm-48.4 20.2c16.1 12 50.1 10.4 50.1-51.4c0-30.8-21.6-47.5-49.4-47.5c-42.5 0-77 34.3-77 90.9c0 58.7 34.3 90.8 77 90.8c27.8 0 49.4-16.7 49.4-47.5c0-62.1-34.3-50.5-50.1-51.4z"/></svg>',
-        class: 'file-icon-js'
-    },
-    'text/javascript': { // .js (alternative MIME type)
-        svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="#F7DF1E" d="M0 32V480c0 17.7 14.3 32 32 32H416c17.7 0 32-14.3 32-32V32c0-17.7-14.3-32-32-32H32C14.3 0 0 14.3 0 32zM204.6 179.8c-10.4 0-16.7-10.2-16.7-19.4c0-10.9 8.3-17.6 20.3-17.6c11.9 0 20.3 6.7 20.3 17.6c-.1 9.2-6.5 19.4-19.9 19.4zm-48.4 20.2c16.1 12 50.1 10.4 50.1-51.4c0-30.8-21.6-47.5-49.4-47.5c-42.5 0-77 34.3-77 90.9c0 58.7 34.3 90.8 77 90.8c27.8 0 49.4-16.7 49.4-47.5c0-62.1-34.3-50.5-50.1-51.4zm236.4-1.6c-10.4 0-16.7-10.2-16.7-19.4c0-10.9 8.3-17.6 20.3-17.6c11.9 0 20.3 6.7 20.3 17.6c0 9.2-6.5 19.4-19.9 19.4zm-48.4 20.2c16.1 12 50.1 10.4 50.1-51.4c0-30.8-21.6-47.5-49.4-47.5c-42.5 0-77 34.3-77 90.9c0 58.7 34.3 90.8 77 90.8c27.8 0 49.4-16.7 49.4-47.5c0-62.1-34.3-50.5-50.1-51.4z"/></svg>',
-        class: 'file-icon-js'
-    },
-
-    // HTML Files
-    'text/html': { // .html
-        svg: '<svg viewBox="0 0 100 100"><path fill="#fefefe" d="m70 0 20 20v70q0 10-10 10H20q-10 0-10-10V10Q10 0 20 0Z"/><path fill="#d5d5d5" d="m70 0 20 20H73q-3 0-3-3Z"/><path fill="#FE490F" d="M60 32q0 3-3 3H10v7q-4 0-4-5V13q0-3 3-3h48q3 0 3 3Z"/><path stroke="#fff" stroke-width="3" stroke-linejoin="round" d="M13 22.5v-6 12-6h6v-6 12-6m5-6h6-3v12-12ZM35 24v4.5-12l3 7.5 3-7.5v12V24m5-7.5v12h6-6Z"/><path fill="#FD7D3A" d="M56 50h5L44 85h-5Zm24 21-15 8v-5l15-8-15-8v5l10 5.66L80 66m-60 5 15 8v-5l-15-8 15-8v5l-10 5.66L20 66"/></svg>',
-        class: 'file-icon-html'
-    },
-
-    // CSS Files
-    'text/css': { // .css
-        svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path fill="#1572B6" d="M0 32l34.9 395.8L192 480l157.1-52.2L384 32H0zm308.2 114.9L192 216.5 75.8 146.9 64 36.5h256l-11.8 110.4zM192 373.8l-68.1-18.5-4.7-47.5H57.4l11.6 117 123 34.1 123-34.1 11.6-117H303.4l-4.7 47.5-68.1 18.5z"/></svg>',
-        class: 'file-icon-css'
-    },
-
-    // ZIP Files
-    'application/zip': { // .zip
-        svg: '<svg viewBox="0 0 100 100"><path fill="#fefefe" d="m70 0 20 20v70q0 10-10 10H20q-10 0-10-10V10Q10 0 20 0Z"/><path fill="#d5d5d5" d="m70 0 20 20H73q-3 0-3-3Z"/><path fill="#ff4e00" d="M60 32q0 3-3 3H10v7q-4 0-4-5V13q0-3 3-3h48q3 0 3 3Z"/><path d="M27 16.5h-7.5H27V18l-7.5 9v1.5H27h-7.5m14.5-12v12Zm7 0h3c6 0 6 6.5 0 6.5h-3v5.5Z" fill="#ff4e00" stroke="#fff" stroke-width="3" stroke-linejoin="round"/><g fill="#FDB67F" transform="matrix(.9 0 0 .9 5.4 1.8)"><path d="M50 45h5v5h-5zm-5 5h5v5h-5zm5 5h5v5h-5zm-5 5h5v5h-5zm5 5h5v5h-5zm-5 5h5v5h-5z"/><rect x="45" y="76" width="10" height="10" rx="2.5" ry="2.5"/><path d="m50 83 6 15q1 2-1 2H45q-2 0-1-2Z"/></g></svg>',
-        class: 'file-icon-zip'
-    },
-    'application/x-zip-compressed': { // .zip (alternative MIME type)
-        svg: '<svg viewBox="0 0 100 100"><path fill="#fefefe" d="m70 0 20 20v70q0 10-10 10H20q-10 0-10-10V10Q10 0 20 0Z"/><path fill="#d5d5d5" d="m70 0 20 20H73q-3 0-3-3Z"/><path fill="orange" d="M60 32q0 3-3 3H10v7q-4 0-4-5V13q0-3 3-3h48q3 0 3 3Z"/><path d="M27 16.5h-7.5H27V18l-7.5 9v1.5H27h-7.5m14.5-12v12Zm7 0h3c6 0 6 6.5 0 6.5h-3v5.5Z" fill="orange" stroke="#fff" stroke-width="3" stroke-linejoin="round"/><g fill="#FDB67F" transform="matrix(.9 0 0 .9 5.4 1.8)"><path d="M50 45h5v5h-5zm-5 5h5v5h-5zm5 5h5v5h-5zm-5 5h5v5h-5zm5 5h5v5h-5zm-5 5h5v5h-5z"/><rect x="45" y="76" width="10" height="10" rx="2.5" ry="2.5"/><path d="m50 83 6 15q1 2-1 2H45q-2 0-1-2Z"/></g></svg>',
-        class: 'file-icon-zip'
-    },
-    'application/x-compressed': { // .zip (another alternative)
-        svg: '<svg viewBox="0 0 100 100"><path fill="#fefefe" d="m70 0 20 20v70q0 10-10 10H20q-10 0-10-10V10Q10 0 20 0Z"/><path fill="#d5d5d5" d="m70 0 20 20H73q-3 0-3-3Z"/><path fill="#ff4e00" d="M60 32q0 3-3 3H10v7q-4 0-4-5V13q0-3 3-3h48q3 0 3 3Z"/><path d="M27 16.5h-7.5H27V18l-7.5 9v1.5H27h-7.5m14.5-12v12Zm7 0h3c6 0 6 6.5 0 6.5h-3v5.5Z" fill="#ff4e00" stroke="#fff" stroke-width="3" stroke-linejoin="round"/><g fill="#FDB67F" transform="matrix(.9 0 0 .9 5.4 1.8)"><path d="M50 45h5v5h-5zm-5 5h5v5h-5zm5 5h5v5h-5zm-5 5h5v5h-5zm5 5h5v5h-5zm-5 5h5v5h-5z"/><rect x="45" y="76" width="10" height="10" rx="2.5" ry="2.5"/><path d="m50 83 6 15q1 2-1 2H45q-2 0-1-2Z"/></g></svg>',
-        class: 'file-icon-zip'
-    },
-
-    // EXE Files
-    'application/x-msdownload': { // .exe
-        svg: '<svg viewBox="0 0 100 100"><path fill="#fefefe" d="m70 0 20 20v70q0 10-10 10H20q-10 0-10-10V10Q10 0 20 0Z"/><path fill="#d5d5d5" d="m70 0 20 20H73q-3 0-3-3Z"/><path fill="#01e200" d="M60 32q0 3-3 3H10v7q-4 0-4-5V13q0-3 3-3h48q3 0 3 3Z"/><path stroke="#fff" stroke-width="3" stroke-linejoin="round" d="M23 16.5h-8v6h8-8v6h8-8v-12Zm6 12 9-12-4.5 6-4.5-6 9 12-4.5-6Zm23-12h-8v6h8-8v6h8-8v-12Z"/><rect x="22" y="46" width="48" height="35" rx="5" ry="5" fill="#78FC5A"/><rect x="25" y="49" width="42" height="24" rx="3" ry="3" fill="#fff"/><rect x="29" y="53" width="48" height="35" rx="5" ry="5" fill="#78FC5A"/><rect x="32" y="56" width="42" height="24" rx="3" ry="3" fill="#fff"/></svg>',
-        class: 'file-icon-exe'
-    },
-    'application/octet-stream': { // .exe (alternative MIME type)
-        svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="#6f42c1" d="M495.9 166.6c3.1 3.1 6.2 7 9.1 11.4c2.9 4.3 5.4 9 7.3 14.1s3.4 10.3 4.6 15.6s1.8 10.6 1.8 16.1s-.6 11.2-1.8 16.1s-2.7 10.8-4.6 16.1s-4.4 9.8-7.3 14.1s-6 8.3-9.1 11.4l-112 112c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L400.6 272 272 143.4c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L495.9 166.6zM0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V288H256c-35.3 0-64 28.7-64 64V512H64c-35.3 0-64-28.7-64-64V64zm384 64V0L256 128H384z"/></svg>',
-        class: 'file-icon-exe'
-    },
-
-    // Thêm các MIME type khác
-    'application/json': {
-        svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path fill="#FD7E14" d="M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V64zM384 128L256 0H64c-17.7 0-32 14.3-32 32V480c0 17.7 14.3 32 32 32H320c17.7 0 32-14.3 32-32V128z"/></svg>',
-        class: 'file-icon-json'
-    },
-
-    'application/x-rar-compressed': { // .rar
-        svg: '<svg viewBox="0 0 100 100"><path fill="#fefefe" d="m70 0 20 20v70q0 10-10 10H20q-10 0-10-10V10Q10 0 20 0Z"/><path fill="#d5d5d5" d="m70 0 20 20H73q-3 0-3-3Z"/><path fill="#700BFD" d="M60 32q0 3-3 3H10v7q-4 0-4-5V13q0-3 3-3h48q3 0 3 3Z"/><path d="M15 28.5v-12h5c5 0 5 7 0 7h-5Zv-5h4.5l4 5-4-5m10 5 4-12H35l4 12-1.2-3.5h-7.1Zm15.5 0v-12h5c5 0 5 7 0 7h-5Zv-5h4.5l4 5-4-5" fill="#700BFD" stroke="#fff" stroke-width="3" stroke-linejoin="round"/><g fill="#a26bfa" stroke="#a26bfa"><path stroke-width="13" d="M25 50h30M25 65h30M25 80h30"/><path stroke-width="6" d="M57 46.5h11"/><path d="M57 51.5h11v13h-4V58h-3v6.5h-4" stroke="none"/><path stroke-width="20" d="M57 76.5h11"/><path stroke-width="13" d="M70 50h5m-5 15h5m-5 15h5"/></g></svg>',
-        class: 'file-icon-rar'
-    },
-
-    'text/plain': {
-        svg: '<svg viewBox="0 0 100 100"><path fill="#fefefe" d="m70 0 20 20v70q0 10-10 10H20q-10 0-10-10V10Q10 0 20 0Z"/><path fill="#d5d5d5" d="m70 0 20 20H73q-3 0-3-3Z"/><path fill="#0086fe" d="M60 32q0 3-3 3H10v7q-4 0-4-5V13q0-3 3-3h48q3 0 3 3Z"/><path stroke="#fff" stroke-width="3" stroke-linejoin="round" d="M23 16.5h-9 4.5v12-12Z"/><path fill="#F97316" stroke="#fff" stroke-width="3" stroke-linejoin="round" d="m29 28.5 8.5-12-4.25 6-4.25-6 8.5 12-4.25-6Z"/><path stroke="#fff" stroke-width="3" stroke-linejoin="round" d="M52 16.5h-9 4.5v12-12Z"/><path fill="#63bffe" d="M30 45h40v10h-4l-1-6h-7.5v37l7.5 1v3H35v-3l7.5-1V49H35l-1 6h-4Z"/></svg>',
-        class: 'file-icon-txt'
-    },
-
-    // Icon mặc định cho các loại file không có icon riêng
-    'default': {
-        svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path fill="#6c757d" d="M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V64zm384 64L256 0H64c-22.1 0-40 17.9-40 40V472c0 22.1 17.9 40 40 40H320c22.1 0 40-17.9 40-40V128z"/></svg>',
-        class: 'file-icon-default'
-    },
-
-    'application/vnd.openxmlformats-officedocument.presentationml.presentation': { // .pptx
-        svg: '<svg viewBox="0 0 100 100"><path fill="#fefefe" d="m70 0 20 20v70q0 10-10 10H20q-10 0-10-10V10Q10 0 20 0Z"/><path fill="#d5d5d5" d="m70 0 20 20H73q-3 0-3-3Z"/><path fill="#F97316" d="M60 32q0 3-3 3H10v7q-4 0-4-5V13q0-3 3-3h48q3 0 3 3Z"/><path fill="#F97316" stroke="#fff" stroke-width="3" stroke-linejoin="round" d="M15 28.5V16.6l5-.1c4 0 4 7.5 0 7.5h-5Zm14 0V16.6l5-.1c4 0 4 7.5 0 7.5h-5Z"/><path stroke="#fff" stroke-width="3" stroke-linejoin="round" d="M52 16.5h-9 4.5v12-12Z"/><g fill="#FFC875"><circle cx="50" cy="68" r="20"/><path stroke-width="4" stroke="#fff" d="M52 66V44a22 22 0 0 1 22 22Z"/></g></svg>',
-        class: 'file-icon-pptx'
-    },
-
-    'application/vnd.android.package-archive': { // .apk
-    svg: '<svg viewBox="0 0 100 100"><path fill="#fefefe" d="m70 0 20 20v70q0 10-10 10H20q-10 0-10-10V10Q10 0 20 0Z"/><path fill="#d5d5d5" d="m70 0 20 20H73q-3 0-3-3Z"/><path fill="#3ddc84" d="M60 32q0 3-3 3H10v7q-4 0-4-5V13q0-3 3-3h48q3 0 3 3Z"/><path fill="#3ddc84" stroke="#fff" stroke-width="3" stroke-linejoin="round" d="m13 28.5 4.5-12h2l4.5 12-1.3-3.5h-8.4Zm17 0v-12h5c4 0 4 7.5 0 7.5h-5Z"/><path stroke="#fff" stroke-width="3" stroke-linejoin="round" d="M44 16.5v12V25l8-8.5-4 4.5 4 7.5-4-7.5-4 4Z"/><g transform="translate(0 -1)" fill="#7ee8ad"><path d="M25 71a26 26 0 0 1 50 0Z"/><path stroke="#7ee8ad" stroke-width="3" stroke-linejoin="round" d="m39 57-6-9Zm23 0 6-9Z"/><circle cx="41" cy="63" r="3" fill="#fff"/><circle cx="59" cy="63" r="3" fill="#fff"/><path d="M25 75h50v15H25z"/></g></svg>',
-    class: 'file-icon-apk'
-},
-
-};
-
-// --- HÀM HỖ TRỢ LẤY ICON FILE DỰA TRÊN MIME TYPE HOẶC TÊN FILE ---
-function getFileIcon(mimeType, fileName) {
-    // Ưu tiên sử dụng MIME type
-    if (mimeType && fileIcons[mimeType]) {
-        return fileIcons[mimeType];
+// ngôi sao //
+function createBoxShadows(count, maxX, maxY) {
+    let shadows = [];
+    for (let i = 0; i < count; i++) {
+        const x = Math.floor(Math.random() * maxX);
+        const y = Math.floor(Math.random() * maxY);
+        shadows.push(`${x}px ${y}px #FFF`);
     }
-
-    // Nếu không có MIME type hoặc MIME type không được hỗ trợ,
-    // thử xác định dựa trên phần mở rộng file
-    if (fileName) {
-        const extension = fileName.toLowerCase().split('.').pop();
-
-        // Map phần mở rộng tới MIME type
-        const extensionToMimeType = {
-            'apk': 'application/vnd.android.package-archive',
-            'pdf': 'application/pdf',
-            'js': 'application/javascript',
-            'javascript': 'application/javascript',
-            'zip': 'application/zip',
-            'docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-            'doc': 'application/msword',
-            'html': 'text/html',
-            'htm': 'text/html',
-            'css': 'text/css',
-            'exe': 'application/x-msdownload',
-            'json': 'application/json',
-            'txt': 'text/plain',
-            'rar': 'application/x-rar-compressed'
-        };
-
-        const detectedMimeType = extensionToMimeType[extension];
-        if (detectedMimeType && fileIcons[detectedMimeType]) {
-            return fileIcons[detectedMimeType];
-        }
-    }
-
-    // Trả về icon mặc định
-    return fileIcons['default'];
+    return shadows.join(', ');
 }
 
-// --- Scroll to Bottom Function (di chuyển ra ngoài DOMContentLoaded) ---
+const starsElement = document.getElementById('stars');
+const stars2Element = document.getElementById('stars2');
+const stars3Element = document.getElementById('stars3');
+
+const expandedWidth = 900;
+const expandedHeight = 480;
+const bufferHeight = 100;
+
+if (starsElement) {
+    starsElement.style.boxShadow = createBoxShadows(700, expandedWidth, expandedHeight + bufferHeight);
+    starsElement.style.setProperty('--star-animation-height', `${expandedHeight + bufferHeight}px`);
+}
+if (stars2Element) {
+    stars2Element.style.boxShadow = createBoxShadows(200, expandedWidth, expandedHeight + bufferHeight);
+    stars2Element.style.setProperty('--star-animation-height', `${expandedHeight + bufferHeight}px`);
+}
+if (stars3Element) {
+    stars3Element.style.boxShadow = createBoxShadows(100, expandedWidth, expandedHeight + bufferHeight);
+    stars3Element.style.setProperty('--star-animation-height', `${expandedHeight + bufferHeight}px`);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// --- Hàm lấy SVG icon cho từng loại file ---
+function getFileIconSvg(extension) {
+    extension = extension.toLowerCase();
+    switch (extension) {
+        case 'html':
+            return `<svg viewBox="0 0 100 100"><path fill="#fefefe" d="m70 0 20 20v70q0 10-10 10H20q-10 0-10-10V10Q10 0 20 0Z"/><path fill="#d5d5d5" d="m70 0 20 20H73q-3 0-3-3Z"/><path fill="#FE490F" d="M60 32q0 3-3 3H10v7q-4 0-4-5V13q0-3 3-3h48q3 0 3 3Z"/><path stroke="#fff" stroke-width="3" stroke-linejoin="round" d="M13 22.5v-6 12-6h6v-6 12-6m5-6h6-3v12-12ZM35 24v4.5-12l3 7.5 3-7.5v12V24m5-7.5v12h6-6Z"/><path fill="#FD7D3A" d="M56 50h5L44 85h-5Zm24 21-15 8v-5l15-8-15-8v5l10 5.66L80 66m-60 5 15 8v-5l-15-8 15-8v5l-10 5.66L20 66"/></svg>`;
+        case 'css':
+            return `<svg viewBox="0 0 100 100"><path fill="#fefefe" d="m70 0 20 20v70q0 10-10 10H20q-10 0-10-10V10Q10 0 20 0Z"/><path fill="#d5d5d5" d="m70 0 20 20H73q-3 0-3-3Z"/><path fill="#03A1E5" d="M60 32q0 3-3 3H10v7q-4 0-4-5V13q0-3 3-3h48q3 0 3 3Z"/><path d="M24 19a6 6 0 1 0 0 7 6 6 0 1 1 0-7Zm13.7-1 .3.5c-4-6-14 1.5-4 4M30.3 27l-.3-.5c4 6 14-1.5 4-4M51.7 18l.3.5c-4-6-14 1.5-4 4M44.3 27l-.3-.5c4 6 14-1.5 4-4" fill="#03A1E5" stroke="#fff" stroke-width="3" stroke-linejoin="round"/><path fill="#fff" stroke="#76CEF3" stroke-width="5" stroke-linejoin="round" d="M32 47c-11 0 1 20-10 20m10 20c-11 0 1-20-10-20m46-20c11 0-1 20 10 20M68 87c11 0-1-20 10-20"/><circle fill="#76CEF3" cx="50" cy="80" r="4"/><circle fill="#76CEF3" cx="60" cy="80" r="4"/><circle fill="#76CEF3" cx="40" cy="80" r="4"/></svg>`;
+        case 'js':
+            return `<svg viewBox="0 0 100 100"><path fill="#fefefe" d="m70 0 20 20v70q0 10-10 10H20q-10 0-10-10V10Q10 0 20 0Z"/><path fill="#d5d5d5" d="m70 0 20 20H73q-3 0-3-3Z"/><path fill="#FFB42A" d="M60 32q0 3-3 3H10v7q-4 0-4-5V13q0-3 3-3h48q3 0 3 3Z"/><path d="M28 17v-.5 8a4 4 0 1 1-8 0l.1.5m22.6-7 .3.5c-4-6-14 1.5-4 4M35.3 27l-.3-.5c4 6 14-1.5 4-4" fill="#FFB42A" stroke="#fff" stroke-width="3" stroke-linejoin="round"/><path fill="#fff" stroke="#FDCC73" stroke-width="5" stroke-linejoin="round" d="M60 50q5 0 5 5v8q0 5 5 5"/><path fill="#fff" stroke="#FDCC73" stroke-width="5" d="M60 86q5 0 5-5v-8q0-5 5-5M40 50q-5 0-5 5v8q0 5-5 5m10 18q-5 0-5-5v-8q0-5-5-5"/><circle fill="#FDCC73" cx="50" cy="63" r="5"/><path fill="#FDCC73" d="M47 75h8l-4 14h-6Z"/></svg>`;
+        case 'doc':
+        case 'docx':
+            return `<svg viewBox="0 0 100 100"><path fill="#fefefe" d="m70 0 20 20v70q0 10-10 10H20q-10 0-10-10V10Q10 0 20 0Z"/><path fill="#d5d5d5" d="m70 0 20 20H73q-3 0-3-3Z"/><path fill="#068EFE" d="M60 32q0 3-3 3H10v7q-4 0-4-5V13q0-3 3-3h48q3 0 3 3Z"/><g fill="#068EFE" stroke="#fff" stroke-width="3" stroke-linejoin="round" transform="translate(-1)"><path d="M13 16.5v12h3c9 0 9-12 0-12Z"/><circle cx="34" cy="22.5" r="6"/><path d="m55 27 .5-.5a6 6 0 1 1 0-8L55 18" fill="none"/></g><path d="M25 50h35Zm0 9h35Zm0 9h50Zm0 9h50Zm0 9h50Z" stroke="#A4E1FD" stroke-width="3" stroke-linejoin="round"/></svg>`;
+        case 'xls':
+        case 'xlsx':
+            return `<svg viewBox="0 0 100 100"><path fill="#fefefe" d="m70 0 20 20v70q0 10-10 10H20q-10 0-10-10V10Q10 0 20 0Z"/><path fill="#d5d5d5" d="m70 0 20 20H73q-3 0-3-3Z"/><path fill="#00DF01" d="M60 32q0 3-3 3H10v7q-4 0-4-5V13q0-3 3-3h48q3 0 3 3Z"/><path fill="#00DF01" stroke="#fff" stroke-width="3" stroke-linejoin="round" d="m15 28.5 8-12-4 6-4-6 8 12-4-6Zm14-12v12h8-8ZM50.7 18l.3.5c-4-6-14 1.5-4 4M43.3 27l-.3-.5c4 6 14-1.5 4-4"/><path fill="#89EB89" d="M20 45h27v11H20zm33 0h27v11H53zM20 61h27v11H20zm33 0h27v11H53zM20 77h27v11H20zm33 0h27v11H53z"/></svg>`;
+        case 'pdf':
+            return `<svg viewBox="0 0 100 100"><path fill="#fefefe" d="m70 0 20 20v70q0 10-10 10H20q-10 0-10-10V10Q10 0 20 0Z"/><path fill="#d5d5d5" d="m70 0 20 20H73q-3 0-3-3Z"/><path fill="red" d="M60 32q0 3-3 3H10v7q-4 0-4-5V13q0-3 3-3h48q3 0 3 3Z"/><path d="M13.5 28.5v-12h4c7 0 7 7.5 0 7.5h-4Zm15.5-12v12h4c8 0 8-12 0-12Zm24 0h-8v6h8-8v6-12Z" fill="red" stroke="#fff" stroke-width="3" stroke-linejoin="round"/><path fill="#fff" stroke="#fd797d" stroke-width="3" d="M46 51q9 24-15 38c-4 2-8.3 1-4-4q17-18 47-8c5 1.5 7 6.5-1 5q-24-5-34-32c-2.5-8 4-8 7 1Z"/></svg>`;
+        case 'mp3':
+            return `<svg viewBox="0 0 100 100"><path fill="#fefefe" d="m70 0 20 20v70q0 10-10 10H20q-10 0-10-10V10Q10 0 20 0Z"/><path fill="#d5d5d5" d="m70 0 20 20H73q-3 0-3-3Z"/><path fill="#FD05E4" d="M60 32q0 3-3 3H10v7q-4 0-4-5V13q0-3 3-3h48q3 0 3 3Z"/><path fill="#FD05E4" stroke="#fff" stroke-width="3" stroke-linejoin="round" d="M14 17v11.5-12l4.5 6.5 4.5-6.5v12V17m7 11.5v-12h4c5 0 5 7 0 7h-4Zm21-12h-8 8l-4 5a4 3.5 0 1 1-4 3.5 4 3.5 0 1 0 4-3.5"/><path fill="#FF92F4" d="M68.199 46.4v28a7.212 7.212 0 1 1-3.2-5.982v-11.97l-22.4 5.6v18.751a7.212 7.212 0 1 1-3.2-5.98v-22.02a1.6 1.6 0 0 1 1.212-1.551l25.6-6.4a1.58 1.58 0 0 1 1.372.29A1.6 1.6 0 0 1 68.2 46.4"/></svg>`;
+        case 'm4a':
+            return `<svg viewBox="0 0 100 100"><path fill="#fefefe" d="m70 0 20 20v70q0 10-10 10H20q-10 0-10-10V10Q10 0 20 0Z"/><path fill="#d5d5d5" d="m70 0 20 20H73q-3 0-3-3Z"/><path fill="#FD05E4" d="M60 32q0 3-3 3H10v7q-4 0-4-5V13q0-3 3-3h48q3 0 3 3Z"/><path fill="#FD05E4" stroke="#fff" stroke-width="3" stroke-linejoin="round" d="M14 17v11.5-12l4.5 6.5 4.5-6.5v12V17m6 7 3-7.5-3 7.5h8v4.5-12 12m6 0 4-12h2l4 12-1.5-4h-7Z"/><path fill="#FF92F4" d="M68.199 46.4v28a7.212 7.212 0 1 1-3.2-5.982v-11.97l-22.4 5.6v18.751a7.212 7.212 0 1 1-3.2-5.98v-22.02a1.6 1.6 0 0 1 1.212-1.551l25.6-6.4a1.58 1.58 0 0 1 1.372.29A1.6 1.6 0 0 1 68.2 46.4"/></svg>`;
+        case 'wav':
+        case 'aac':
+            return `<svg viewBox="0 0 100 100"><path fill="#fefefe" d="m70 0 20 20v70q0 10-10 10H20q-10 0-10-10V10Q10 0 20 0Z"/><path fill="#d5d5d5" d="m70 0 20 20H73q-3 0-3-3Z"/><path fill="#FD05E4" d="M60 32q0 3-3 3H10v7q-4 0-4-5V13q0-3 3-3h48q3 0 3 3Z"/><path fill="#FD05E4" stroke="#fff" stroke-width="3" stroke-linejoin="round" d="M14 17v11.5-12l4.5 6.5 4.5-6.5v12V17m7 11.5v-12h4c5 0 5 7 0 7h-4Zm21-12h-8 8l-4 5a4 3.5 0 1 1-4 3.5 4 3.5 0 1 0 4-3.5"/><path fill="#FF92F4" d="M68.199 46.4v28a7.212 7.212 0 1 1-3.2-5.982v-11.97l-22.4 5.6v18.751a7.212 7.212 0 1 1-3.2-5.98v-22.02a1.6 1.6 0 0 1 1.212-1.551l25.6-6.4a1.58 1.58 0 0 1 1.372.29A1.6 1.6 0 0 1 68.2 46.4"/></svg>`;
+        case 'csv':
+            return `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6C4.89 2 4 2.9 4 4V20C4 21.11 4.89 22 6 22H18C19.11 22 20 21.11 20 20V8L14 2ZM18 20H6V4H13V9H18V20ZM12 12L15 15L12 18L9 15L12 12Z"></path></svg>`;
+        case 'ppt':
+        case 'pptx':
+            return `<svg viewBox="0 0 100 100"><path fill="#fefefe" d="m70 0 20 20v70q0 10-10 10H20q-10 0-10-10V10Q10 0 20 0Z"/><path fill="#d5d5d5" d="m70 0 20 20H73q-3 0-3-3Z"/><path fill="#F97316" d="M60 32q0 3-3 3H10v7q-4 0-4-5V13q0-3 3-3h48q3 0 3 3Z"/><path fill="#F97316" stroke="#fff" stroke-width="3" stroke-linejoin="round" d="M15 28.5V16.6l5-.1c4 0 4 7.5 0 7.5h-5Zm14 0V16.6l5-.1c4 0 4 7.5 0 7.5h-5Z"/><path stroke="#fff" stroke-width="3" stroke-linejoin="round" d="M52 16.5h-9 4.5v12-12Z"/><g fill="#FFC875"><circle cx="50" cy="68" r="20"/><path stroke-width="4" stroke="#fff" d="M52 66V44a22 22 0 0 1 22 22Z"/></g></svg>`;
+        case 'apk':
+            return `<svg viewBox="0 0 100 100"><path fill="#fefefe" d="m70 0 20 20v70q0 10-10 10H20q-10 0-10-10V10Q10 0 20 0Z"/><path fill="#d5d5d5" d="m70 0 20 20H73q-3 0-3-3Z"/><path fill="#3ddc84" d="M60 32q0 3-3 3H10v7q-4 0-4-5V13q0-3 3-3h48q3 0 3 3Z"/><path fill="#3ddc84" stroke="#fff" stroke-width="3" stroke-linejoin="round" d="m13 28.5 4.5-12h2l4.5 12-1.3-3.5h-8.4Zm17 0v-12h5c4 0 4 7.5 0 7.5h-5Z"/><path stroke="#fff" stroke-width="3" stroke-linejoin="round" d="M44 16.5v12V25l8-8.5-4 4.5 4 7.5-4-7.5-4 4Z"/><g transform="translate(0 -1)" fill="#7ee8ad"><path d="M25 71a26 26 0 0 1 50 0Z"/><path stroke="#7ee8ad" stroke-width="3" stroke-linejoin="round" d="m39 57-6-9Zm23 0 6-9Z"/><circle cx="41" cy="63" r="3" fill="#fff"/><circle cx="59" cy="63" r="3" fill="#fff"/><path d="M25 75h50v15H25z"/></g></svg>`;
+        case 'zip':
+            return `<svg viewBox="0 0 100 100"><path fill="#fefefe" d="m70 0 20 20v70q0 10-10 10H20q-10 0-10-10V10Q10 0 20 0Z"/><path fill="#d5d5d5" d="m70 0 20 20H73q-3 0-3-3Z"/><path fill="#ff4e00" d="M60 32q0 3-3 3H10v7q-4 0-4-5V13q0-3 3-3h48q3 0 3 3Z"/><path d="M27 16.5h-7.5H27V18l-7.5 9v1.5H27h-7.5m14.5-12v12Zm7 0h3c6 0 6 6.5 0 6.5h-3v5.5Z" fill="#ff4e00" stroke="#fff" stroke-width="3" stroke-linejoin="round"/><g fill="#FDB67F" transform="matrix(.9 0 0 .9 5.4 1.8)"><path d="M50 45h5v5h-5zm-5 5h5v5h-5zm5 5h5v5h-5zm-5 5h5v5h-5zm5 5h5v5h-5zm-5 5h5v5h-5z"/><rect x="45" y="76" width="10" height="10" rx="2.5" ry="2.5"/><path d="m50 83 6 15q1 2-1 2H45q-2 0-1-2Z"/></g></svg>`;
+        case 'rar':
+            return `<svg viewBox="0 0 100 100"><path fill="#fefefe" d="m70 0 20 20v70q0 10-10 10H20q-10 0-10-10V10Q10 0 20 0Z"/><path fill="#d5d5d5" d="m70 0 20 20H73q-3 0-3-3Z"/><path fill="#700BFD" d="M60 32q0 3-3 3H10v7q-4 0-4-5V13q0-3 3-3h48q3 0 3 3Z"/><path d="M15 28.5v-12h5c5 0 5 7 0 7h-5Zv-5h4.5l4 5-4-5m10 5 4-12H35l4 12-1.2-3.5h-7.1Zm15.5 0v-12h5c5 0 5 7 0 7h-5Zv-5h4.5l4 5-4-5" fill="#700BFD" stroke="#fff" stroke-width="3" stroke-linejoin="round"/><g fill="#a26bfa" stroke="#a26bfa"><path stroke-width="13" d="M25 50h30M25 65h30M25 80h30"/><path stroke-width="6" d="M57 46.5h11"/><path d="M57 51.5h11v13h-4V58h-3v6.5h-4" stroke="none"/><path stroke-width="20" d="M57 76.5h11"/><path stroke-width="13" d="M70 50h5m-5 15h5m-5 15h5"/></g></svg>`;
+        case '7z':
+            return `<svg viewBox="0 0 100 100"><path fill="#fefefe" d="m70 0 20 20v70q0 10-10 10H20q-10 0-10-10V10Q10 0 20 0Z"/><path fill="#d5d5d5" d="m70 0 20 20H73q-3 0-3-3Z"/><path fill="#ff4e00" d="M60 32q0 3-3 3H10v7q-4 0-4-5V13q0-3 3-3h48q3 0 3 3Z"/><path d="M27 16.5h-7.5H27V18l-7.5 9v1.5H27h-7.5m14.5-12v12Zm7 0h3c6 0 6 6.5 0 6.5h-3v5.5Z" fill="#ff4e00" stroke="#fff" stroke-width="3" stroke-linejoin="round"/><g fill="#FDB67F" transform="matrix(.9 0 0 .9 5.4 1.8)"><path d="M50 45h5v5h-5zm-5 5h5v5h-5zm5 5h5v5h-5zm-5 5h5v5h-5zm5 5h5v5h-5zm-5 5h5v5h-5z"/><rect x="45" y="76" width="10" height="10" rx="2.5" ry="2.5"/><path d="m50 83 6 15q1 2-1 2H45q-2 0-1-2Z"/></g></svg>`;
+        case 'exe':
+            return `<svg viewBox="0 0 100 100"><path fill="#fefefe" d="m70 0 20 20v70q0 10-10 10H20q-10 0-10-10V10Q10 0 20 0Z"/><path fill="#d5d5d5" d="m70 0 20 20H73q-3 0-3-3Z"/><path fill="#01e200" d="M60 32q0 3-3 3H10v7q-4 0-4-5V13q0-3 3-3h48q3 0 3 3Z"/><path stroke="#fff" stroke-width="3" stroke-linejoin="round" d="M23 16.5h-8v6h8-8v6h8-8v-12Zm6 12 9-12-4.5 6-4.5-6 9 12-4.5-6Zm23-12h-8v6h8-8v6h8-8v-12Z"/><rect x="22" y="46" width="48" height="35" rx="5" ry="5" fill="#78FC5A"/><rect x="25" y="49" width="42" height="24" rx="3" ry="3" fill="#fff"/><rect x="29" y="53" width="48" height="35" rx="5" ry="5" fill="#78FC5A"/><rect x="32" y="56" width="42" height="24" rx="3" ry="3" fill="#fff"/></svg>`;
+        case 'txt':
+            return `<svg viewBox="0 0 100 100"><path fill="#fefefe" d="m70 0 20 20v70q0 10-10 10H20q-10 0-10-10V10Q10 0 20 0Z"/><path fill="#d5d5d5" d="m70 0 20 20H73q-3 0-3-3Z"/><path fill="#0086fe" d="M60 32q0 3-3 3H10v7q-4 0-4-5V13q0-3 3-3h48q3 0 3 3Z"/><path stroke="#fff" stroke-width="3" stroke-linejoin="round" d="M23 16.5h-9 4.5v12-12Z"/><path fill="#F97316" stroke="#fff" stroke-width="3" stroke-linejoin="round" d="m29 28.5 8.5-12-4.25 6-4.25-6 8.5 12-4.25-6Z"/><path stroke="#fff" stroke-width="3" stroke-linejoin="round" d="M52 16.5h-9 4.5v12-12Z"/><path fill="#63bffe" d="M30 45h40v10h-4l-1-6h-7.5v37l7.5 1v3H35v-3l7.5-1V49H35l-1 6h-4Z"/></svg>`;
+        case 'xml':
+            return `<svg viewBox="0 0 100 100"><path fill="#fefefe" d="m70 0 20 20v70q0 10-10 10H20q-10 0-10-10V10Q10 0 20 0Z"/><path fill="#d5d5d5" d="m70 0 20 20H73q-3 0-3-3Z"/><path fill="#FE490F" d="M60 32q0 3-3 3H10v7q-4 0-4-5V13q0-3 3-3h48q3 0 3 3Z"/><path fill="#FE490F" stroke="#fff" stroke-width="3" stroke-linejoin="round" d="m14.5 28.5 8.5-12-4.25 6-4.25-6 8.5 12-4.25-6Zm15-8.5v8.5-12L34 24l4.5-7.5v12-12m6.5 0v12h8-8Z"/><path fill="#FD7D3A" d="M56 50h5L44 85h-5Zm24 21-15 8v-5l15-8-15-8v5l10 5.66L80 66m-60 5 15 8v-5l-15-8 15-8v5l-10 5.66L20 66"/></svg>`;
+        case 'json':
+            return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path fill="#FD7E14" d="M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V64zM384 128L256 0H64c-17.7 0-32 14.3-32 32V480c0 17.7 14.3 32 32 32H320c17.7 0 32-14.3 32-32V128z"/></svg>`;
+        default:
+            return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path fill="#6c757d" d="M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V64zm384 64L256 0H64c-22.1 0-40 17.9-40 40V472c0 22.1 17.9 40 40 40H320c22.1 0 40-17.9 40-40V128z"/></svg>`; // Icon mặc định mới
+    }
+}
+
+
+
+
+
+
+
+
+// Cấu hình Google Apps Script Web App URL
+const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycby52IEfOzUa7g0OjJnTOXBZrq4N_qNkTNeLs3fZRdyUs2PGPgUgwLq4NHO2LGA7Cf6xug/exec';
+// Khai báo biến này ở phạm vi toàn cục
+let currentActiveMessageBox = null;
+let chatContentArea = null;
+let toolbarLoadingOverlay = null;
+let scrollToBottomBtn = null;
+let chatBubble = null;
+
+// --- Scroll to Bottom Function ---
 function scrollToBottom() {
     if (chatContentArea) {
         chatContentArea.scrollTo({
@@ -456,7 +404,232 @@ function scrollToBottom() {
     }
 }
 
-// --- HÀM HỖ TRỢ ĐỊNH DẠNG KÍCH THƯỚC FILE ---
+// --- HÀM HIỂN THỊ THÔNG BÁO TẠM THỜI ---
+function showTemporaryNotification(message) {
+    const notificationBox = document.createElement('div');
+    notificationBox.classList.add('temporary-notification');
+    notificationBox.textContent = message;
+    document.body.appendChild(notificationBox);
+    setTimeout(() => notificationBox.classList.add('show'), 10);
+    setTimeout(() => {
+        notificationBox.classList.remove('show');
+        notificationBox.addEventListener('transitionend', () => notificationBox.remove(), { once: true });
+    }, 3000);
+}
+
+
+// --- HÀM HIỆN THỊ CÁC NÚT TƯƠNG TÁC (CẬP NHẬT) ---
+function showInteractionButtons(messageBox) {
+    hideInteractionButtons();
+    currentActiveMessageBox = messageBox;
+
+    // Kiểm tra loại message để quyết định icon cho button đầu tiên
+    const messageIndex = messageBox.dataset.messageIndex;
+    const isTextMessage = messageBox.querySelector('p') !== null;
+
+    // Tạo button đầu tiên (copy hoặc download)
+    const firstButton = document.createElement('div');
+    firstButton.classList.add('interaction-button', 'blue');
+    const firstImg = document.createElement('img');
+
+    if (isTextMessage) {
+        // Nếu là text message, dùng copy icon
+        firstImg.src = 'assets/img/copy.png';
+        firstImg.alt = 'Copy';
+        firstButton.setAttribute('data-action', 'copy');
+    } else {
+        // Nếu là file message, dùng download icon
+        firstImg.src = 'assets/img/download.png';
+        firstImg.alt = 'Download';
+        firstButton.setAttribute('data-action', 'download');
+    }
+
+    firstButton.appendChild(firstImg);
+    messageBox.appendChild(firstButton);
+    // Tạo delete button (giữ nguyên)
+    const deleteButton = document.createElement('div');
+    deleteButton.classList.add('interaction-button', 'red');
+    const deleteImg = document.createElement('img');
+    deleteImg.src = 'assets/img/delete.png';
+    deleteImg.alt = 'Delete';
+    deleteButton.appendChild(deleteImg);
+    messageBox.appendChild(deleteButton);
+
+    // Hiển thị buttons với animation
+    setTimeout(() => {
+        firstButton.classList.add('active');
+        deleteButton.classList.add('active');
+    }, 10);
+    // Event listener cho button đầu tiên
+    firstButton.addEventListener('click', function (event) {
+        event.stopPropagation();
+
+        const action = this.getAttribute('data-action');
+        if (action === 'copy') {
+            handleCopyText(messageBox);
+        } else if (action === 'download') {
+            handleDownloadFile(messageBox);
+        }
+
+
+        hideInteractionButtons();
+
+    });
+    // Event listener cho delete button (giữ nguyên)
+    deleteButton.addEventListener('click', async function (event) {
+        event.stopPropagation();
+        const messageIndex = messageBox.dataset.messageIndex;
+
+        // Đã xóa bỏ đoạn if (confirm(...))
+        try {
+            toolbarLoadingOverlay.classList.add('active');
+
+            const response = await fetch(GAS_WEB_APP_URL + '?action=delete&index=' + messageIndex, {
+
+                method: 'GET',
+            });
+            const result = await response.json();
+
+            if (result.status === 'success') {
+                console.log('Tin nhắn đã được xóa thành công.');
+                await loadAllMessages(false);
+
+                showTemporaryNotification('Đã xóa tin nhắn thành công!');
+            } else {
+                console.error('Lỗi khi xóa tin nhắn:', result.message);
+                alert('Lỗi khi xóa tin nhắn: ' + result.message);
+            }
+        } catch (error) {
+
+            console.error('Lỗi kết nối hoặc API khi xóa:', error);
+            alert('Lỗi kết nối hoặc API: ' + error.message);
+        } finally {
+            toolbarLoadingOverlay.classList.remove('active');
+        }
+        hideInteractionButtons();
+    });
+}
+
+// --- HÀM XỬ LÝ COPY TEXT ---
+function handleCopyText(messageBox) {
+    const textToCopy = messageBox.querySelector('p') ?
+        messageBox.querySelector('p').textContent : '';
+    if (textToCopy) {
+        navigator.clipboard.writeText(textToCopy)
+            .then(() => {
+                console.log('Đã sao chép vào clipboard:', textToCopy);
+                showTemporaryNotification('Đã sao chép!');
+            })
+            .catch(err => {
+
+                console.error('Không thể sao chép:', err);
+                alert('Không thể sao chép. Vui lòng thử lại hoặc sao chép thủ công.');
+            });
+    }
+}
+
+// --- HÀM XỬ LÝ DOWNLOAD FILE (ĐÃ SỬA LỖI) ---
+function handleDownloadFile(messageBox) {
+    // Lấy thông tin file từ message data
+    const messageIndex = messageBox.dataset.messageIndex;
+    // Tìm thông tin file từ dữ liệu đã load
+    const fileInfo = getFileInfoByMessageIndex(messageIndex);
+    if (fileInfo && fileInfo.fileUrl) {
+        // Tạo tên file an toàn cho download
+        const safeFileName = fileInfo.fileName ||
+            'download_file';
+
+        // Sử dụng URL trực tiếp từ Dropbox với raw=1 để tải xuống
+        let downloadUrl = fileInfo.fileUrl;
+        // Đảm bảo URL là dạng raw để tải trực tiếp
+        if (downloadUrl.includes('dropbox.com') && !downloadUrl.includes('raw=1')) {
+            downloadUrl = downloadUrl.replace('dl=0', 'raw=1').replace('dl=1', 'raw=1');
+            if (!downloadUrl.includes('raw=1')) {
+                downloadUrl += (downloadUrl.includes('?') ? '&' : '?') + 'raw=1';
+            }
+        }
+
+        // Tạo element a ẩn để trigger download
+        const downloadLink = document.createElement('a');
+        downloadLink.href = downloadUrl;
+        downloadLink.download = safeFileName;
+        downloadLink.style.display = 'none';
+
+        // Thêm vào DOM, click và xóa
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+
+        showTemporaryNotification('Đang tải xuống file...');
+        console.log('Downloading file:', safeFileName, 'from URL:', downloadUrl);
+    } else {
+        alert('Không thể tải xuống file. URL không hợp lệ.');
+        console.error('File info not found for message index:', messageIndex);
+    }
+}
+
+// --- HÀM LẤY THÔNG TIN FILE THEO MESSAGE INDEX ---
+function getFileInfoByMessageIndex(messageIndex) {
+    // Tìm trong dữ liệu messages đã load
+    // Giả sử bạn có một biến global chứa messages data
+    if (window.messagesData && window.messagesData.messages) {
+        const message = window.messagesData.messages.find(msg => msg.index.toString() === messageIndex.toString());
+        if (message && message.type === 'file') {
+            return {
+                fileName: message.fileName,
+                fileUrl: message.fileUrl,
+                mimeType: message.mimeType,
+                fileSize: message.fileSize
+            };
+        }
+    }
+    return null;
+}
+// --- HÀM ẨN CÁC NÚT TƯƠNG TÁC ---
+function hideInteractionButtons() {
+    if (currentActiveMessageBox) {
+        const buttons = currentActiveMessageBox.querySelectorAll('.interaction-button');
+        buttons.forEach(button => {
+            button.classList.remove('active');
+            button.classList.add('hide');
+            button.addEventListener('transitionend', function handler() {
+                button.remove();
+                button.removeEventListener('transitionend', handler);
+            }, { once: true });
+        });
+        currentActiveMessageBox = null;
+    }
+}
+
+// --- HÀM XỬ LÝ SỰ KIỆN CLICK VÀO MESSAGE BOX ---
+function handleMessageBoxClick(event) {
+    event.stopPropagation();
+    if (currentActiveMessageBox && currentActiveMessageBox !== this) {
+        hideInteractionButtons();
+    }
+    showInteractionButtons(this);
+}
+
+// --- Scroll to Bottom Button Functions ---
+function isAtBottom() {
+    if (!chatContentArea) return true;
+    const threshold = 100;
+    return chatContentArea.scrollTop + chatContentArea.clientHeight >= chatContentArea.scrollHeight - threshold;
+}
+
+function updateScrollButton() {
+    if (!scrollToBottomBtn || (chatBubble && !chatBubble.classList.contains('expanded'))) {
+        if (scrollToBottomBtn) scrollToBottomBtn.classList.remove('show');
+        return;
+    }
+    if (isAtBottom()) {
+        scrollToBottomBtn.classList.remove('show');
+    } else {
+        scrollToBottomBtn.classList.add('show');
+    }
+}
+
+// --- Hàm format kích thước file ---
 function formatFileSize(bytes) {
     if (bytes === 0) return '0 Bytes';
     const k = 1024;
@@ -465,10 +638,137 @@ function formatFileSize(bytes) {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 }
 
+// Hàm helper để xử lý tên file có ký tự đặc biệt
+function createSafeFileName(originalName) {
+    // Nếu tên file chỉ chứa ASCII, giữ nguyên
+    if (/^[\x00-\x7F]*$/.test(originalName)) {
+        return originalName;
+    }
+
+    // Nếu có ký tự Unicode, tạo tên backup
+    const extension = originalName.split('.').pop();
+    const nameWithoutExt = originalName.substring(0, originalName.lastIndexOf('.'));
+    const timestamp = Date.now();
+
+    return {
+        original: originalName,
+        safe: `file_${timestamp}.${extension}`,
+        needsRename: true
+    };
+}
+
+// Phiên bản xử lý đặc biệt cho ký tự tiếng Việt
+async function uploadFileToDropboxWithVietnamese(file, accessToken) {
+    try {
+        const fileNameInfo = createSafeFileName(file.name);
+        const isComplexName = typeof fileNameInfo === 'object';
+
+        const uploadName = isComplexName ? fileNameInfo.safe : fileNameInfo;
+        const originalName = isComplexName ?
+            fileNameInfo.original : fileNameInfo;
+
+        console.log('Uploading as:', uploadName);
+        console.log('Original name:', originalName);
+
+        // Tạo file với tên an toàn để upload
+        const fileToUpload = isComplexName ?
+            new File([file], uploadName, { type: file.type, lastModified: file.lastModified }) :
+            file;
+        const result = await uploadFileToDropbox(fileToUpload, accessToken);
+
+        // Nếu cần đổi tên lại sau khi upload
+        if (isComplexName) {
+            try {
+                await renameFileOnDropbox('/' + uploadName, '/' + originalName, accessToken);
+                result.fileName = originalName;
+                console.log('File renamed back to original name');
+            } catch (renameError) {
+                console.warn('Could not rename file back to original name:', renameError);
+                // Vẫn trả về kết quả thành công với tên tạm thời
+            }
+        }
+
+        return result;
+    } catch (error) {
+        console.error('Upload with Vietnamese characters failed:', error);
+        throw error;
+    }
+}
+
+// Hàm đổi tên file trên Dropbox
+async function renameFileOnDropbox(fromPath, toPath, accessToken) {
+    const response = await fetch('https://api.dropboxapi.com/2/files/move_v2', {
+        method: 'POST',
+        headers: {
+            'Authorization': 'Bearer ' + accessToken,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            from_path: fromPath,
+
+            to_path: toPath,
+            allow_shared_folder: false,
+            autorename: false,
+            allow_ownership_transfer: false
+        })
+    });
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error('Rename failed: ' + (error.error_summary || 'Unknown error'));
+    }
+
+    return await response.json();
+}
+
+// Phiên bản an toàn hơn của hàm upload
+async function uploadFileToDropboxSafe(file, accessToken) {
+    // Tạo một bản copy của file với tên đã được làm sạch nếu cần
+    const sanitizedName = sanitizeFileName(file.name);
+    // Tạo file object mới với tên đã được làm sạch
+    const fileToUpload = new File([file], sanitizedName, {
+        type: file.type,
+        lastModified: file.lastModified
+    });
+    return await uploadFileToDropbox(fileToUpload, accessToken);
+}
+
+// --- HÀM THÊM EVENT LISTENER CHO CÁC MESSAGE BOX ---
+function addMessageBoxEventListeners() {
+    document.querySelectorAll('.message-box').forEach(box => {
+        box.removeEventListener('click', handleMessageBoxClick);
+        box.addEventListener('click', handleMessageBoxClick);
+    });
+}
+
+// --- HÀM TẢI TẤT CẢ TIN NHẮN VÀ HIỂN THỊ ---
+async function loadAllMessages(scrollToEnd = false) {
+    try {
+        const response = await fetch(GAS_WEB_APP_URL + '?action=getAllMessages');
+        const data = await response.json();
+
+        if (data.status === 'success') {
+            // Lưu dữ liệu vào biến global để sử dụng cho download
+            window.messagesData = data;
+            chatContentArea.innerHTML = '';
+            data.messages.forEach(message => {
+                appendMessageToChat(message);
+            });
+            addMessageBoxEventListeners();
+            if (scrollToEnd) {
+                scrollToBottom();
+            }
+        } else {
+            console.error("Lỗi khi tải tin nhắn:", data.message);
+            alert("Không thể tải tin nhắn: " + data.message);
+        }
+    } catch (error) {
+        console.error("Lỗi kết nối hoặc API khi tải tin nhắn:", error);
+        alert("Lỗi kết nối hoặc API: " + error.message);
+    }
+}
+
 // --- HÀM HỖ TRỢ RÚT GỌN TÊN FILE ---
-// Thêm tham số isAudioFile để kiểm soát việc rút gọn
 function shortenFileName(fileName, maxLength = 30, isAudioFile = false) {
-    // Nếu là tệp âm thanh, trả về tên gốc không rút gọn
     if (isAudioFile) {
         return fileName;
     }
@@ -478,11 +778,8 @@ function shortenFileName(fileName, maxLength = 30, isAudioFile = false) {
     let nameWithoutExt = parts.join('.');
 
     if (nameWithoutExt.length + extension.length > maxLength) {
-        // Tính toán số ký tự thực sự để hiển thị tên file không bao gồm phần mở rộng và "..."
-        const charsToShow = maxLength - extension.length - 3; // -3 cho '...'
-
-        if (charsToShow <= 0) { // Trường hợp tên quá ngắn, chỉ hiển thị phần đầu
-            // Đảm bảo không trả về chuỗi rỗng hoặc lỗi khi maxLength quá nhỏ
+        const charsToShow = maxLength - extension.length - 3;
+        if (charsToShow <= 0) {
             return fileName.substring(0, Math.max(0, maxLength - 3)) + '...';
         }
         return nameWithoutExt.substring(0, charsToShow) + '...' + extension;
@@ -491,201 +788,86 @@ function shortenFileName(fileName, maxLength = 30, isAudioFile = false) {
 }
 
 
+// --- HÀM APPEND TIN NHẮN VÀO CHAT ---
+function appendMessageToChat(message) {
+    const messageBox = document.createElement('div');
+    messageBox.classList.add('message-box');
+    messageBox.dataset.messageIndex = message.index;
+
+    let contentHtml = '';
+    if (message.type === 'text') {
+        contentHtml = `<p>${message.textContent}</p>`;
+    } else if (message.type === 'file') {
+        const fileExtension = message.fileName ?
+            message.fileName.split('.').pop().toLowerCase() : '';
+        const fileSizeFormatted = formatFileSize(message.fileSize);
+        // Kiểm tra xem hàm getFileIconSvg có tồn tại không trước khi gọi
+        const fileIconSvg = typeof getFileIconSvg === 'function' ?
+            getFileIconSvg(fileExtension) : '';
+
+        const isAudio = message.mimeType.startsWith('audio/');
+        const displayFileName = shortenFileName(message.fileName, 30, isAudio);
+
+        if (message.mimeType.startsWith('image/')) {
+            contentHtml = `<img src="${message.fileUrl}" alt="${message.fileName}" class="chat-image">`;
+        } else if (message.mimeType.startsWith('video/')) {
+            contentHtml = `<video controls src="${message.fileUrl}" class="chat-video"></video>`;
+        } else if (isAudio) {
+            contentHtml = `
+                <div class="chat-audio">
+                    <div class="file-info">
+                        <div class="file-avatar-container svg">${fileIconSvg}</div>
+                        <div class="file-details">
+                            <span class="file-name">${displayFileName}</span>
+                            <span class="file-size">${fileSizeFormatted}</span>
+                        </div>
+                    </div>
+                    <audio controls src="${message.fileUrl}"></audio>
+                </div>`;
+        } else {
+            contentHtml = `
+                <div class="chat-file">
+                    <div class="file-info">
+                        <div class="file-avatar-container svg">${fileIconSvg}</div>
+                        <div class="file-details">
+                            <span class="file-name">${displayFileName}</span>
+                            <span class="file-size">${fileSizeFormatted}</span>
+                        </div>
+                    </div>
+                </div>`;
+        }
+    }
+
+    messageBox.innerHTML = `
+        <div class="message-content">
+            ${contentHtml}
+        </div>
+    `;
+    chatContentArea.appendChild(messageBox);
+}
+
+
 document.addEventListener('DOMContentLoaded', function () {
-    const chatBubble = document.getElementById('chat-bubble');
+    chatBubble = document.getElementById('chat-bubble');
     const backgroundBlurChat = document.querySelector('.background-blur-chat');
     const sendButton = document.querySelector('.chat-toolbar .send-button');
     const textInput = document.querySelector('.chat-toolbar .text-input');
-    chatContentArea = document.querySelector('.chat-content-area'); // Gán giá trị cho biến toàn cục
-    const toolbarLoadingOverlay = document.getElementById('toolbar-loading-overlay');
+    chatContentArea = document.querySelector('.chat-content-area');
+    toolbarLoadingOverlay = document.getElementById('toolbar-loading-overlay');
     const noteBackground = document.getElementById('note-background');
     const syncLoadingOverlay = document.getElementById('sync-loading-overlay');
-    const scrollToBottomBtn = document.getElementById('scroll-to-bottom-btn');
+    scrollToBottomBtn = document.getElementById('scroll-to-bottom-btn');
     const plusButton = document.querySelector('.plus-button');
-
-    let isPickingFile = false;
-
-    // --- HÀM HIỂN THỊ THÔNG BÁO TẠM THỜI (Ví dụ: "Đã lưu vào Google Drive") ---
-    function showTemporaryNotification(message) {
-        const notificationBox = document.createElement('div');
-        notificationBox.classList.add('temporary-notification');
-        notificationBox.textContent = message;
-        document.body.appendChild(notificationBox);
-
-        // Kích hoạt animation hiện ra
-        setTimeout(() => notificationBox.classList.add('show'), 10);
-
-        // Ẩn và xóa sau 3 giây
-        setTimeout(() => {
-            notificationBox.classList.remove('show');
-            notificationBox.addEventListener('transitionend', () => notificationBox.remove(), { once: true });
-        }, 3000);
-    }
-
-    // --- HÀM XỬ LÝ DOWNLOAD TRỰC TIẾP ---
-    async function downloadFileDirectly(fileUrl, fileName) {
-        try {
-            const response = await fetch(fileUrl);
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const blob = await response.blob();
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.style.display = 'none';
-            a.href = url;
-            a.download = fileName || 'download';
-            document.body.appendChild(a);
-            a.click();
-            window.URL.revokeObjectURL(url);
-            a.remove();
-            showTemporaryNotification('Tải xuống hoàn tất!');
-            console.log('File đã được tải xuống trực tiếp:', fileName);
-        } catch (error) {
-            console.error('Lỗi khi tải xuống file trực tiếp:', error);
-            alert('Không thể tải xuống file trực tiếp. Vui lòng thử lại.');
-        }
-    }
-
-
-    // --- HÀM ẨN CÁC NÚT TƯƠNG TÁC ---
-    function hideInteractionButtons() {
-        if (currentActiveMessageBox) {
-            const buttons = currentActiveMessageBox.querySelectorAll('.interaction-button');
-            buttons.forEach(button => {
-                button.classList.remove('active');
-                button.classList.add('hide');
-                button.addEventListener('transitionend', function handler() {
-                    button.remove();
-                    button.removeEventListener('transitionend', handler);
-                }, { once: true });
-            });
-            currentActiveMessageBox = null;
-        }
-    }
-
-    // --- HÀM HIỆN THỊ CÁC NÚT TƯƠNG TÁC ---
-    function showInteractionButtons(messageBox) {
-        hideInteractionButtons(); // Ẩn các nút cũ trước
-
-        currentActiveMessageBox = messageBox;
-
-        const copyDownloadButton = document.createElement('div');
-        copyDownloadButton.classList.add('interaction-button', 'blue');
-        const copyDownloadImg = document.createElement('img');
-
-        if (messageBox.dataset.fileUrl) { // Nếu có fileUrl, hiển thị nút download
-            copyDownloadImg.src = 'assets/img/download.png';
-            copyDownloadImg.alt = 'Download';
-            copyDownloadButton.dataset.action = 'download';
-        } else { // Nếu không có fileUrl, hiển thị nút copy (cho tin nhắn văn bản)
-            copyDownloadImg.src = 'assets/img/copy.png';
-            copyDownloadImg.alt = 'Copy';
-            copyDownloadButton.dataset.action = 'copy';
-        }
-
-        copyDownloadButton.appendChild(copyDownloadImg);
-        messageBox.appendChild(copyDownloadButton);
-
-        const deleteButton = document.createElement('div');
-        deleteButton.classList.add('interaction-button', 'red');
-        const deleteImg = document.createElement('img');
-        deleteImg.src = 'assets/img/delete.png';
-        deleteImg.alt = 'Delete';
-        deleteButton.appendChild(deleteImg);
-        messageBox.appendChild(deleteButton);
-
-        setTimeout(() => {
-            copyDownloadButton.classList.add('active');
-            deleteButton.classList.add('active');
-        }, 10);
-
-        copyDownloadButton.addEventListener('click', function (event) {
-            event.stopPropagation();
-            if (this.dataset.action === 'download') {
-                const fileUrl = messageBox.dataset.fileUrl;
-                const fileName = messageBox.querySelector('.file-name') ? messageBox.querySelector('.file-name').textContent : 'download'; // Lấy tên file từ element nếu có
-                if (fileUrl) {
-                    downloadFileDirectly(fileUrl, fileName); // Gọi hàm tải xuống trực tiếp
-                    console.log('Đang tải xuống file trực tiếp:', fileName, fileUrl);
-                }
-            } else {
-                const textToCopy = messageBox.querySelector('p') ? messageBox.querySelector('p').textContent : '';
-                if (textToCopy) {
-                    navigator.clipboard.writeText(textToCopy)
-                        .then(() => {
-                            console.log('Đã sao chép vào clipboard:', textToCopy);
-                            showTemporaryNotification('Đã sao chép!');
-                        })
-                        .catch(err => {
-                            console.error('Không thể sao chép:', err);
-                            alert('Không thể sao chép. Vui lòng thử lại hoặc sao chép thủ công.');
-                        });
-                }
-            }
-            hideInteractionButtons();
-        });
-
-        deleteButton.addEventListener('click', async function (event) {
-            event.stopPropagation();
-            // index là 0-based, tương ứng với vị trí trong mảng messages trả về từ Apps Script
-            const messageIndex = messageBox.dataset.messageIndex;
-
-            if (confirm("Bạn có chắc muốn xóa tin nhắn này không?")) {
-                try {
-                    toolbarLoadingOverlay.classList.add('active');
-
-                    // Gửi index 0-based đến Apps Script
-                    const response = await fetch(GAS_WEB_APP_URL + '?action=delete&index=' + messageIndex, {
-                        method: 'GET', // Gửi DELETE request qua GET với tham số
-                    });
-                    const result = await response.json();
-
-                    if (result.status === 'success') {
-                        console.log('Tin nhắn đã được xóa thành công.');
-                        await loadAllMessages(false); // Tải lại tin nhắn
-                        showTemporaryNotification('Đã xóa tin nhắn/file thành công!');
-                    } else {
-                        console.error('Lỗi khi xóa tin nhắn:', result.message);
-                        alert('Lỗi khi xóa tin nhắn: ' + result.message);
-                    }
-                } catch (error) {
-                    console.error('Lỗi kết nối hoặc API khi xóa:', error);
-                    alert('Lỗi kết nối hoặc API: ' + error.message);
-                } finally {
-                    toolbarLoadingOverlay.classList.remove('active');
-                }
-                hideInteractionButtons(); // Ẩn nút sau khi xóa
-            }
-        });
-    }
-
-    // --- HÀM XỬ LÝ SỰ KIỆN CLICK VÀO MESSAGE BOX ---
-    function handleMessageBoxClick(event) {
-        event.stopPropagation();
-
-        if (currentActiveMessageBox && currentActiveMessageBox !== this) {
-            hideInteractionButtons();
-        }
-
-        showInteractionButtons(this);
-    }
-
-    // --- HÀM THÊM EVENT LISTENER CHO CÁC MESSAGE BOX ---
-    function addMessageBoxEventListeners() {
-        document.querySelectorAll('.message-box').forEach(box => {
-            box.removeEventListener('click', handleMessageBoxClick); // Xóa để tránh trùng lặp
-            box.addEventListener('click', handleMessageBoxClick);
-        });
-    }
+    const fileInput = document.getElementById('file-input');
 
     // --- KHỞI TẠO CHAT VÀ TẢI TIN NHẮN BAN ĐẦU ---
-    async function initializeChat() {
+    async function
+        initializeChat() {
         if (syncLoadingOverlay) {
             syncLoadingOverlay.classList.add('active');
         }
         try {
-            await loadAllMessages(true); // Tải tin nhắn và cuộn xuống dưới cùng
+            await loadAllMessages(true);
         } catch (error) {
             console.error("Lỗi khi tải tin nhắn ban đầu:", error);
         } finally {
@@ -696,27 +878,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     initializeChat();
-
-    // --- Scroll to Bottom Button Functions ---
-    function isAtBottom() {
-        if (!chatContentArea) return true;
-        const threshold = 100;
-        return chatContentArea.scrollTop + chatContentArea.clientHeight >= chatContentArea.scrollHeight - threshold;
-    }
-
-    function updateScrollButton() {
-        if (!scrollToBottomBtn || !chatBubble.classList.contains('expanded')) {
-            if (scrollToBottomBtn) scrollToBottomBtn.classList.remove('show');
-            return;
-        }
-
-        if (isAtBottom()) {
-            scrollToBottomBtn.classList.remove('show');
-        } else {
-            scrollToBottomBtn.classList.add('show');
-        }
-    }
-
     if (chatContentArea) {
         chatContentArea.addEventListener('scroll', updateScrollButton);
     }
@@ -732,19 +893,20 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // --- Logic Chat Bubble Expand/Collapse ---
-    // Logic Chat Bubble Expand/Collapse
     if (chatBubble) {
         chatBubble.addEventListener('click', function (event) {
             if (!this.classList.contains('expanded')) {
                 if (!event.target.closest('#note-background') &&
                     !event.target.closest('.chat-toolbar') &&
+
                     !event.target.closest('.message-box')) {
                     this.classList.add('expanded');
-                    document.body.classList.add('no-scroll'); // Thêm dòng này để khóa scroll
+                    document.body.classList.add('no-scroll');
                     if (backgroundBlurChat) {
                         backgroundBlurChat.classList.add('active');
+
                     }
-                    scrollToBottom(); // Gọi hàm toàn cục [cite: 95]
+                    scrollToBottom();
                     setTimeout(updateScrollButton, 100);
                 }
             }
@@ -757,13 +919,14 @@ document.addEventListener('DOMContentLoaded', function () {
             if (
                 chatBubble.classList.contains('expanded') &&
                 !chatBubble.contains(event.target) &&
-                !event.target.closest('.chat-toolbar') && // đề phòng người dùng click vào thanh công cụ
-                !isPickingFile // <-- dòng quan trọng để ngăn collapse [cite: 96]
+
+                !event.target.closest('.chat-toolbar')
             ) {
                 chatBubble.classList.remove('expanded');
-                document.body.classList.remove('no-scroll'); // Thêm dòng này để bỏ khóa scroll
+                document.body.classList.remove('no-scroll');
                 if (backgroundBlurChat) {
                     backgroundBlurChat.classList.remove('active');
+
                 }
                 if (scrollToBottomBtn) {
                     scrollToBottomBtn.classList.remove('show');
@@ -781,18 +944,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (!chatBubble.classList.contains('expanded')) {
                 chatBubble.classList.add('expanded');
-                document.body.classList.add('no-scroll'); // Thêm dòng này để khóa scroll
+                document.body.classList.add('no-scroll');
+
                 if (backgroundBlurChat) {
                     backgroundBlurChat.classList.add('active');
                 }
-                scrollToBottom(); // Gọi hàm toàn cục [cite: 100]
+                scrollToBottom();
                 setTimeout(updateScrollButton, 100);
                 return;
+
             }
 
             if (chatBubble.classList.contains('expanded')) {
                 syncLoadingOverlay.classList.add('active');
-
                 try {
                     await loadAllMessages(true);
                     console.log("Đồng bộ dữ liệu từ Google Sheet thành công!");
@@ -811,16 +975,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const maxTextAreaHeight = 400;
     const minTextAreaHeight = 40;
-
     if (textInput) {
         function adjustHeight() {
-            const currentHeight = parseInt(textInput.style.height) || minTextAreaHeight;
+            const currentHeight = parseInt(textInput.style.height) ||
+                minTextAreaHeight;
 
             textInput.style.transition = 'none';
             textInput.style.height = 'auto';
 
             let newHeight = Math.max(Math.ceil(textInput.scrollHeight), minTextAreaHeight);
-
             if (newHeight > maxTextAreaHeight) {
                 newHeight = maxTextAreaHeight;
                 textInput.style.overflowY = 'auto';
@@ -830,7 +993,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (Math.abs(newHeight - currentHeight) > 3) {
                 textInput.style.height = currentHeight + 'px';
-                textInput.offsetHeight;
+                textInput.offsetHeight; // force reflow
                 textInput.style.transition = 'height 0.3s ease';
                 textInput.style.height = newHeight + 'px';
             } else {
@@ -854,17 +1017,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 toolbarLoadingOverlay.classList.add('active');
 
                 try {
+
                     const response = await fetch(GAS_WEB_APP_URL, {
                         method: 'POST',
                         headers: {
+
                             'Content-Type': 'text/plain;charset=utf-8'
                         },
                         body: JSON.stringify({
-                            action: 'saveMessage',
-                            content: messageText
+                            action: 'postMessage',
+
+                            message: messageText
                         })
                     });
-
                     const result = await response.json();
 
                     if (result.status === 'success') {
@@ -885,7 +1050,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }
         });
-
         textInput.addEventListener('keydown', function (event) {
             if (event.key === 'Enter' && !event.shiftKey) {
                 event.preventDefault();
@@ -896,367 +1060,225 @@ document.addEventListener('DOMContentLoaded', function () {
         console.error("Không tìm thấy một hoặc nhiều phần tử: sendButton, textInput, chatContentArea, toolbarLoadingOverlay. Vui lòng kiểm tra lại HTML.");
     }
 
-    // --- XỬ LÝ NÚT PLUS VÀ TẢI FILE LÊN CLOUDINARY HOẶC GOOGLE DRIVE (QUA APPS SCRIPT) ---
-    if (plusButton) {
-        plusButton.addEventListener('click', async function (event) {
-            event.stopPropagation();
 
-            const fileInput = document.createElement('input');
-            fileInput.type = 'file';
-            fileInput.style.display = 'none';
-            document.body.appendChild(fileInput);
-
-            isPickingFile = true; // Đánh dấu đang chọn file
-
-            const fileChosenPromise = new Promise(resolve => {
-                fileInput.addEventListener('change', function handler(e) {
-                    fileInput.removeEventListener('change', handler);
-                    resolve(e.target.files[0]);
-                }, { once: true });
-            });
-
+    // --- Xử lý click nút plus để chọn file ---
+    if (plusButton && fileInput) {
+        plusButton.addEventListener('click', () => {
             fileInput.click();
+        });
+        fileInput.addEventListener('change', async (event) => {
+            const files = event.target.files;
+            if (files.length === 0) return;
 
-            const file = await fileChosenPromise;
-            document.body.removeChild(fileInput);
-            isPickingFile = false; // Reset sau khi chọn xong
-
-            if (!file) return;
-
-            console.log("File được chọn:", file.name, file.type, file.size);
             toolbarLoadingOverlay.classList.add('active');
-
             try {
-                let uploaded = false;
+                // Lấy access token từ GAS
+                const tokenResponse = await fetch(GAS_WEB_APP_URL + '?action=getAccessToken');
+                const tokenData = await tokenResponse.json();
 
-                // --- Ưu tiên Cloudinary ---
-                if (file.size <= CLOUDINARY_MAX_RAW_SIZE && CLOUDINARY_UPLOAD_PRESET && CLOUDINARY_CLOUD_NAME) {
-                    try {
-                        const formData = new FormData();
-                        formData.append('file', file);
-                        formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+                if (tokenData.status === 'success' && tokenData.accessToken) {
+                    const accessToken = tokenData.accessToken;
+                    for (const file of files) {
 
-                        const response = await fetch(CLOUDINARY_UPLOAD_URL, {
-                            method: 'POST',
-                            body: formData
-                        });
-
-                        const result = await response.json();
-                        if (!result.secure_url) throw new Error('Upload Cloudinary thất bại');
-
-                        const fileUrl = result.secure_url;
-                        const fileData = {
-                            type: result.resource_type,
-                            fileName: file.name,
-                            mimeType: file.type,
-                            fileSize: file.size,
-                            fileUrl: fileUrl
-                        };
-
-                        const resMeta = await fetch(GAS_WEB_APP_URL, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                            body: JSON.stringify({
-                                action: 'saveFileMetadata',
-                                platform: 'cloudinary',
-                                fileData: fileData
-                            })
-                        });
-
-                        const resJson = await resMeta.json();
-                        if (resJson.status !== 'success') throw new Error('Cloudinary metadata lỗi');
-
-                        showTemporaryNotification('Đã lưu file vào Cloudinary!');
-                        uploaded = true;
-                    } catch (err) {
-                        console.warn('Cloudinary lỗi:', err.message);
+                        await uploadFileToDropbox(file, accessToken);
                     }
+                    showTemporaryNotification('Đã tải lên tệp thành công!');
+                    await loadAllMessages(true); // Tải lại tin nhắn sau khi upload
+
+                } else {
+                    alert('Lỗi: Không thể lấy Access Token từ Google Apps Script. ' + (tokenData.message ||
+                        ''));
                 }
+            } catch (error) {
+                console.error('Lỗi khi tải lên file hoặc lấy token:', error);
+                alert('Lỗi khi tải lên file hoặc lấy token: ' + error.message);
+            } finally {
+                toolbarLoadingOverlay.classList.remove('active');
+                fileInput.value = ''; // Reset input file để có thể chọn lại cùng file
+            }
+        });
+    }
 
-                // --- Fallback sang Dropbox nếu Cloudinary lỗi ---
-                if (!uploaded) {
-                    try {
-                        const DROPBOX_ACCESS_TOKEN = 'sl.u.AFwk4txsPjnqWXHKd-xXgBM-ieVQMBk9S6HDgJZvfX3ip92mCVrjVxR77mBiYCSygbw8zB9HXYgPKNedXZkge86jRZUugl_JLRxCqk5AQftnNXwYHJj9JvhPYsIT4AgHjbtO4wUAf7uvrCfJ7BErES2sitsanCWmloQM4afR7xU_GmgaIIQx-cgB_ZhG5TUeAeXhhCuGSKd7IVlRVV7pXntnhQki9_cBSnz2vWvl3tg4Pg0zKjSnA-T4tBRztxwce0kf3Qsiv5E1v6T5BE5GwupYuavUqTVVycDwOOHE2uSLW5ZE8DSKE8zIeDik2rwSADNdg7zourd-evGKXyjh-b9s2cFb9uF328ALDvZY6Qs4IgYZUp7tbc36K4M93-4ig6a4o2APjITeCChzMe_G0t2gTQFJmw3Gl5jUjqxnvoY5_947ltV7JXLGUmihB97QW8liUn1z864J0XxILGXFAPvbeQqqzUzpDUGtzDd905Gop1V_oCqUeikQ6kCEcpqmlnMhbzfy_wOWj2FSbzMawn_riX0e-U5S5KvviL6ERkcA4BUkcWzMO6Sd7bRZI8PkB9My25C0sZRI84MFvXcqIpllBKUtp3I_gG4sTFkwZhzymqXZJFWHKZWJg6MJpKqwRKVtzk9QrSF19jfisOMUEkbB_IjJaTSro5jftMcLGpe-0ccgZg7uhMcXN_WB6RDfeM-nnjeXPRP7nFdB8f7sOEmwypTumypOGKW2jGtLvBfe_wmA9emmC49b6j3-S_nWRxXKVYgRkmMfvPOp4SpDkjxbZV3-OKqQT_E7rf-laXUq32kQ8TYVkNGjbUsivEmTOjXFth7w1hLOqKFd3pRdepov_yFFaFBsAVU6VRD7Uv-SGO6KcUeQK3Mcwe_Sr8eE85prNx3a91zRsmsahei1WHjB6QuYFxvu7Xqbmh-eetAAv8JMPdXNs_BPPYwywOupD98xNw0KGnz9mzH_HDxmFJ5L3cO6Uw_lSCC6wH-OhQZHDXciWBEoJ_P5Pg4Yl1z6238nkLonoEzNWZP2jGjk8Q1hi573JWHw6o7MZZ-z2BkVBdmCuBkjrOMgQwfcD4i3o1UV8H8pvJHAE5ARmGAxQLKtlaoNyt4Wt3wu6Mjo_e-vGTXxO7fI84n9ToSc5AuhJdgT4tfn9Rok3SRidzjsWmYf_IGsSV4OSQyPhrkpXMJhpKgPENhMne13ZNDA-IbAa5e904zomG_3lZ7KqIyGpjYzv7hPZ44uelRz3hzY1PQDbRYSqbSRIdzna9NkhrI3aGC9rrfiH_Ri0r_DGa8utDHR'; // <-- thay bằng token thật
 
-                        const sanitizedFileName = sanitizeFileName(file.name);
+    // --- Hàm upload file lên Dropbox ---
+    async function uploadFileToDropbox(file, accessToken) {
+        try {
+            // Đảm bảo tên file được mã hóa UTF-8 chính xác
+            const fileName = file.name;
+            // Thử encode tên file để tránh lỗi với ký tự đặc biệt
+            const encodedFileName = encodeURIComponent(fileName);
+            const path = '/' + fileName; // Sử dụng tên gốc cho path
 
-                        const uploadRes = await fetch('https://content.dropboxapi.com/2/files/upload', {
+            console.log('Original fileName:', fileName);
+            console.log('Encoded fileName:', encodedFileName);
+            console.log('Path:', path);
+
+            console.log('Uploading file:', fileName);
+
+            // Giải pháp đơn giản: Chuyển ký tự Unicode thành percent encoding
+            function encodePathForHeader(path) {
+                // Encode từng ký tự non-ASCII thành %XX format
+                return path.split('').map(char => {
+                    const code = char.charCodeAt(0);
+
+                    if (code > 127) {
+                        // Encode thành UTF-8 bytes rồi percent encode
+                        return encodeURIComponent(char);
+                    }
+
+                    return char;
+                }).join('');
+            }
+
+            const encodedPath = encodePathForHeader(path);
+            const dropboxApiArg = JSON.stringify({
+                path: encodedPath,
+                mode: 'overwrite',
+                autorename: false,
+                mute: false
+            });
+            console.log('Original path:', path);
+            console.log('Encoded path:', encodedPath);
+            console.log('Dropbox-API-Arg:', dropboxApiArg);
+
+            const response = await fetch('https://content.dropboxapi.com/2/files/upload', {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer ' + accessToken,
+                    'Content-Type': 'application/octet-stream',
+
+                    'Dropbox-API-Arg': dropboxApiArg
+                },
+                body: file
+            });
+            const data = await response.json();
+
+            if (!response.ok) {
+                console.error('Error uploading file to Dropbox:', data);
+                throw new Error('Lỗi khi tải lên Dropbox: ' + (data.error_summary || 'Unknown error'));
+            }
+
+            console.log('File uploaded to Dropbox:', data);
+            // Lấy URL chia sẻ
+            let fileUrl = '';
+            try {
+                const shareResponse = await fetch('https://api.dropboxapi.com/2/sharing/create_shared_link_with_settings', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' + accessToken,
+
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        path: data.path_lower,
+
+                        settings: {
+                            requested_visibility: "public" // Hoặc "team_only", "password" tùy chọn
+                        }
+                    })
+
+                });
+
+                const shareData = await shareResponse.json();
+
+                if (shareResponse.ok) {
+                    fileUrl = shareData.url.replace('dl=0', 'raw=1');
+                    // Chuyển đổi URL để tải trực tiếp
+                    console.log('Shared link created:', fileUrl);
+                } else {
+                    // Nếu đã có link chia sẻ, Dropbox sẽ trả về lỗi, chúng ta cần lấy link hiện có
+                    if (shareData.error && shareData.error['.tag'] === 'shared_link_already_exists') {
+                        const existingLinksResponse = await fetch('https://api.dropboxapi.com/2/sharing/list_shared_links', {
+
                             method: 'POST',
                             headers: {
-                                'Authorization': 'Bearer ' + DROPBOX_ACCESS_TOKEN,
-                                'Dropbox-API-Arg': JSON.stringify({
-                                    path: '/' + sanitizedFileName,
-                                    mode: 'add',
-                                    autorename: true
-                                }),
-                                'Content-Type': 'application/octet-stream'
-                            },
-                            body: await file.arrayBuffer()
-                        });
+                                'Authorization': 'Bearer ' + accessToken,
 
-
-                        if (!uploadRes.ok) throw new Error('Upload Dropbox lỗi');
-                        const uploadJson = await uploadRes.json();
-
-                        const shareRes = await fetch('https://api.dropboxapi.com/2/sharing/create_shared_link_with_settings', {
-                            method: 'POST',
-                            headers: {
-                                'Authorization': 'Bearer ' + DROPBOX_ACCESS_TOKEN,
                                 'Content-Type': 'application/json'
                             },
                             body: JSON.stringify({
-                                path: uploadJson.path_lower,
-                                settings: { requested_visibility: 'public' }
+
+                                path: data.path_lower,
+                                direct_only: true
                             })
                         });
+                        const existingLinksData = await existingLinksResponse.json();
 
-                        const shareJson = await shareRes.json();
-
-                        // Fix hiển thị ảnh Dropbox:
-                        let fileUrl = shareJson.url
-                            .replace('www.dropbox.com', 'dl.dropboxusercontent.com')
-                            .replace('?dl=0', ''); // Xóa ?dl=0 để được link raw ảnh
-
-                        const fileData = {
-                            type: file.type.startsWith('image/') ? 'image' :
-                                file.type.startsWith('video/') ? 'video' : 'file',
-                            fileName: file.name,
-                            mimeType: file.type,
-                            fileSize: file.size,
-                            fileUrl: fileUrl
-                        };
-
-                        const resMeta = await fetch(GAS_WEB_APP_URL, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                            body: JSON.stringify({
-                                action: 'saveFileMetadata',
-                                platform: 'dropbox',
-                                fileData: fileData
-                            })
-                        });
-
-
-                        const resJson = await resMeta.json();
-                        if (resJson.status !== 'success') throw new Error('Dropbox metadata lỗi');
-
-                        showTemporaryNotification('Đã lưu file vào Dropbox!');
-                        uploaded = true;
-                    } catch (err) {
-                        console.warn('Dropbox lỗi:', err.message);
+                        if (existingLinksResponse.ok && existingLinksData.links && existingLinksData.links.length > 0) {
+                            fileUrl = existingLinksData.links[0].url.replace('dl=0', 'raw=1');
+                            console.log('Existing shared link:', fileUrl);
+                        } else {
+                            console.error('Error getting existing shared links:', existingLinksData);
+                            throw new Error('Không thể lấy liên kết chia sẻ hiện có');
+                        }
+                    } else {
+                        console.error('Error creating shared link:', shareData);
+                        throw new Error('Không thể tạo liên kết chia sẻ cho tệp: ' + (shareData.error_summary || 'Unknown error'));
                     }
                 }
-
-                // --- Cuối cùng: fallback sang Google Drive ---
-                if (!uploaded) {
-                    const base64 = await fileToBase64(file);
-                    const form = new URLSearchParams();
-                    form.append('action', 'uploadFileToDrive');
-                    form.append('fileName', file.name);
-                    form.append('mimeType', file.type);
-                    form.append('fileSize', file.size);
-                    form.append('base64Data', base64.split(',')[1]);
-
-                    const response = await fetch(GAS_WEB_APP_URL, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                        body: form
-                    });
-
-                    const result = await response.json();
-                    if (result.status !== 'success') throw new Error('Drive upload lỗi');
-
-                    showTemporaryNotification('Đã lưu file vào Google Drive!');
-                }
-
-                await loadAllMessages(true);
-            } catch (err) {
-                alert('Lỗi tải file: ' + err.message);
-                console.error('Tải file lỗi:', err);
-            } finally {
-                toolbarLoadingOverlay.classList.remove('active');
-            }
-        });
-    } else {
-        console.error("Không tìm thấy phần tử .plus-button. Vui lòng đảm bảo class hoặc ID chính xác.");
-    }
-
-
-    // --- TẢI TẤT CẢ TIN NHẮN (BAO GỒM VĂN BẢN VÀ FILE) ---
-    async function loadAllMessages(forceScrollToBottom = false) {
-        if (!chatContentArea) return;
-
-        const currentScrollTop = chatContentArea.scrollTop;
-        const currentScrollHeight = chatContentArea.scrollHeight;
-
-        try {
-            const response = await fetch(GAS_WEB_APP_URL + '?action=getAllMessages', {
-                method: 'GET'
-            });
-
-            const messages = await response.json();
-            chatContentArea.innerHTML = ''; // Xóa nội dung cũ
-
-            messages.sort((a, b) => {
-                const timeA = a.timestamp ? new Date(a.timestamp).getTime() : 0;
-                const timeB = b.timestamp ? new Date(b.timestamp).getTime() : 0;
-                return timeA - timeB;
-            });
-
-            messages.forEach((msgObj, index) => {
-                if (msgObj) {
-                    const messageBox = document.createElement('div');
-                    messageBox.classList.add('message-box');
-                    // Gán index + 1 vì Apps Script dùng 1-based index cho hàng
-                    messageBox.dataset.messageIndex = index;
-
-                    // Xử lý tin nhắn văn bản
-                    if (msgObj.type === 'text') {
-                        const paragraph = document.createElement('p');
-                        paragraph.textContent = msgObj.content;
-                        messageBox.appendChild(paragraph);
-                    } else { // Xử lý file (bao gồm image/pdf)
-                        const fileLink = msgObj.fileUrl;
-                        const fileName = msgObj.fileName;
-                        const fileSize = msgObj.fileSize;
-                        let mimeType = msgObj.mimeType; // MIME type từ backend
-                        const filePlatform = msgObj.filePlatform; // Lấy nền tảng lưu trữ
-
-                        // Sửa MIME type cho PDF nếu cần (hoặc từ backend trả về sai)
-                        if (mimeType === 'image/pdf') {
-                            mimeType = 'application/pdf';
-                        } else if (mimeType && mimeType.includes('rar')) { // Thêm xử lý cho .rar từ backend
-                            mimeType = 'application/x-rar-compressed';
-                        }
-
-
-                        messageBox.dataset.fileUrl = fileLink;
-                        messageBox.dataset.filePlatform = filePlatform; // Lưu nền tảng vào dataset
-
-                        // Xử lý hiển thị dựa trên type
-                        if (msgObj.type === 'image' && mimeType && !mimeType.includes('pdf')) { // Kiểm tra mimeType không phải PDF
-                            const img = document.createElement('img');
-                            img.src = fileLink;
-                            img.alt = fileName;
-                            img.classList.add('chat-image');
-                            messageBox.appendChild(img);
-                        } else if (msgObj.type === 'video') {
-                            const video = document.createElement('video');
-                            video.src = fileLink;
-                            video.controls = true;
-                            video.preload = 'metadata';
-                            video.alt = fileName;
-                            video.classList.add('chat-video');
-                            messageBox.appendChild(video);
-                        } else if (msgObj.type === 'audio') { // Thêm phần này để xử lý audio
-                            const audio = document.createElement('audio');
-                            audio.src = fileLink;
-                            audio.controls = true; // Hiển thị thanh điều khiển
-                            audio.preload = 'metadata'; // Tải metadata để hiển thị thời lượng
-                            audio.alt = fileName;
-                            audio.classList.add('chat-audio'); // Class cho audio box
-                            messageBox.appendChild(audio);
-
-                            const audioFileNameP = document.createElement('p');
-                            audioFileNameP.classList.add('file-name'); // Class cho tên file
-                            audioFileNameP.textContent = shortenFileName(fileName, 25, true); // Rút gọn tên file nếu cần
-                            messageBox.appendChild(audioFileNameP);
-                        } else { // Xử lý các file khác, bao gồm PDF và RAR
-                            const fileContentDiv = document.createElement('div');
-                            fileContentDiv.classList.add('file-content');
-
-                            // Sử dụng mimeType từ backend (đã được chuẩn hóa nếu cần)
-                            const fileIconInfo = getFileIcon(mimeType, fileName);
-                            const iconContainer = document.createElement('div');
-                            iconContainer.classList.add('file-avatar-container');
-                            if (fileIconInfo.class) {
-                                iconContainer.classList.add(fileIconInfo.class);
-                            }
-                            iconContainer.innerHTML = fileIconInfo.svg;
-
-                            fileContentDiv.appendChild(iconContainer);
-
-                            const fileInfoDiv = document.createElement('div');
-                            fileInfoDiv.classList.add('file-info');
-
-                            const fileNameP = document.createElement('p');
-                            fileNameP.classList.add('file-name');
-                            fileNameP.textContent = shortenFileName(fileName, 25);
-                            fileInfoDiv.appendChild(fileNameP);
-
-                            const fileSizeP = document.createElement('p');
-                            fileSizeP.classList.add('file-size');
-                            fileSizeP.textContent = formatFileSize(fileSize);
-                            fileInfoDiv.appendChild(fileSizeP);
-
-                            fileContentDiv.appendChild(fileInfoDiv);
-                            messageBox.appendChild(fileContentDiv);
-                        }
-                    }
-                    chatContentArea.appendChild(messageBox);
-                }
-            });
-
-            if (forceScrollToBottom) {
-                scrollToBottom();
-            } else {
-                const newScrollHeight = chatContentArea.scrollHeight;
-                const scrollRatio = currentScrollTop / currentScrollHeight;
-                chatContentArea.scrollTop = scrollRatio * newScrollHeight;
+            } catch (shareError) {
+                console.error('Error handling shared link:', shareError);
+                // Vẫn tiếp tục với việc lưu metadata ngay cả khi không tạo được shared link
+                fileUrl = 'Error creating shared link';
             }
 
-            addMessageBoxEventListeners();
-            setTimeout(updateScrollButton, 100);
+            // Lưu thông tin file vào Google Sheet
+            try {
+                await saveFileMetadataToSheet({
+                    fileName: fileName, // Sử dụng tên file gốc với ký tự tiếng Việt
 
+                    fileSize: file.size,
+                    fileMimeType: file.type,
+                    filePlatform: 'Dropbox',
+                    fileUrl: fileUrl,
+                    fileId: data.id // Dropbox file ID
+
+                });
+                console.log('File metadata saved successfully');
+            } catch (metadataError) {
+                console.error('Error saving file metadata:', metadataError);
+                // Không throw error ở đây vì file đã upload thành công
+            }
+
+            return {
+                success: true,
+                fileId: data.id,
+                fileName: fileName,
+
+                fileUrl: fileUrl,
+                path: data.path_display
+            };
         } catch (error) {
-            console.error('Lỗi khi tải tin nhắn:', error);
-            alert('Lỗi khi tải tin nhắn: ' + error.message);
+            console.error('Upload failed:', error);
+            throw error;
         }
     }
 
 
-    // Khởi tạo các ngôi sao
-    function createBoxShadows(count, maxX, maxY) {
-        let shadows = [];
-        for (let i = 0; i < count; i++) {
-            const x = Math.floor(Math.random() * maxX);
-            const y = Math.floor(Math.random() * maxY);
-            shadows.push(`${x}px ${y}px #FFF`);
+    // --- Hàm lưu metadata file vào Google Sheet ---
+    async function saveFileMetadataToSheet(fileMetadata) {
+        const response = await fetch(GAS_WEB_APP_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'text/plain;charset=utf-8'
+            },
+            body: JSON.stringify({
+                action: 'postFileMetadata',
+                fileName: fileMetadata.fileName,
+                fileSize: fileMetadata.fileSize,
+                mimeType: fileMetadata.mimeType,
+                filePlatform: fileMetadata.filePlatform,
+
+                fileUrl: fileMetadata.fileUrl,
+                fileId: fileMetadata.fileId
+            })
+        });
+        const result = await response.json();
+        if (result.status === 'success') {
+            console.log('Metadata file đã được lưu thành công:', fileMetadata.fileName);
+        } else {
+            console.error('Lỗi khi lưu metadata file:', result.message);
+            throw new Error('Lỗi khi lưu metadata file: ' + result.message);
         }
-        return shadows.join(', ');
-    }
-
-    const starsElement = document.getElementById('stars');
-    const stars2Element = document.getElementById('stars2');
-    const stars3Element = document.getElementById('stars3');
-
-    const expandedWidth = 900;
-    const expandedHeight = 480;
-    const bufferHeight = 100;
-
-    if (starsElement) {
-        starsElement.style.boxShadow = createBoxShadows(700, expandedWidth, expandedHeight + bufferHeight);
-        starsElement.style.setProperty('--star-animation-height', `${expandedHeight + bufferHeight}px`);
-    }
-    if (stars2Element) {
-        stars2Element.style.boxShadow = createBoxShadows(200, expandedWidth, expandedHeight + bufferHeight);
-        stars2Element.style.setProperty('--star-animation-height', `${expandedHeight + bufferHeight}px`);
-    }
-    if (stars3Element) {
-        stars3Element.style.boxShadow = createBoxShadows(100, expandedWidth, expandedHeight + bufferHeight);
-        stars3Element.style.setProperty('--star-animation-height', `${expandedHeight + bufferHeight}px`);
     }
 });
-
-function fileToBase64(file) {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = e => resolve(e.target.result);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-    });
-}
-
-function sanitizeFileName(name) {
-    return name.replace(/[^a-zA-Z0-9_.\-]/g, '_');
-}
