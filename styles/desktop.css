@@ -1328,22 +1328,19 @@ body {
     /* Loại bỏ khoảng trắng thừa dưới ảnh */
     border-radius: 15px;
     /* Bo tròn góc cho ảnh */
-    object-fit: contain;
+    object-fit: cover;
+    margin: 5px;
 }
 
 /* Styles cho video trong message-box */
 .chat-video {
-    max-width: 400px;
-    /* Chiều rộng tối đa */
-    max-height: 200px;
-    /* Chiều cao tối đa */
-    height: auto;
-    /* Đảm bảo tỷ lệ khung hình được duy trì */
+    height: 200px;
     display: block;
+    margin: 5px;
     /* Loại bỏ khoảng trắng thừa dưới video */
     border-radius: 15px;
     /* Bo tròn góc cho video */
-    object-fit: contain;
+    object-fit: cover;
     /* Đảm bảo video hiển thị đầy đủ trong khung */
 }
 
