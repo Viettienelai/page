@@ -897,8 +897,8 @@ body {
 /* Khi chat-bubble.expanded, điều chỉnh border-effect theo */
 #chat-bubble.expanded+.chat-bubble-border-effect {
   width: 910px;
-  height: 710px;
-  top: -115px;
+  height: 610px;
+  top: -65px;
   right: -55px;
   border-radius: 25px;
   /* Hình vuông/chữ nhật với góc bo */
@@ -908,8 +908,8 @@ body {
 
 #chat-bubble.expanded {
   width: 900px;
-  height: 700px;
-  top: -110px;
+  height: 600px;
+  top: -60px;
   right: -50px;
   border-radius: 20px;
   z-index: 1000001;
@@ -1262,7 +1262,7 @@ body {
 
 .chat-content-area {
   width: 900px;
-  height: 700px;
+  height: 600px;
   top: 0px;
   box-sizing: border-box;
   overflow-y: auto;
@@ -1329,21 +1329,19 @@ body {
     border-radius: 15px;
     /* Bo tròn góc cho ảnh */
     object-fit: cover;
-    margin: 5px;
+    margin: 0px;
 }
 
 /* Styles cho video trong message-box */
 .chat-video {
     height: 200px;
     display: block;
-    margin: 5px;
+    width: auto;
     /* Loại bỏ khoảng trắng thừa dưới video */
     border-radius: 15px;
     /* Bo tròn góc cho video */
     object-fit: cover;
-    /* Đảm bảo video hiển thị đầy đủ trong khung */
 }
-
 /* Styles chung cho box chứa file (không phải ảnh/video/audio) */
 .chat-file {
     display: flex;
@@ -1778,7 +1776,7 @@ body {
 
 .scroll-to-bottom-btn {
   position: absolute;
-  top: 560px;
+  top: 460px;
   left: 50%;
   transform: translateX(-50%);
   width: 40px;
