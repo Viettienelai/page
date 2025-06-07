@@ -385,14 +385,61 @@ function getFileIconSvg(extension) {
 
 
 
-// Cấu hình Google Apps Script Web App URL
-const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxt4ct-xXs3FqN4WdUnx2UUQ59DGHSwnZvNvvx0uKKZbwd4TsTFuOmAPdj2vSt9Gl8tNQ/exec';
-// Khai báo biến này ở phạm vi toàn cục
-let currentActiveMessageBox = null;
-let chatContentArea = null;
-let toolbarLoadingOverlay = null;
-let scrollToBottomBtn = null;
-let chatBubble = null;
+
+
+
+
+
+
+
+
+
+
+
+
+// --- HÀM ẨN CÁC NÚT TƯƠNG TÁC ---
+function hideInteractionButtons() {
+    if (currentActiveMessageBox) {
+        const buttons = currentActiveMessageBox.querySelectorAll('.interaction-button');
+        buttons.forEach(button => {
+            button.classList.remove('active');
+            button.classList.add('hide');
+            button.addEventListener('transitionend', function handler() {
+                button.remove();
+                button.removeEventListener('transitionend', handler);
+            }, { once: true });
+        });
+        currentActiveMessageBox = null;
+    }
+}
+
+// --- HÀM XỬ LÝ SỰ KIỆN CLICK VÀO MESSAGE BOX ---
+function handleMessageBoxClick(event) {
+    event.stopPropagation();
+    if (currentActiveMessageBox && currentActiveMessageBox !== this) {
+        hideInteractionButtons();
+    }
+    showInteractionButtons(this);
+}
+
+// --- Scroll to Bottom Button Functions ---
+function isAtBottom() {
+    if (!chatContentArea) return true;
+    const threshold = 100;
+    return chatContentArea.scrollTop + chatContentArea.clientHeight >= chatContentArea.scrollHeight - threshold;
+}
+
+function updateScrollButton() {
+    if (!scrollToBottomBtn || (chatBubble && !chatBubble.classList.contains('expanded'))) {
+        if (scrollToBottomBtn) scrollToBottomBtn.classList.remove('show');
+        return;
+    }
+    if (isAtBottom()) {
+        scrollToBottomBtn.classList.remove('show');
+    } else {
+        scrollToBottomBtn.classList.add('show');
+    }
+}
 
 // --- Scroll to Bottom Function ---
 function scrollToBottom() {
@@ -531,6 +578,62 @@ function handleCopyText(messageBox) {
     }
 }
 
+// --- Hàm format kích thước file ---
+function formatFileSize(bytes) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+}
+
+// --- HÀM HỖ TRỢ RÚT GỌN TÊN FILE ---
+function shortenFileName(fileName, maxLength = 30, isAudioFile = false) {
+    if (isAudioFile) {
+        return fileName;
+    }
+
+    const parts = fileName.split('.');
+    const extension = parts.length > 1 ? '.' + parts.pop() : '';
+    let nameWithoutExt = parts.join('.');
+
+    if (nameWithoutExt.length + extension.length > maxLength) {
+        const charsToShow = maxLength - extension.length - 3;
+        if (charsToShow <= 0) {
+            return fileName.substring(0, Math.max(0, maxLength - 3)) + '...';
+        }
+        return nameWithoutExt.substring(0, charsToShow) + '...' + extension;
+    }
+    return fileName;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Cấu hình Google Apps Script Web App URL
+const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzuloVy-eF_FX1Go5wnwQE-gKOvluHEyFyh5afrCN86vpRVcbqEceew7HoWsCJvH3ga3w/exec';
+// Khai báo biến này ở phạm vi toàn cục
+let currentActiveMessageBox = null;
+let chatContentArea = null;
+let toolbarLoadingOverlay = null;
+let scrollToBottomBtn = null;
+let chatBubble = null;
+
+
+
 // --- HÀM XỬ LÝ DOWNLOAD FILE (ĐÃ SỬA LỖI) ---
 function handleDownloadFile(messageBox) {
     // Lấy thông tin file từ message data
@@ -587,58 +690,6 @@ function getFileInfoByMessageIndex(messageIndex) {
         }
     }
     return null;
-}
-// --- HÀM ẨN CÁC NÚT TƯƠNG TÁC ---
-function hideInteractionButtons() {
-    if (currentActiveMessageBox) {
-        const buttons = currentActiveMessageBox.querySelectorAll('.interaction-button');
-        buttons.forEach(button => {
-            button.classList.remove('active');
-            button.classList.add('hide');
-            button.addEventListener('transitionend', function handler() {
-                button.remove();
-                button.removeEventListener('transitionend', handler);
-            }, { once: true });
-        });
-        currentActiveMessageBox = null;
-    }
-}
-
-// --- HÀM XỬ LÝ SỰ KIỆN CLICK VÀO MESSAGE BOX ---
-function handleMessageBoxClick(event) {
-    event.stopPropagation();
-    if (currentActiveMessageBox && currentActiveMessageBox !== this) {
-        hideInteractionButtons();
-    }
-    showInteractionButtons(this);
-}
-
-// --- Scroll to Bottom Button Functions ---
-function isAtBottom() {
-    if (!chatContentArea) return true;
-    const threshold = 100;
-    return chatContentArea.scrollTop + chatContentArea.clientHeight >= chatContentArea.scrollHeight - threshold;
-}
-
-function updateScrollButton() {
-    if (!scrollToBottomBtn || (chatBubble && !chatBubble.classList.contains('expanded'))) {
-        if (scrollToBottomBtn) scrollToBottomBtn.classList.remove('show');
-        return;
-    }
-    if (isAtBottom()) {
-        scrollToBottomBtn.classList.remove('show');
-    } else {
-        scrollToBottomBtn.classList.add('show');
-    }
-}
-
-// --- Hàm format kích thước file ---
-function formatFileSize(bytes) {
-    if (bytes === 0) return '0 Bytes';
-    const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 }
 
 // Hàm helper để xử lý tên file có ký tự đặc biệt
@@ -769,27 +820,6 @@ async function loadAllMessages(scrollToEnd = false) {
         alert("Lỗi kết nối hoặc API: " + error.message);
     }
 }
-
-// --- HÀM HỖ TRỢ RÚT GỌN TÊN FILE ---
-function shortenFileName(fileName, maxLength = 30, isAudioFile = false) {
-    if (isAudioFile) {
-        return fileName;
-    }
-
-    const parts = fileName.split('.');
-    const extension = parts.length > 1 ? '.' + parts.pop() : '';
-    let nameWithoutExt = parts.join('.');
-
-    if (nameWithoutExt.length + extension.length > maxLength) {
-        const charsToShow = maxLength - extension.length - 3;
-        if (charsToShow <= 0) {
-            return fileName.substring(0, Math.max(0, maxLength - 3)) + '...';
-        }
-        return nameWithoutExt.substring(0, charsToShow) + '...' + extension;
-    }
-    return fileName;
-}
-
 
 // --- HÀM ESCAPE HTML ---
 function escapeHtml(text) {
