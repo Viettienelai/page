@@ -1848,7 +1848,7 @@ body.no-scroll {
 
 
 .glow-point {
-  position: absolute;
+  position: fixed;
   box-shadow: 0rem 0rem 1.2rem 0.6rem rgb(0, 172, 255);
   pointer-events: none;
   z-index: 3000000;
