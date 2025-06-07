@@ -433,13 +433,15 @@ function showInteractionButtons(messageBox) {
     const firstImg = document.createElement('img');
 
     if (isTextMessage) {
-        // Nếu là text message, dùng copy icon
-        firstImg.src = 'assets/img/copy.png';
+        // Nếu là text message, dùng copy icon SVG
+        const svgString = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="none" stroke="#fff" stroke-width="10" stroke-linejoin="round" d="M46 5H36h35q20 0 20 20v45-10"/><path fill="none" stroke="#fff" stroke-width="10" stroke-linejoin="round" d="M61 25q10 0 10 10v50q0 10-10 10H21q-10 0-10-10V35q0-10 10-10Z"/></svg>';
+        firstImg.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgString);
         firstImg.alt = 'Copy';
         firstButton.setAttribute('data-action', 'copy');
     } else {
-        // Nếu là file message, dùng download icon
-        firstImg.src = 'assets/img/download.png';
+        // Nếu là file message, dùng download icon SVG
+        const downloadSvgString = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="none" stroke="#fff" stroke-width="10" stroke-linejoin="round" d="M50 5v65L25 45l25 25 25-25-25 25ZM9 80 5 70l4 10q6 15 21 15h40q15 0 21-15l4-10-4 10"/></svg>';
+        firstImg.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(downloadSvgString);
         firstImg.alt = 'Download';
         firstButton.setAttribute('data-action', 'download');
     }
@@ -450,7 +452,8 @@ function showInteractionButtons(messageBox) {
     const deleteButton = document.createElement('div');
     deleteButton.classList.add('interaction-button', 'red');
     const deleteImg = document.createElement('img');
-    deleteImg.src = 'assets/img/delete.png';
+    const deleteSvgString = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="none" stroke="#fff" stroke-width="8" stroke-linejoin="round" d="M5 15h30V5h30v10h30v5H5Z"/><path fill="none" stroke="#fff" stroke-width="8" stroke-linejoin="round" d="m12 15 8 70q0 10 10 10h40q10 0 10-10l8-70Zm25 20 3 40Zm26 0-3 40Z"/></svg>';
+    deleteImg.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(deleteSvgString);
     deleteImg.alt = 'Delete';
     deleteButton.appendChild(deleteImg);
     messageBox.appendChild(deleteButton);
@@ -788,6 +791,13 @@ function shortenFileName(fileName, maxLength = 30, isAudioFile = false) {
 }
 
 
+// --- HÀM ESCAPE HTML ---
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
 // --- HÀM APPEND TIN NHẮN VÀO CHAT ---
 function appendMessageToChat(message) {
     const messageBox = document.createElement('div');
@@ -796,7 +806,9 @@ function appendMessageToChat(message) {
 
     let contentHtml = '';
     if (message.type === 'text') {
-        contentHtml = `<p>${message.textContent}</p>`;
+        // Escape HTML để tránh việc render SVG hoặc các thẻ HTML khác
+        const escapedText = escapeHtml(message.textContent);
+        contentHtml = `<p>${escapedText}</p>`;
     } else if (message.type === 'file') {
         const fileExtension = message.fileName ?
             message.fileName.split('.').pop().toLowerCase() : '';
@@ -809,7 +821,7 @@ function appendMessageToChat(message) {
         const displayFileName = shortenFileName(message.fileName, 30, isAudio);
 
         if (message.mimeType.startsWith('image/')) {
-            contentHtml = `<img src="${message.fileUrl}" alt="${message.fileName}" class="chat-image">`;
+            contentHtml = `<img src="${message.fileUrl}" alt="${escapeHtml(message.fileName)}" class="chat-image">`;
         } else if (message.mimeType.startsWith('video/')) {
             contentHtml = `<video controls src="${message.fileUrl}" class="chat-video"></video>`;
         } else if (isAudio) {
@@ -818,7 +830,7 @@ function appendMessageToChat(message) {
                     <div class="file-info">
                         <div class="file-avatar-container svg">${fileIconSvg}</div>
                         <div class="file-details">
-                            <span class="file-name">${displayFileName}</span>
+                            <span class="file-name">${escapeHtml(displayFileName)}</span>
                             <span class="file-size">${fileSizeFormatted}</span>
                         </div>
                     </div>
@@ -830,7 +842,7 @@ function appendMessageToChat(message) {
                     <div class="file-info">
                         <div class="file-avatar-container svg">${fileIconSvg}</div>
                         <div class="file-details">
-                            <span class="file-name">${displayFileName}</span>
+                            <span class="file-name">${escapeHtml(displayFileName)}</span>
                             <span class="file-size">${fileSizeFormatted}</span>
                         </div>
                     </div>
