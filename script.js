@@ -386,7 +386,7 @@ function getFileIconSvg(extension) {
 
 
 // Cấu hình Google Apps Script Web App URL
-const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbycG1rc9nlAMD7cj0SomUEJUFhSU_8ohNC7gzesILArByeDxLJpgygUux_pRgikJfIgaQ/exec';
+const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxt4ct-xXs3FqN4WdUnx2UUQ59DGHSwnZvNvvx0uKKZbwd4TsTFuOmAPdj2vSt9Gl8tNQ/exec';
 // Khai báo biến này ở phạm vi toàn cục
 let currentActiveMessageBox = null;
 let chatContentArea = null;
