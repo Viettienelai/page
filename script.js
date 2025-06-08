@@ -624,44 +624,39 @@ function shortenFileName(fileName, maxLength = 30, isAudioFile = false) {
 
 
 // Cấu hình Google Apps Script Web App URL
-const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzuloVy-eF_FX1Go5wnwQE-gKOvluHEyFyh5afrCN86vpRVcbqEceew7HoWsCJvH3ga3w/exec';
-// Khai báo biến này ở phạm vi toàn cục
+const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbx3Lgpg9HV_Pl7K98yVDPWXgapgFaWUfTskWLodk7mpUrcV65-ctPmdXihpVJQ761X8vw/exec';
+// Khai báo biến toàn cục
 let currentActiveMessageBox = null;
 let chatContentArea = null;
 let toolbarLoadingOverlay = null;
 let scrollToBottomBtn = null;
 let chatBubble = null;
 
-
-
-// --- HÀM XỬ LÝ DOWNLOAD FILE (ĐÃ SỬA LỖI) ---
+// --- HÀM XỬ LÝ DOWNLOAD FILE (ĐÃ CẬP NHẬT) ---
 function handleDownloadFile(messageBox) {
-    // Lấy thông tin file từ message data
     const messageIndex = messageBox.dataset.messageIndex;
-    // Tìm thông tin file từ dữ liệu đã load
     const fileInfo = getFileInfoByMessageIndex(messageIndex);
-    if (fileInfo && fileInfo.fileUrl) {
-        // Tạo tên file an toàn cho download
-        const safeFileName = fileInfo.fileName ||
-            'download_file';
 
-        // Sử dụng URL trực tiếp từ Dropbox với raw=1 để tải xuống
+    if (fileInfo && fileInfo.fileUrl) {
         let downloadUrl = fileInfo.fileUrl;
-        // Đảm bảo URL là dạng raw để tải trực tiếp
-        if (downloadUrl.includes('dropbox.com') && !downloadUrl.includes('raw=1')) {
-            downloadUrl = downloadUrl.replace('dl=0', 'raw=1').replace('dl=1', 'raw=1');
+        const safeFileName = fileInfo.fileName || 'download_file';
+
+        // Xử lý URL Dropbox để tải trực tiếp
+        if (fileInfo.filePlatform === 'Dropbox' && downloadUrl.includes('dropbox.com')) {
             if (!downloadUrl.includes('raw=1')) {
-                downloadUrl += (downloadUrl.includes('?') ? '&' : '?') + 'raw=1';
+                downloadUrl = downloadUrl.replace('dl=0', 'raw=1').replace('dl=1', 'raw=1');
+                if (!downloadUrl.includes('raw=1')) {
+                    downloadUrl += (downloadUrl.includes('?') ? '&' : '?') + 'raw=1';
+                }
             }
         }
+        // Cloudinary URL thường đã là link trực tiếp, không cần xử lý thêm
 
-        // Tạo element a ẩn để trigger download
         const downloadLink = document.createElement('a');
         downloadLink.href = downloadUrl;
         downloadLink.download = safeFileName;
         downloadLink.style.display = 'none';
 
-        // Thêm vào DOM, click và xóa
         document.body.appendChild(downloadLink);
         downloadLink.click();
         document.body.removeChild(downloadLink);
@@ -674,10 +669,9 @@ function handleDownloadFile(messageBox) {
     }
 }
 
+
 // --- HÀM LẤY THÔNG TIN FILE THEO MESSAGE INDEX ---
 function getFileInfoByMessageIndex(messageIndex) {
-    // Tìm trong dữ liệu messages đã load
-    // Giả sử bạn có một biến global chứa messages data
     if (window.messagesData && window.messagesData.messages) {
         const message = window.messagesData.messages.find(msg => msg.index.toString() === messageIndex.toString());
         if (message && message.type === 'file') {
@@ -685,25 +679,22 @@ function getFileInfoByMessageIndex(messageIndex) {
                 fileName: message.fileName,
                 fileUrl: message.fileUrl,
                 mimeType: message.mimeType,
-                fileSize: message.fileSize
+                fileSize: message.fileSize,
+                filePlatform: message.filePlatform, // Thêm platform
+                fileId: message.fileId
             };
         }
     }
     return null;
 }
 
-// Hàm helper để xử lý tên file có ký tự đặc biệt
 function createSafeFileName(originalName) {
-    // Nếu tên file chỉ chứa ASCII, giữ nguyên
     if (/^[\x00-\x7F]*$/.test(originalName)) {
         return originalName;
     }
-
-    // Nếu có ký tự Unicode, tạo tên backup
     const extension = originalName.split('.').pop();
     const nameWithoutExt = originalName.substring(0, originalName.lastIndexOf('.'));
     const timestamp = Date.now();
-
     return {
         original: originalName,
         safe: `file_${timestamp}.${extension}`,
@@ -711,37 +702,22 @@ function createSafeFileName(originalName) {
     };
 }
 
-// Phiên bản xử lý đặc biệt cho ký tự tiếng Việt
 async function uploadFileToDropboxWithVietnamese(file, accessToken) {
     try {
         const fileNameInfo = createSafeFileName(file.name);
         const isComplexName = typeof fileNameInfo === 'object';
-
         const uploadName = isComplexName ? fileNameInfo.safe : fileNameInfo;
-        const originalName = isComplexName ?
-            fileNameInfo.original : fileNameInfo;
-
-        console.log('Uploading as:', uploadName);
-        console.log('Original name:', originalName);
-
-        // Tạo file với tên an toàn để upload
-        const fileToUpload = isComplexName ?
-            new File([file], uploadName, { type: file.type, lastModified: file.lastModified }) :
-            file;
+        const originalName = isComplexName ? fileNameInfo.original : fileNameInfo;
+        const fileToUpload = isComplexName ? new File([file], uploadName, { type: file.type, lastModified: file.lastModified }) : file;
         const result = await uploadFileToDropbox(fileToUpload, accessToken);
-
-        // Nếu cần đổi tên lại sau khi upload
         if (isComplexName) {
             try {
                 await renameFileOnDropbox('/' + uploadName, '/' + originalName, accessToken);
                 result.fileName = originalName;
-                console.log('File renamed back to original name');
             } catch (renameError) {
                 console.warn('Could not rename file back to original name:', renameError);
-                // Vẫn trả về kết quả thành công với tên tạm thời
             }
         }
-
         return result;
     } catch (error) {
         console.error('Upload with Vietnamese characters failed:', error);
@@ -749,7 +725,6 @@ async function uploadFileToDropboxWithVietnamese(file, accessToken) {
     }
 }
 
-// Hàm đổi tên file trên Dropbox
 async function renameFileOnDropbox(fromPath, toPath, accessToken) {
     const response = await fetch('https://api.dropboxapi.com/2/files/move_v2', {
         method: 'POST',
@@ -759,7 +734,6 @@ async function renameFileOnDropbox(fromPath, toPath, accessToken) {
         },
         body: JSON.stringify({
             from_path: fromPath,
-
             to_path: toPath,
             allow_shared_folder: false,
             autorename: false,
@@ -770,15 +744,11 @@ async function renameFileOnDropbox(fromPath, toPath, accessToken) {
         const error = await response.json();
         throw new Error('Rename failed: ' + (error.error_summary || 'Unknown error'));
     }
-
     return await response.json();
 }
 
-// Phiên bản an toàn hơn của hàm upload
 async function uploadFileToDropboxSafe(file, accessToken) {
-    // Tạo một bản copy của file với tên đã được làm sạch nếu cần
     const sanitizedName = sanitizeFileName(file.name);
-    // Tạo file object mới với tên đã được làm sạch
     const fileToUpload = new File([file], sanitizedName, {
         type: file.type,
         lastModified: file.lastModified
@@ -799,9 +769,7 @@ async function loadAllMessages(scrollToEnd = false) {
     try {
         const response = await fetch(GAS_WEB_APP_URL + '?action=getAllMessages');
         const data = await response.json();
-
         if (data.status === 'success') {
-            // Lưu dữ liệu vào biến global để sử dụng cho download
             window.messagesData = data;
             chatContentArea.innerHTML = '';
             data.messages.forEach(message => {
@@ -817,7 +785,6 @@ async function loadAllMessages(scrollToEnd = false) {
         }
     } catch (error) {
         console.error("Lỗi kết nối hoặc API khi tải tin nhắn:", error);
-        alert("Lỗi kết nối hoặc API: " + error.message);
     }
 }
 
@@ -836,20 +803,14 @@ function appendMessageToChat(message) {
 
     let contentHtml = '';
     if (message.type === 'text') {
-        // Escape HTML để tránh việc render SVG hoặc các thẻ HTML khác
         const escapedText = escapeHtml(message.textContent);
         contentHtml = `<p>${escapedText}</p>`;
     } else if (message.type === 'file') {
-        const fileExtension = message.fileName ?
-            message.fileName.split('.').pop().toLowerCase() : '';
+        const fileExtension = message.fileName ? message.fileName.split('.').pop().toLowerCase() : '';
         const fileSizeFormatted = formatFileSize(message.fileSize);
-        // Kiểm tra xem hàm getFileIconSvg có tồn tại không trước khi gọi
-        const fileIconSvg = typeof getFileIconSvg === 'function' ?
-            getFileIconSvg(fileExtension) : '';
-
+        const fileIconSvg = typeof getFileIconSvg === 'function' ? getFileIconSvg(fileExtension) : '';
         const isAudio = message.mimeType.startsWith('audio/');
         const displayFileName = shortenFileName(message.fileName, 30, isAudio);
-
         if (message.mimeType.startsWith('image/')) {
             contentHtml = `<img src="${message.fileUrl}" alt="${escapeHtml(message.fileName)}" class="chat-image">`;
         } else if (message.mimeType.startsWith('video/')) {
@@ -888,7 +849,6 @@ function appendMessageToChat(message) {
     chatContentArea.appendChild(messageBox);
 }
 
-
 document.addEventListener('DOMContentLoaded', function () {
     chatBubble = document.getElementById('chat-bubble');
     const backgroundBlurChat = document.querySelector('.background-blur-chat');
@@ -902,9 +862,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const plusButton = document.querySelector('.plus-button');
     const fileInput = document.getElementById('file-input');
 
-    // --- KHỞI TẠO CHAT VÀ TẢI TIN NHẮN BAN ĐẦU ---
-    async function
-        initializeChat() {
+    async function initializeChat() {
         if (syncLoadingOverlay) {
             syncLoadingOverlay.classList.add('active');
         }
@@ -934,69 +892,50 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // --- Logic Chat Bubble Expand/Collapse ---
     if (chatBubble) {
         chatBubble.addEventListener('click', function (event) {
             if (!this.classList.contains('expanded')) {
-                if (!event.target.closest('#note-background') &&
-                    !event.target.closest('.chat-toolbar') &&
-
-                    !event.target.closest('.message-box')) {
+                if (!event.target.closest('#note-background') && !event.target.closest('.chat-toolbar') && !event.target.closest('.message-box')) {
                     this.classList.add('expanded');
                     document.body.classList.add('no-scroll');
                     if (backgroundBlurChat) {
                         backgroundBlurChat.classList.add('active');
-
                     }
                     scrollToBottom();
                     setTimeout(updateScrollButton, 100);
                 }
             }
         });
-        document.addEventListener('click', function (event) {
-            if (currentActiveMessageBox && !currentActiveMessageBox.contains(event.target)) {
-                hideInteractionButtons();
-            }
-
-            if (
-                chatBubble.classList.contains('expanded') &&
-                !chatBubble.contains(event.target) &&
-
-                !event.target.closest('.chat-toolbar')
-            ) {
-                chatBubble.classList.remove('expanded');
-                document.body.classList.remove('no-scroll');
-                if (backgroundBlurChat) {
-                    backgroundBlurChat.classList.remove('active');
-
-                }
-                if (scrollToBottomBtn) {
-                    scrollToBottomBtn.classList.remove('show');
-                }
-            }
-        });
-    } else {
-        console.error("Không tìm thấy phần tử #chat-bubble. Vui lòng đảm bảo ID chính xác.");
     }
 
-    // --- Logic Click vào #note-background để Sync ---
+    document.addEventListener('click', function (event) {
+        if (currentActiveMessageBox && !currentActiveMessageBox.contains(event.target)) {
+            hideInteractionButtons();
+        }
+        if (chatBubble.classList.contains('expanded') && !chatBubble.contains(event.target) && !event.target.closest('.chat-toolbar')) {
+            chatBubble.classList.remove('expanded');
+            document.body.classList.remove('no-scroll');
+            if (backgroundBlurChat) {
+                backgroundBlurChat.classList.remove('active');
+            }
+            if (scrollToBottomBtn) {
+                scrollToBottomBtn.classList.remove('show');
+            }
+        }
+    });
     if (noteBackground && syncLoadingOverlay && chatBubble) {
         noteBackground.addEventListener('click', async function (event) {
             event.stopPropagation();
-
             if (!chatBubble.classList.contains('expanded')) {
                 chatBubble.classList.add('expanded');
                 document.body.classList.add('no-scroll');
-
                 if (backgroundBlurChat) {
                     backgroundBlurChat.classList.add('active');
                 }
                 scrollToBottom();
                 setTimeout(updateScrollButton, 100);
                 return;
-
             }
-
             if (chatBubble.classList.contains('expanded')) {
                 syncLoadingOverlay.classList.add('active');
                 try {
@@ -1011,20 +950,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }
         });
-    } else {
-        console.error("Không tìm thấy #note-background, #sync-loading-overlay hoặc #chat-bubble. Vui lòng kiểm tra lại HTML.");
     }
 
     const maxTextAreaHeight = 400;
     const minTextAreaHeight = 40;
     if (textInput) {
         function adjustHeight() {
-            const currentHeight = parseInt(textInput.style.height) ||
-                minTextAreaHeight;
-
+            const currentHeight = parseInt(textInput.style.height) || minTextAreaHeight;
             textInput.style.transition = 'none';
             textInput.style.height = 'auto';
-
             let newHeight = Math.max(Math.ceil(textInput.scrollHeight), minTextAreaHeight);
             if (newHeight > maxTextAreaHeight) {
                 newHeight = maxTextAreaHeight;
@@ -1032,60 +966,41 @@ document.addEventListener('DOMContentLoaded', function () {
             } else {
                 textInput.style.overflowY = 'hidden';
             }
-
             if (Math.abs(newHeight - currentHeight) > 3) {
                 textInput.style.height = currentHeight + 'px';
-                textInput.offsetHeight; // force reflow
+                textInput.offsetHeight;
                 textInput.style.transition = 'height 0.3s ease';
                 textInput.style.height = newHeight + 'px';
             } else {
                 textInput.style.height = newHeight + 'px';
             }
         }
-
         textInput.addEventListener('input', adjustHeight);
         adjustHeight();
         window.addEventListener('resize', adjustHeight);
-    } else {
-        console.error("Không tìm thấy phần tử .text-input. Vui lòng đảm bảo class hoặc ID chính xác.");
     }
 
-    // --- XỬ LÝ GỬI TIN NHẮN (VĂN BẢN) ---
     if (sendButton && textInput && chatContentArea && toolbarLoadingOverlay) {
         sendButton.addEventListener('click', async function () {
             const messageText = textInput.value.trim();
-
             if (messageText) {
                 toolbarLoadingOverlay.classList.add('active');
-
                 try {
-
                     const response = await fetch(GAS_WEB_APP_URL, {
                         method: 'POST',
-                        headers: {
-
-                            'Content-Type': 'text/plain;charset=utf-8'
-                        },
-                        body: JSON.stringify({
-                            action: 'postMessage',
-
-                            message: messageText
-                        })
+                        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                        body: JSON.stringify({ action: 'postMessage', message: messageText })
                     });
                     const result = await response.json();
-
                     if (result.status === 'success') {
-                        console.log('Tin nhắn đã được gửi và lưu thành công:', messageText);
                         textInput.value = '';
                         adjustHeight();
                         await loadAllMessages(true);
                         showTemporaryNotification('Đã gửi tin nhắn!');
                     } else {
-                        console.error('Lỗi khi lưu tin nhắn:', result.message);
                         alert('Lỗi khi gửi tin nhắn: ' + result.message);
                     }
                 } catch (error) {
-                    console.error('Lỗi kết nối hoặc API:', error);
                     alert('Lỗi kết nối hoặc API: ' + error.message);
                 } finally {
                     toolbarLoadingOverlay.classList.remove('active');
@@ -1098,12 +1013,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 sendButton.click();
             }
         });
-    } else {
-        console.error("Không tìm thấy một hoặc nhiều phần tử: sendButton, textInput, chatContentArea, toolbarLoadingOverlay. Vui lòng kiểm tra lại HTML.");
     }
 
-
-    // --- Xử lý click nút plus để chọn file ---
     if (plusButton && fileInput) {
         plusButton.addEventListener('click', () => {
             fileInput.click();
@@ -1114,190 +1025,175 @@ document.addEventListener('DOMContentLoaded', function () {
 
             toolbarLoadingOverlay.classList.add('active');
             try {
-                // Lấy access token từ GAS
-                const tokenResponse = await fetch(GAS_WEB_APP_URL + '?action=getAccessToken');
-                const tokenData = await tokenResponse.json();
-
-                if (tokenData.status === 'success' && tokenData.accessToken) {
-                    const accessToken = tokenData.accessToken;
-                    for (const file of files) {
-
-                        await uploadFileToDropbox(file, accessToken);
-                    }
-                    showTemporaryNotification('Đã tải lên tệp thành công!');
-                    await loadAllMessages(true); // Tải lại tin nhắn sau khi upload
-
-                } else {
-                    alert('Lỗi: Không thể lấy Access Token từ Google Apps Script. ' + (tokenData.message ||
-                        ''));
+                for (const file of files) {
+                    await handleFileUpload(file);
                 }
+                showTemporaryNotification('Tất cả các tệp đã được xử lý!');
+                await loadAllMessages(true);
             } catch (error) {
-                console.error('Lỗi khi tải lên file hoặc lấy token:', error);
-                alert('Lỗi khi tải lên file hoặc lấy token: ' + error.message);
+                console.error('Lỗi trong quá trình tải lên:', error);
+                alert('Lỗi trong quá trình tải lên: ' + error.message);
             } finally {
                 toolbarLoadingOverlay.classList.remove('active');
-                fileInput.value = ''; // Reset input file để có thể chọn lại cùng file
+                fileInput.value = '';
             }
         });
     }
 
+    // --- HÀM XỬ LÝ TẢI LÊN TỆP (LOGIC MỚI) ---
+    async function handleFileUpload(file) {
+        const isImage = file.type.startsWith('image/');
+        const isVideo = file.type.startsWith('video/');
+        const imageSizeLimit = 10 * 1024 * 1024; // 10MB
+        const videoSizeLimit = 100 * 1024 * 1024; // 100MB
 
-    // --- Hàm upload file lên Dropbox ---
+        let uploaded = false;
+        // Ưu tiên Cloudinary cho ảnh và video trong giới hạn
+        if ((isImage && file.size <= imageSizeLimit) || (isVideo && file.size <= videoSizeLimit)) {
+            try {
+                console.log(`Attempting to upload ${file.name} to Cloudinary...`);
+                await uploadFileToCloudinary(file);
+                uploaded = true;
+            } catch (cloudinaryError) {
+                console.warn(`Cloudinary upload failed for ${file.name}. Falling back to Dropbox. Error:`, cloudinaryError);
+                // Không cần làm gì thêm, sẽ tự chuyển sang Dropbox
+            }
+        }
+
+        // Nếu không phải ảnh/video, quá giới hạn, hoặc Cloudinary lỗi, dùng Dropbox
+        if (!uploaded) {
+            console.log(`Uploading ${file.name} to Dropbox...`);
+            try {
+                const tokenResponse = await fetch(GAS_WEB_APP_URL + '?action=getAccessToken');
+                const tokenData = await tokenResponse.json();
+                if (tokenData.status === 'success' && tokenData.dropboxAccessToken) {
+                    await uploadFileToDropbox(file, tokenData.dropboxAccessToken);
+                } else {
+                    throw new Error('Không thể lấy Dropbox Access Token. ' + (tokenData.message || ''));
+                }
+            } catch (dropboxError) {
+                console.error(`Dropbox upload failed for ${file.name}:`, dropboxError);
+                throw dropboxError; // Ném lỗi nếu cả hai đều thất bại
+            }
+        }
+    }
+
+    // --- HÀM TẢI LÊN CLOUDINARY ---
+    async function uploadFileToCloudinary(file) {
+        // 1. Lấy chữ ký từ GAS
+        const sigResponse = await fetch(GAS_WEB_APP_URL + '?action=getCloudinarySignature');
+        const sigData = await sigResponse.json();
+
+        if (sigData.status !== 'success') {
+            throw new Error('Could not get Cloudinary signature: ' + sigData.message);
+        }
+
+        // 2. Chuẩn bị form data để tải lên
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('api_key', sigData.apiKey);
+        formData.append('timestamp', sigData.timestamp);
+        formData.append('signature', sigData.signature);
+
+        const resourceType = file.type.startsWith('video/') ? 'video' : 'image';
+        const uploadUrl = `https://api.cloudinary.com/v1_1/${sigData.cloudName}/${resourceType}/upload`;
+        // 3. Tải lên Cloudinary
+        const uploadResponse = await fetch(uploadUrl, {
+            method: 'POST',
+            body: formData
+        });
+        const uploadData = await uploadResponse.json();
+
+        if (!uploadResponse.ok) {
+            throw new Error('Cloudinary upload failed: ' + (uploadData.error ? uploadData.error.message : 'Unknown error'));
+        }
+
+        // 4. Lưu metadata vào Google Sheet
+        await saveFileMetadataToSheet({
+            fileName: file.name,
+            fileSize: file.size,
+            fileMimeType: file.type,
+            filePlatform: 'Cloudinary',
+            fileUrl: uploadData.secure_url,
+            fileId: uploadData.public_id // Lưu public_id để xóa
+        });
+    }
+
+    // --- HÀM TẢI LÊN DROPBOX ---
     async function uploadFileToDropbox(file, accessToken) {
         try {
-            // Đảm bảo tên file được mã hóa UTF-8 chính xác
-            const fileName = file.name;
-            // Thử encode tên file để tránh lỗi với ký tự đặc biệt
-            const encodedFileName = encodeURIComponent(fileName);
-            const path = '/' + fileName; // Sử dụng tên gốc cho path
-
-            console.log('Original fileName:', fileName);
-            console.log('Encoded fileName:', encodedFileName);
-            console.log('Path:', path);
-
-            console.log('Uploading file:', fileName);
-
-            // Giải pháp đơn giản: Chuyển ký tự Unicode thành percent encoding
-            function encodePathForHeader(path) {
-                // Encode từng ký tự non-ASCII thành %XX format
-                return path.split('').map(char => {
-                    const code = char.charCodeAt(0);
-
-                    if (code > 127) {
-                        // Encode thành UTF-8 bytes rồi percent encode
-                        return encodeURIComponent(char);
-                    }
-
-                    return char;
-                }).join('');
-            }
-
-            const encodedPath = encodePathForHeader(path);
+            const path = '/' + file.name;
             const dropboxApiArg = JSON.stringify({
-                path: encodedPath,
+                path: path,
                 mode: 'overwrite',
                 autorename: false,
                 mute: false
             });
-            console.log('Original path:', path);
-            console.log('Encoded path:', encodedPath);
-            console.log('Dropbox-API-Arg:', dropboxApiArg);
-
             const response = await fetch('https://content.dropboxapi.com/2/files/upload', {
                 method: 'POST',
                 headers: {
                     'Authorization': 'Bearer ' + accessToken,
                     'Content-Type': 'application/octet-stream',
-
                     'Dropbox-API-Arg': dropboxApiArg
                 },
                 body: file
             });
             const data = await response.json();
-
             if (!response.ok) {
-                console.error('Error uploading file to Dropbox:', data);
                 throw new Error('Lỗi khi tải lên Dropbox: ' + (data.error_summary || 'Unknown error'));
             }
 
-            console.log('File uploaded to Dropbox:', data);
-            // Lấy URL chia sẻ
             let fileUrl = '';
             try {
                 const shareResponse = await fetch('https://api.dropboxapi.com/2/sharing/create_shared_link_with_settings', {
                     method: 'POST',
                     headers: {
                         'Authorization': 'Bearer ' + accessToken,
-
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
                         path: data.path_lower,
-
-                        settings: {
-                            requested_visibility: "public" // Hoặc "team_only", "password" tùy chọn
-                        }
+                        settings: { requested_visibility: "public" }
                     })
-
                 });
-
                 const shareData = await shareResponse.json();
-
                 if (shareResponse.ok) {
                     fileUrl = shareData.url.replace('dl=0', 'raw=1');
-                    // Chuyển đổi URL để tải trực tiếp
-                    console.log('Shared link created:', fileUrl);
-                } else {
-                    // Nếu đã có link chia sẻ, Dropbox sẽ trả về lỗi, chúng ta cần lấy link hiện có
-                    if (shareData.error && shareData.error['.tag'] === 'shared_link_already_exists') {
-                        const existingLinksResponse = await fetch('https://api.dropboxapi.com/2/sharing/list_shared_links', {
-
-                            method: 'POST',
-                            headers: {
-                                'Authorization': 'Bearer ' + accessToken,
-
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-
-                                path: data.path_lower,
-                                direct_only: true
-                            })
-                        });
-                        const existingLinksData = await existingLinksResponse.json();
-
-                        if (existingLinksResponse.ok && existingLinksData.links && existingLinksData.links.length > 0) {
-                            fileUrl = existingLinksData.links[0].url.replace('dl=0', 'raw=1');
-                            console.log('Existing shared link:', fileUrl);
-                        } else {
-                            console.error('Error getting existing shared links:', existingLinksData);
-                            throw new Error('Không thể lấy liên kết chia sẻ hiện có');
-                        }
-                    } else {
-                        console.error('Error creating shared link:', shareData);
-                        throw new Error('Không thể tạo liên kết chia sẻ cho tệp: ' + (shareData.error_summary || 'Unknown error'));
+                } else if (shareData.error && shareData.error['.tag'] === 'shared_link_already_exists') {
+                    const existingLinksResponse = await fetch('https://api.dropboxapi.com/2/sharing/list_shared_links', {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': 'Bearer ' + accessToken,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ path: data.path_lower, direct_only: true })
+                    });
+                    const existingLinksData = await existingLinksResponse.json();
+                    if (existingLinksResponse.ok && existingLinksData.links.length > 0) {
+                        fileUrl = existingLinksData.links[0].url.replace('dl=0', 'raw=1');
                     }
                 }
             } catch (shareError) {
-                console.error('Error handling shared link:', shareError);
-                // Vẫn tiếp tục với việc lưu metadata ngay cả khi không tạo được shared link
+                console.error('Error handling Dropbox shared link:', shareError);
                 fileUrl = 'Error creating shared link';
             }
 
-            // Lưu thông tin file vào Google Sheet
-            try {
-                await saveFileMetadataToSheet({
-                    fileName: fileName, // Sử dụng tên file gốc với ký tự tiếng Việt
-
-                    fileSize: file.size,
-                    fileMimeType: file.type,
-                    filePlatform: 'Dropbox',
-                    fileUrl: fileUrl,
-                    fileId: data.id // Dropbox file ID
-
-                });
-                console.log('File metadata saved successfully');
-            } catch (metadataError) {
-                console.error('Error saving file metadata:', metadataError);
-                // Không throw error ở đây vì file đã upload thành công
-            }
-
-            return {
-                success: true,
-                fileId: data.id,
-                fileName: fileName,
-
+            await saveFileMetadataToSheet({
+                fileName: file.name,
+                fileSize: file.size,
+                fileMimeType: file.type,
+                filePlatform: 'Dropbox',
                 fileUrl: fileUrl,
-                path: data.path_display
-            };
+                fileId: data.id
+            });
+            return { success: true };
         } catch (error) {
-            console.error('Upload failed:', error);
+            console.error('Dropbox upload failed:', error);
             throw error;
         }
     }
 
-
-    // --- Hàm lưu metadata file vào Google Sheet ---
+    // --- HÀM LƯU METADATA FILE VÀO GOOGLE SHEET ---
     async function saveFileMetadataToSheet(fileMetadata) {
         const response = await fetch(GAS_WEB_APP_URL, {
             method: 'POST',
@@ -1306,20 +1202,11 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             body: JSON.stringify({
                 action: 'postFileMetadata',
-                fileName: fileMetadata.fileName,
-                fileSize: fileMetadata.fileSize,
-                mimeType: fileMetadata.fileMimeType,
-                filePlatform: fileMetadata.filePlatform,
-
-                fileUrl: fileMetadata.fileUrl,
-                fileId: fileMetadata.fileId
+                ...fileMetadata
             })
         });
         const result = await response.json();
-        if (result.status === 'success') {
-            console.log('Metadata file đã được lưu thành công:', fileMetadata.fileName);
-        } else {
-            console.error('Lỗi khi lưu metadata file:', result.message);
+        if (result.status !== 'success') {
             throw new Error('Lỗi khi lưu metadata file: ' + result.message);
         }
     }
