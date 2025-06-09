@@ -624,7 +624,7 @@ function shortenFileName(fileName, maxLength = 30, isAudioFile = false) {
 
 
 // Cấu hình Google Apps Script Web App URL
-const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbx3Lgpg9HV_Pl7K98yVDPWXgapgFaWUfTskWLodk7mpUrcV65-ctPmdXihpVJQ761X8vw/exec';
+const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxVaRVU65_OhQWNgAl0wdMqiAsIKgbYYYOWyVIVd5XNgDPmiRnXzejEuTFjgHwUYcte/exec';
 // Khai báo biến toàn cục
 let currentActiveMessageBox = null;
 let chatContentArea = null;
@@ -1028,7 +1028,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 for (const file of files) {
                     await handleFileUpload(file);
                 }
-                showTemporaryNotification('Tất cả các tệp đã được xử lý!');
+                showTemporaryNotification('Upload file thành công!');
                 await loadAllMessages(true);
             } catch (error) {
                 console.error('Lỗi trong quá trình tải lên:', error);
