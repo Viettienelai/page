@@ -157,7 +157,7 @@ body {
 }
 
 #search-bar {
-  width: 90%;
+  width: 89%;
   pointer-events: auto;
   height: 50px;
   top: 10px;
@@ -237,7 +237,7 @@ body {
 
 #search-options a:hover {
   transform: translateX(5px) scale(1.1);
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(255, 255, 255, 0.6);
 }
 
 #search-options.active {
@@ -1328,10 +1328,14 @@ body {
     /* Đảm bảo tỷ lệ khung hình được duy trì */
     display: block;
     /* Loại bỏ khoảng trắng thừa dưới ảnh */
-    border-radius: 4px;
+    border-radius: 14px;
     /* Bo tròn góc cho ảnh */
     object-fit: cover;
     margin: 10px;
+}
+
+.message-box:has(.chat-image), .message-box:has(.chat-video) {
+  border-radius: 24px;
 }
 
 /* Styles cho video trong message-box */
@@ -1340,7 +1344,7 @@ body {
     display: block;
     width: auto;
     /* Loại bỏ khoảng trắng thừa dưới video */
-    border-radius: 4px;
+    border-radius: 14px;
     /* Bo tròn góc cho video */
     object-fit: cover;
     margin: 10px;
