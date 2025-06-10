@@ -73,12 +73,12 @@ body {
   background: var(--bg);
   padding: 10px 15px 10px 15px;
   box-sizing: border-box;
-  border-radius: var(--border-radius);
+  border-radius: 24px;
   position: relative;
   display: flex;
   flex-wrap: wrap;
   z-index: 2;
-  box-shadow: var(--shadow);
+  box-shadow: 0 0px 32px rgba(0, 0, 0, 0.2);
   animation: bookmark-container 1s cubic-bezier(0.175, 0.885, 0.32, 2) forwards;
 }
 
@@ -98,7 +98,7 @@ body {
   height: 85px;
   transition: background-color 0.1s ease, transform 0.3s ease;
   padding-top: 7px;
-  border-radius: 15px;
+  border-radius: 14px;
 }
 
 .bookmark-avatar {
@@ -166,7 +166,7 @@ body {
   backdrop-filter: blur(20px);
   background: rgba(255, 255, 255, 0.7);
   box-sizing: border-box;
-  box-shadow: 0 0px 12px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 0px 32px rgba(0, 0, 0, 0.2);
   font-size: 16px;
   border-radius: 100px;
   position: relative;
@@ -187,20 +187,25 @@ body {
   height: 30px;
   cursor: pointer;
   opacity: 0;
-  z-index: 12;
+  z-index: 20;
+  transition: all 0.3s ease;
   animation: search-icon 1s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
 }
 
+#search-icon:hover {
+  transform: scale(1.2);
+}
+
 #search-options {
-  padding: 10px 0px 10px 0px;
+  padding: 9px 0px 9px 0px;
   position: absolute;
-  border-radius: 20px;
+  border-radius: 12px;
   pointer-events: auto;
-  top: 35px;
+  top: 55px;
   left: 7%;
   backdrop-filter: blur(15px);
-  box-shadow: 0 0px 10px rgba(0, 0, 0, 0.5);
-  background: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 0px 32px rgba(0, 0, 0, 0.2);
+  background: rgba(255, 255, 255, 0.6);
   list-style: none;
   width: 200px;
   pointer-events: none;
@@ -214,12 +219,12 @@ body {
 }
 
 #search-options a {
-  margin-left: 10px;
+  margin-left: 9.7px;
   height: 30px;
   width: 140px;
   padding: 10px 15px;
   cursor: pointer;
-  border-radius: 15px;
+  border-radius: 8px;
   font-size: 16px;
   display: flex;
   align-items: center;
@@ -232,7 +237,7 @@ body {
 
 #search-options a:hover {
   transform: translateX(5px) scale(1.1);
-  background-color: #ffffff7f;
+  background-color: rgba(255, 255, 255, 0.5);
 }
 
 #search-options.active {
@@ -257,7 +262,7 @@ body {
   height: 1500%;
   backdrop-filter: blur(10px);
   opacity: 0;
-  background: rgba(0, 0, 0, 0.1);
+  background: rgba(19, 19, 38, 0.3);
   transition: opacity 0.3s ease;
   z-index: 10;
 }
@@ -292,7 +297,7 @@ body {
   left: 0;
   z-index: 14;
   transition: all 0.3s ease;
-  border-radius: 20px;
+  border-radius: 24px;
 }
 
 #clock {
@@ -627,13 +632,11 @@ body {
 @keyframes search-icon {
   0% {
     left: calc(50% - 25px);
-    transform: scaleX(0.1) scaleY(0.1);
     opacity: 0;
   }
 
   100% {
     left: calc(8% - 25px);
-    transform: scaleX(1) scaleY(1);
     opacity: 1;
   }
 }
@@ -721,7 +724,7 @@ body {
 
 .popup-content {
   background-color: #fefefe;
-  border-radius: 30px;
+  border-radius: 24px;
   width: 100%;
   height: 100%;
   overflow-y: auto;
@@ -739,7 +742,7 @@ body {
   align-items: center;
   box-sizing: border-box;
   padding: 10px;
-  border-radius: 30px;
+  border-radius: 24px;
   border: 10px solid #E9EEF6;
 }
 
@@ -758,7 +761,7 @@ body {
   z-index: auto;
   box-sizing: border-box;
   transition: all 0.3s cubic-bezier(.25, .46, .45, .94);
-  border-radius: 15px;
+  border-radius: 14px;
 }
 
 /* Animation khi popup được kích hoạt */
@@ -838,9 +841,12 @@ body {
 
 #chat-bubble:not(.expanded) {
   cursor: pointer;
-  box-shadow: 0 0px 12px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 0px 32px rgba(0, 0, 0, 0.2);
 }
 
+#chat-bubble:not(.expanded):hover .note-icon{
+  transform: scale(1.2);
+}
 @property --deg {
   syntax: '<angle>';
   inherits: true;
@@ -900,7 +906,7 @@ body {
   height: 610px;
   top: -85px;
   right: -55px;
-  border-radius: 25px;
+  border-radius: 29px;
   /* Hình vuông/chữ nhật với góc bo */
   opacity: 1;
   /* Hiển thị khi expanded */
@@ -911,7 +917,7 @@ body {
   height: 600px;
   top: -80px;
   right: -50px;
-  border-radius: 20px;
+  border-radius: 24px;
   z-index: 1000001;
 }
 
@@ -978,8 +984,7 @@ body {
   height: 30px;
   z-index: 2;
   opacity: 0;
-  /* Mặc định ẩn tất cả các icon */
-  transition: opacity 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
 }
 
 /* ---------------------------------------------------- */
@@ -1099,7 +1104,7 @@ body {
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(20px);
-  z-index: 8;
+  z-index: 7;
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.3s ease, visibility 0.3s ease;
@@ -1124,7 +1129,7 @@ body {
   gap: 20px;
   z-index: 1;
   backdrop-filter: blur(10px);
-  border-radius: 25px 25px 0px 0px;
+  border-radius: 24px 24px 0px 0px;
   background: rgba(255, 255, 255, 0.2);
   transition: all 0.3s ease;
 }
@@ -1280,7 +1285,7 @@ body {
 .message-box {
   margin-right: 100px;
   background: rgba(255, 255, 255, 0.5);
-  border-radius: 20px;
+  border-radius: 14px;
   max-width: 700px;
   width: fit-content;
   min-height: 40px;
@@ -1288,9 +1293,6 @@ body {
   word-wrap: break-word;
   flex-shrink: 0;
   backdrop-filter: blur(10px);
-  animation: appear linear;
-  animation-timeline: view();
-  animation-range: 0% 15%;
   position: relative;
   align-self: flex-end;
   z-index: 20;
@@ -1303,7 +1305,7 @@ body {
 
 .message-box:hover {
   background: rgba(255, 255, 255, 1);
-  box-shadow: 0 0px 12px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0px 32px rgba(0, 0, 0, 0.2);
 }
 
 /* Styles cho tin nhắn văn bản */
@@ -1326,10 +1328,10 @@ body {
     /* Đảm bảo tỷ lệ khung hình được duy trì */
     display: block;
     /* Loại bỏ khoảng trắng thừa dưới ảnh */
-    border-radius: 15px;
+    border-radius: 4px;
     /* Bo tròn góc cho ảnh */
     object-fit: cover;
-    margin: 0px;
+    margin: 10px;
 }
 
 /* Styles cho video trong message-box */
@@ -1338,9 +1340,10 @@ body {
     display: block;
     width: auto;
     /* Loại bỏ khoảng trắng thừa dưới video */
-    border-radius: 15px;
+    border-radius: 4px;
     /* Bo tròn góc cho video */
     object-fit: cover;
+    margin: 10px;
 }
 /* Styles chung cho box chứa file (không phải ảnh/video/audio) */
 .chat-file {
