@@ -1322,7 +1322,7 @@ body {
 .chat-image {
     max-width: 400px;
     /* Chiều rộng tối đa */
-    max-height: 200px;
+    max-height: 300px;
     /* Chiều cao tối đa */
     height: auto;
     /* Đảm bảo tỷ lệ khung hình được duy trì */
@@ -1331,11 +1331,10 @@ body {
     border-radius: 14px;
     /* Bo tròn góc cho ảnh */
     object-fit: cover;
-    margin: 10px;
 }
 
-.message-box:has(.chat-image), .message-box:has(.chat-video) {
-  border-radius: 24px;
+.message-box:has(.chat-video) {
+  background-color: transparent;
 }
 
 /* Styles cho video trong message-box */
@@ -1347,7 +1346,6 @@ body {
     border-radius: 14px;
     /* Bo tròn góc cho video */
     object-fit: cover;
-    margin: 10px;
 }
 /* Styles chung cho box chứa file (không phải ảnh/video/audio) */
 .chat-file {
@@ -1793,7 +1791,7 @@ body {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: rgba(0, 0, 0, 0.1);
+  background: rgba(71, 71, 71, 0.2);
   border: none;
   cursor: pointer;
   z-index: 10;
