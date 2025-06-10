@@ -70,7 +70,7 @@ body {
 
 .container {
   backdrop-filter: blur(5px);
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.1);
   box-shadow:
     0 3px 8px 3px rgba(53, 53, 53, 0.25),
     inset 0 2px 10px 5px rgba(255, 255, 255, 0.25),
@@ -126,10 +126,11 @@ body {
   transform: translateX(-50%);
   margin-top: 7px;
   font-size: 12px;
-  color: #333;
+  color: #ffffff;
   position: absolute;
   white-space: nowrap;
   z-index: 5;
+   text-shadow: 0px 0px 10px rgb(0, 0, 0);
 }
 
 #bar-container {
@@ -169,7 +170,7 @@ body {
   left: 10px;
   border: none;
   backdrop-filter: blur(5px);
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.2);
   box-shadow:
     0 3px 8px 3px rgba(53, 53, 53, 0.25),
     inset 0 2px 10px 5px rgba(255, 255, 255, 0.25),
@@ -183,6 +184,10 @@ body {
   z-index: 11;
   outline-color: #FEC319;
   transition: all 0.3s cubic-bezier(0.250, 0.460, 0.450, 0.940);
+}
+
+#search-bar::placeholder {
+  color: #4a4a4a;
 }
 
 #search-bar:hover {
@@ -200,6 +205,7 @@ body {
   z-index: 20;
   transition: all 0.3s ease;
   animation: search-icon 1s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 1)) drop-shadow(0 0 5px rgba(255, 255, 255, 1));
 }
 
 #search-icon:hover {
@@ -212,11 +218,14 @@ body {
   border-radius: 12px;
   pointer-events: auto;
   top: 55px;
-  left: 7%;
-  backdrop-filter: blur(15px);
-  box-shadow: 0 0px 32px rgba(0, 0, 0, 0.2);
-  background: rgba(255, 255, 255, 0.6);
-  list-style: none;
+  left: 7%;backdrop-filter: blur(5px);
+  background: rgba(255, 255, 255, 0.5);
+  box-shadow:
+    0 3px 8px 3px rgba(53, 53, 53, 0.25),
+    inset 0 2px 10px 5px rgba(255, 255, 255, 0.25),
+    inset 0 0 14px 0 rgba(255, 255, 255, 0.35),
+    inset 1px 3px 5px 0 rgba(255, 255, 255, 0.30),
+    inset -1px -3px 3px 0 rgba(255, 255, 255, 0.10);
   width: 200px;
   pointer-events: none;
   overflow: hidden;
