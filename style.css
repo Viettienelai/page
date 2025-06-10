@@ -1538,6 +1538,7 @@ body {
   background: rgba(0, 0, 0, 0.2);
   right: -90px;
   transform: translateY(-50%) translateX(-55px);
+  transition: all 0.3s ease-out;
 }
 
 .interaction-button.red:hover {
@@ -1806,8 +1807,12 @@ body {
 }
 
 .scroll-to-bottom-btn:hover {
-  background: rgba(0, 102, 255, 0.7);
-  transform: translateX(-50%) scale(1.1);
+  transform: scale(1.4) translateX(-13.8px);
+  background: rgba(0, 123, 255, 0.7);
+  background: rgb(0, 123, 255);
+  box-shadow: 0 0 50px #3195ff,
+    0 0 5px #3195ff,
+    0 0 25px #3195ff;
 }
 
 .scroll-to-bottom-btn.show {
@@ -1820,7 +1825,7 @@ body {
 }
 
 .scroll-to-bottom-btn:hover svg {
-  transform: translateY(2px);
+  transform: translate(-0.5px, 3px);
 }
 
 
