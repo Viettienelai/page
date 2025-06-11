@@ -1397,11 +1397,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Mảng chứa các đường dẫn ảnh nền và màu phân đoạn tương ứng
     const backgroundImages = [
-        { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749581150/h1m3ezilaqprllkjyubj.jpg', segmentColor: 'rgba(255, 213, 0, 1)' }, // Vàng
-        { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749641310/gkkxserrxedgxsoehbac.jpg', segmentColor: 'rgb(255, 243, 24)' }, // Xanh lam nhạt
-        { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749641504/qfxbmeauekidspngq1fa.jpg', segmentColor: 'rgb(255, 138, 120)' }, // Hồng
-        { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749641518/sz7jsxubnkntcjzzp6jx.jpg', segmentColor: 'rgb(255, 242, 0)' }, // Xanh lá
-        { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749641493/lstyci1vkwqjskhzrsxk.jpg', segmentColor: 'rgb(255, 135, 141)' }, // Cam
+        { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749669809/vangogh.jpg', segmentColor: 'rgba(255, 213, 0, 1)' }, // Vàng
+        { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749669814/nahida_blue.jpg', segmentColor: 'rgb(255, 243, 24)' }, // Xanh lam nhạt
+        { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749669819/nahida_pink.jpg', segmentColor: 'rgb(255, 138, 120)' }, // Hồng
+        { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749669810/nahida_green.jpg', segmentColor: 'rgb(255, 242, 0)' }, // Xanh lá
+        { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749669809/nahida%2Bpaimon.jpg', segmentColor: 'rgb(255, 135, 141)' }, // Cam
     ];
 
     let currentBackgroundIndex = 4; // Bắt đầu với ảnh cuối cùng (đang hiển thị)
