@@ -128,6 +128,9 @@ const digitSegments = {
     9: ['top', 'top-left', 'top-right', 'between', 'bot-right', 'bot']
 };
 
+// Biến toàn cục để lưu màu phân đoạn hiện tại
+let currentSegmentColor = 'rgba(255, 213, 0, 1)'; // Màu mặc định ban đầu
+
 // Function to update the clock
 function updateClock() {
     // Get Vietnam time (UTC+7)
@@ -159,10 +162,11 @@ function updateDigit(prefix, digit) {
         const element = document.getElementById(`${prefix}-${segment}`);
         if (element) {
             if (activeSegments.includes(segment)) {
-                element.style.fill = 'rgba(255, 213, 0, 1)';
+                // Sử dụng màu từ biến currentSegmentColor
+                element.style.fill = currentSegmentColor;
                 element.style.transition = 'fill 0.3s ease';
             } else {
-                element.style.fill = 'rgba(0, 0, 0, 0.2)';
+                element.style.fill = 'rgba(0, 0, 0, 0.1)';
                 element.style.transition = 'fill 0.3s ease';
             }
         }
@@ -1363,3 +1367,224 @@ const handleOnMove = (e) => {
 window.onmousemove = (e) => handleOnMove(e);
 window.ontouchmove = (e) => handleOnMove(e.touches[0]);
 document.body.onmouseleave = () => updateLastMousePosition(originPosition);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Lấy các phần tử cần thiết từ DOM
+    const expandedPanel = document.getElementById('expandedPanel');
+    const autoChangeToggle = document.getElementById('autoChangeToggle');
+    const backgroundGrid = document.querySelector('.background-grid');
+    const mainBackground = document.querySelector('.background img');
+    const backgroundContainer = document.querySelector('.background'); // Thêm dòng này để lấy container
+    const settingText = document.getElementById('settingText');
+
+    // Mảng chứa các đường dẫn ảnh nền và màu phân đoạn tương ứng
+    const backgroundImages = [
+        { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749581150/h1m3ezilaqprllkjyubj.jpg', segmentColor: 'rgba(255, 213, 0, 1)' }, // Vàng
+        { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749641310/gkkxserrxedgxsoehbac.jpg', segmentColor: 'rgb(255, 243, 24)' }, // Xanh lam nhạt
+        { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749641504/qfxbmeauekidspngq1fa.jpg', segmentColor: 'rgb(255, 138, 120)' }, // Hồng
+        { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749641518/sz7jsxubnkntcjzzp6jx.jpg', segmentColor: 'rgb(255, 242, 0)' }, // Xanh lá
+        { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749641493/lstyci1vkwqjskhzrsxk.jpg', segmentColor: 'rgb(255, 135, 141)' }, // Cam
+    ];
+
+    let currentBackgroundIndex = 4; // Bắt đầu với ảnh cuối cùng (đang hiển thị)
+    let autoChangeInterval;
+    let preloadedImages = [];
+    let isExpanded = false;
+
+    // --- Hàm preload ảnh để giảm lag ---
+    function preloadImages() {
+        backgroundImages.forEach((imageData, index) => {
+            const img = new Image();
+            img.onload = () => {
+                console.log(`Preloaded image ${index + 1}`);
+            };
+            const optimizedSrc = imageData.src.replace('/upload/', '/upload/w_135,h_80,c_fill/');
+            img.src = optimizedSrc;
+            preloadedImages[index] = img;
+        });
+    }
+
+    // --- Hàm khởi tạo và hiển thị các lựa chọn hình nền ---
+    function initializeBackgroundOptions() {
+        backgroundGrid.innerHTML = '';
+        backgroundImages.forEach((imageData, index) => {
+            const optionDiv = document.createElement('div');
+            optionDiv.classList.add('background-option');
+            optionDiv.id = `background-option-${index}`;
+
+            const img = document.createElement('img');
+            const optimizedSrc = imageData.src.replace('/upload/', '/upload/w_135,h_80,c_fill/');
+            img.src = optimizedSrc;
+            img.alt = `Background ${index + 1}`;
+            img.loading = 'lazy';
+
+            optionDiv.appendChild(img);
+            backgroundGrid.appendChild(optionDiv);
+
+            // Thêm hiệu ứng click với debounce
+            let clickTimeout;
+            optionDiv.addEventListener('click', (event) => {
+                event.stopPropagation();
+                clearTimeout(clickTimeout);
+                clickTimeout = setTimeout(() => {
+                    selectBackground(index);
+                    // Restart auto change nếu đang bật, nhưng không chuyển ngay
+                    if (autoChangeToggle.checked) {
+                        // Reset lại interval để tính thời gian từ lúc user chọn
+                        stopAutoChange();
+                        autoChangeInterval = setInterval(moveToNextBackground, 300000);
+                        console.log('Auto change restarted from user selection.');
+                    }
+                }, 100);
+            });
+        });
+        
+        // Đánh dấu background hiện tại là selected
+        selectBackground(currentBackgroundIndex);
+    }
+
+    // --- Hàm chọn hình nền với animation mượt ---
+    function selectBackground(index) {
+        // Cập nhật màu phân đoạn đồng hồ dựa trên hình nền được chọn
+        currentSegmentColor = backgroundImages[index].segmentColor;
+        // Kích hoạt cập nhật đồng hồ để thay đổi màu ngay lập tức
+        updateClock(); 
+
+        // Xóa class selected từ tất cả options
+        document.querySelectorAll('.background-option').forEach(option => {
+            option.classList.remove('selected');
+        });
+
+        // Thêm class selected cho option được chọn
+        const selectedOption = document.getElementById(`background-option-${index}`);
+        if (selectedOption) {
+            selectedOption.classList.add('selected');
+        }
+
+        // --- Cập nhật class trên phần tử backgroundContainer ---
+        // Xóa tất cả các class background-active-X cũ
+        backgroundContainer.classList.forEach(className => {
+            if (className.startsWith('background-active-')) {
+                backgroundContainer.classList.remove(className);
+            }
+        });
+        // Thêm class mới
+        backgroundContainer.classList.add(`background-active-${index}`);
+        // --- Kết thúc cập nhật class ---
+
+        // Thay đổi background với fade effect
+        const currentSrc = mainBackground.src;
+        const newSrc = backgroundImages[index].src; // Lấy src từ đối tượng
+        
+        if (currentSrc !== newSrc) {
+            mainBackground.style.opacity = '0.8';
+            setTimeout(() => {
+                mainBackground.src = newSrc;
+                mainBackground.style.opacity = '1';
+            }, 150);
+        }
+        
+        currentBackgroundIndex = index;
+    }
+
+    // --- Hàm chuyển sang hình nền tiếp theo ---
+    function moveToNextBackground() {
+        let nextIndex = currentBackgroundIndex + 1;
+        if (nextIndex >= backgroundImages.length) {
+            nextIndex = 0;
+        }
+        selectBackground(nextIndex);
+    }
+
+    // --- Hàm bắt đầu chế độ tự động thay đổi ---
+    function startAutoChange() {
+        stopAutoChange();
+        // Không moveToNextBackground() ngay lập tức, chỉ set interval
+        autoChangeInterval = setInterval(moveToNextBackground, 300000); // 5 phút
+        console.log('Auto change started.');
+        updateSettingText(true);
+    }
+
+    // --- Hàm dừng chế độ tự động thay đổi ---
+    function stopAutoChange() {
+        if (autoChangeInterval) {
+            clearInterval(autoChangeInterval);
+            autoChangeInterval = null;
+            console.log('Auto change stopped.');
+        }
+        updateSettingText(false);
+    }
+
+    // --- Hàm cập nhật văn bản trạng thái ---
+    function updateSettingText(isOn) {
+        settingText.textContent = isOn ? "Change after 5 mins" : "Remain constant";
+    }
+
+    // --- Hàm toggle panel ---
+    function togglePanel() {
+        isExpanded = !isExpanded;
+        if (isExpanded) {
+            expandedPanel.classList.add('active');
+        } else {
+            expandedPanel.classList.remove('active');
+        }
+    }
+
+    // --- Xử lý sự kiện click cho panel ---
+    expandedPanel.addEventListener('click', (event) => {
+        // Chỉ toggle khi click vào chính panel (không phải các element con khi đã expanded)
+        if (!isExpanded || event.target === expandedPanel) {
+            event.stopPropagation();
+            togglePanel();
+        }
+    });
+
+    // --- Xử lý sự kiện click bên ngoài panel ---
+    document.addEventListener('click', (event) => {
+        if (!expandedPanel.contains(event.target) && isExpanded) {
+            togglePanel();
+        }
+    });
+
+    // --- Xử lý sự kiện thay đổi của công tắc ---
+    autoChangeToggle.addEventListener('change', (event) => {
+        event.stopPropagation();
+        if (autoChangeToggle.checked) {
+            startAutoChange();
+        } else {
+            stopAutoChange();
+        }
+    });
+
+    // --- Ngăn việc đóng panel khi click vào nội dung ---
+    document.querySelector('.panel-content').addEventListener('click', (event) => {
+        event.stopPropagation();
+    });
+
+    // --- Khởi tạo ban đầu ---
+    preloadImages();
+    initializeBackgroundOptions();
+    
+    // Đảm bảo đồng hồ được cập nhật màu đúng ngay từ đầu
+    autoChangeToggle.checked = true;
+    startAutoChange();
+    updateSettingText(autoChangeToggle.checked);
+});
