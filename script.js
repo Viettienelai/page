@@ -166,7 +166,7 @@ function updateDigit(prefix, digit) {
                 element.style.fill = currentSegmentColor;
                 element.style.transition = 'fill 0.3s ease';
             } else {
-                element.style.fill = 'rgba(0, 0, 0, 0.1)';
+                element.style.fill = 'rgba(0, 0, 0, 0.05)';
                 element.style.transition = 'fill 0.3s ease';
             }
         }
@@ -1398,10 +1398,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // Mảng chứa các đường dẫn ảnh nền và màu phân đoạn tương ứng
     const backgroundImages = [
         { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749669809/vangogh.jpg', segmentColor: 'rgba(255, 213, 0, 1)' }, // Vàng
-        { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749669814/nahida_blue.jpg', segmentColor: 'rgb(255, 243, 24)' }, // Xanh lam nhạt
+        { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749669814/nahida_blue.jpg', segmentColor: 'rgb(255, 242, 0)' }, // Xanh lam nhạt
         { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749669819/nahida_pink.jpg', segmentColor: 'rgb(255, 138, 120)' }, // Hồng
-        { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749669810/nahida_green.jpg', segmentColor: 'rgb(255, 242, 0)' }, // Xanh lá
-        { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749669809/nahida%2Bpaimon.jpg', segmentColor: 'rgb(255, 135, 141)' }, // Cam
+        { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749669810/nahida_green.jpg', segmentColor: 'rgb(255, 200, 0)' }, // Xanh lá
+        { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749669809/nahida%2Bpaimon.jpg', segmentColor: 'rgb(255, 135, 141)' },
+        { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749675269/capheny_mildar.jpg', segmentColor: 'rgb(255, 83, 92)' },
+        { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749706546/lauriel_neko.jpg', segmentColor: 'rgb(233, 135, 255)' },
     ];
 
     let currentBackgroundIndex = 4; // Bắt đầu với ảnh cuối cùng (đang hiển thị)

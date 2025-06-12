@@ -4,7 +4,6 @@
   --padding: 17px 15px 0;
   --border-radius: 20px;
   --shadow: 0 0 12px rgba(0, 0, 0, 0.5);
-  --bookmark-animation: bounce 1s ease-in-out forwards;
 }
 
 * {
@@ -88,7 +87,7 @@ body {
   opacity: 0;
   position: relative;
   z-index: 3;
-  animation: var(--bookmark-animation);
+  animation: bounce 1s ease-in-out forwards;
 }
 
 .container .bookmark-item a {
@@ -128,7 +127,7 @@ body {
 
 #bar-container {
   pointer-events: none;
-  position: relative;
+  position: absolute;
   display: flex;
   justify-content: center;
   top: 190px;
@@ -143,11 +142,9 @@ body {
   width: 100%;
   max-width: 800px;
   height: 70px;
-  position: relative;
-  top: -1px;
+  position: absolute;
   box-sizing: border-box;
   font-size: 16px;
-  position: sticky;
   z-index: 9;
   transform-origin: bottom;
   transform: scale(0);
@@ -173,8 +170,8 @@ body {
   box-sizing: border-box;
   font-size: 16px;
   border-radius: 100px;
-  position: relative;
-  z-index: 11;
+  position: absolute;
+  z-index: 1;
   outline-color: #FEC319;
   transition: all 0.3s cubic-bezier(0.250, 0.460, 0.450, 0.940);
 }
@@ -325,7 +322,6 @@ body {
   box-sizing: border-box;
   z-index: 15;
   border-radius: 20px;
-  background: rgba(0, 0, 0, 0.1);
   box-shadow:
     0 3px 8px 3px rgba(53, 53, 53, 0.25),
     inset 0 2px 10px 5px rgba(255, 255, 255, 0.25),
@@ -2023,7 +2019,7 @@ body.no-scroll {
   position: fixed;
   top: 10px;
   left: 20px;
-  z-index: 100;
+  z-index: 9;
 }
 
 /* CSS cho panel - ban đầu có dạng circle */
@@ -2032,8 +2028,8 @@ body.no-scroll {
   width: 40px;
   height: 40px;
   border-radius: 20px;
-  backdrop-filter: blur(5px);
-  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(15px);
+  background: rgba(255, 255, 255, 0.5);
   box-shadow:
     0 3px 8px 3px rgba(53, 53, 53, 0.25),
     inset 0 2px 10px 5px rgba(255, 255, 255, 0.25),
@@ -2050,7 +2046,7 @@ body.no-scroll {
 /* Trạng thái khi panel mở rộng */
 .expanded-panel.active {
   width: 300px;
-  height: 350px;
+  height: 370px;
   border-radius: 14px;
   cursor: default;
 }
@@ -2074,7 +2070,7 @@ body.no-scroll {
 .panel-icon img {
   width: 24px;
   height: 18px;
-  filter: invert(0.6);
+  filter: invert(0.9);
 }
 
 /* Ẩn icon khi panel mở rộng */
@@ -2106,21 +2102,22 @@ body.no-scroll {
   width: 280px;
   display: flex;
   justify-content: space-between;
-  padding: 15px 20px 5px 20px;
+  padding: 15px 20px 5px 15px;
   align-items: center;
   box-sizing: border-box;
 }
 
 /* CSS cho phần tử văn bản */
 .panel-header .setting-text {
-  font-size: 16px;
-  color: #545454;
+  font-size: 17px;
+  color: var(--pannel-text-color);
   font-weight: bold;
   line-height: 28px;
   width: 170px;
   height: 28px;
   overflow: hidden;
   white-space: nowrap;
+  text-shadow: 0px 0px 2px rgba(255, 255, 255, 0.5);
 }
 
 /* CSS cho công tắc bật/tắt Apple-style */
@@ -2203,10 +2200,11 @@ input:checked+.slider:before {
   border-radius: 4px;
   overflow: hidden;
   cursor: pointer;
-  background-color: #848484;
+  background-color: transparent;
   transition: all 0.3s cubic-bezier(0.250, 0.460, 0.450, 0.940);
   width: 135px;
   height: 80px;
+  border: none;
   box-sizing: border-box;
   object-fit: cover;
   /* Hardware acceleration */
@@ -2218,11 +2216,13 @@ input:checked+.slider:before {
   position: absolute;
   top: 0px;
   left: 0px;
-  width: 100%;
-  height: 100%;
+  width: 135px;
+  height: 80px;
   object-fit: cover;
   display: block;
+  border: none;
   opacity: 0.5;
+  filter: brightness(0.5);
   transition: all 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940);
   /* Tối ưu hóa rendering */
   transform: translateZ(0);
@@ -2234,11 +2234,13 @@ input:checked+.slider:before {
 .background-option:hover img {
   opacity: 1;
   transform: scale(1.05);
+  filter: brightness(1);
 }
 
 .background-option.selected img {
   opacity: 1;
   transform: scale(1.05);
+  filter: brightness(1);
 }
 
 .background-option.selected {
@@ -2257,21 +2259,31 @@ input:checked+.slider:before {
 
 .background.background-active-1 img {
   position: absolute;
-  transform: scale(0.3);
-  top: -2200px;
-  right: -4400px;
+  top: -250px;
+  right: -900px;
+  height: 170vh;
 }
 
 .background.background-active-2 img {
   position: absolute;
-  transform: scale(0.3);
-  top: -2300px;
-  left: -4560px;
+  top: -300px;
+  left: -1050px;
+  height: 170vh;
 }
 
 .background.background-active-3 img {
   position: absolute;
-  transform: scale(0.3);
-  top: -2350px;
-  left: -4720px;
+  top: -400px;
+  left: -1350px;
+  height: 190vh;
+}
+
+.background.background-active-5 img {
+  width: 130vw;
+  height: 100vh;
+}
+
+.background.background-active-6 img {
+  width: 100vw;
+  height: 100vh;
 }
