@@ -1403,7 +1403,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749669810/nahida_green.jpg', segmentColor: 'rgb(255, 200, 0)' }, // Xanh lá
         { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749669809/nahida%2Bpaimon.jpg', segmentColor: 'rgb(255, 135, 141)' },
         { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749715864/capheny_mildar.jpg', segmentColor: 'rgb(255, 83, 92)' },
-        { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749706546/lauriel_neko.jpg', segmentColor: 'rgb(233, 135, 255)' },
+        { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749721868/lauriel_neko.jpg', segmentColor: 'rgb(233, 135, 255)' },
     ];
 
     let currentBackgroundIndex = 4; // Bắt đầu với ảnh cuối cùng (đang hiển thị)
