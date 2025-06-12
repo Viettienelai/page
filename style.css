@@ -75,7 +75,6 @@ body {
 }
 
 .container:hover {
-  transform: scale(1.01, 1.05);
   background-color: rgba(255, 255, 255, 0);
 }
 
@@ -2090,7 +2089,7 @@ body.no-scroll {
 /* Trạng thái khi panel mở rộng */
 .expanded-panel.active {
   width: 300px;
-  height: 370px;
+  height: 380px;
   border-radius: 14px;
   cursor: default;
 }
@@ -2289,40 +2288,34 @@ input:checked+.slider:before {
 
 
 
-
-
-.background.background-active-0 img, .background.background-active-4 img {
+.background-active-0 img,
+.background-active-4 img,
+.background-active-6 img {
   width: 100vw;
   height: 100vh;
 }
 
-.background.background-active-1 img {
-  position: absolute;
-  top: -250px;
-  right: -900px;
-  height: 170vh;
-}
-
-.background.background-active-2 img {
-  position: absolute;
-  top: -300px;
-  left: -1050px;
-  height: 170vh;
-}
-
-.background.background-active-3 img {
-  position: absolute;
-  top: -400px;
-  left: -1350px;
-  height: 190vh;
-}
-
-.background.background-active-5 img {
-  width: 130vw;
+.background-active-1 img,
+.background-active-2 img,
+.background-active-3 img {
   height: 100vh;
 }
 
-.background.background-active-6 img {
+.background-active-1 img,
+.background-active-5 img {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.background-active-2 img,
+.background-active-3 img,
+.background-active-6 img {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.background-active-5 img {
   width: 100vw;
-  height: 100vh;
 }

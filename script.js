@@ -1397,13 +1397,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Mảng chứa các đường dẫn ảnh nền và màu phân đoạn tương ứng
     const backgroundImages = [
-        { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749669809/vangogh.jpg', segmentColor: 'rgba(255, 213, 0, 1)' }, // Vàng
-        { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749669814/nahida_blue.jpg', segmentColor: 'rgb(255, 242, 0)' }, // Xanh lam nhạt
-        { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749669819/nahida_pink.jpg', segmentColor: 'rgb(255, 138, 120)' }, // Hồng
-        { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749669810/nahida_green.jpg', segmentColor: 'rgb(255, 200, 0)' }, // Xanh lá
-        { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749669809/nahida%2Bpaimon.jpg', segmentColor: 'rgb(255, 135, 141)' },
-        { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749715864/capheny_mildar.jpg', segmentColor: 'rgb(255, 83, 92)' },
-        { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749721868/lauriel_neko.jpg', segmentColor: 'rgb(233, 135, 255)' },
+        { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749755201/wxsmp3khl4rxetoll3mx.webp', segmentColor: 'rgba(255, 213, 0, 1)' }, // Vàng
+        { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749752086/hgvojcdwc3gafgerqva4.webp', segmentColor: 'rgb(255, 242, 0)' }, // Xanh lam nhạt
+        { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749752086/zi3eumhtq0be5mmeciii.webp', segmentColor: 'rgb(255, 138, 120)' }, // Hồng
+        { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749752086/oqqf3ctq28yl8mz7bpja.webp', segmentColor: 'rgb(255, 200, 0)' }, // Xanh lá
+        { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749752088/xyy466nsxhehepuuon7j.webp', segmentColor: 'rgb(255, 135, 141)' },
+        { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749752087/o7bleciiuuqpzxkwnbad.webp', segmentColor: 'rgb(255, 83, 92)' },
+        { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749754674/yjcbwpkqobft3m5ecmy9.webp', segmentColor: 'rgb(233, 135, 255)' },
     ];
 
     let currentBackgroundIndex = 4; // Bắt đầu với ảnh cuối cùng (đang hiển thị)
