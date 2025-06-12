@@ -122,7 +122,16 @@ body {
   position: absolute;
   white-space: nowrap;
   z-index: 5;
-  text-shadow: 0px 0px 20px rgb(255, 255, 255), 0px 0px 10px rgb(255, 255, 255);
+  text-shadow: 0px 0px 10px rgb(255, 255, 255),
+  0px 0px 20px rgb(255, 255, 255),
+  0px 0px 30px rgb(255, 255, 255),
+  0px 0px 40px rgb(255, 255, 255),
+  0px 0px 50px rgb(255, 255, 255),
+  0px 0px 60px rgb(255, 255, 255),
+  0px 0px 70px rgb(255, 255, 255),
+  0px 0px 80px rgb(255, 255, 255),
+  0px 0px 90px rgb(255, 255, 255),
+  0px 0px 100px rgb(255, 255, 255);
 }
 
 #bar-container {
@@ -183,6 +192,10 @@ body {
 #search-bar:hover {
   transform: translateX(calc(50% - 360px)) scaleY(1.1);
   background-color: rgba(255, 255, 255, 0);
+}
+
+#search-bar:focus {
+  background-color: white;
 }
 
 #search-icon {
@@ -263,6 +276,7 @@ body {
   width: 25px;
   height: 25px;
   margin-right: 20px;
+  border: 1px solid red;
 }
 
 #background-blur {
@@ -855,25 +869,30 @@ body {
   border-radius: 100px;
   background: radial-gradient(ellipse at bottom, #6d97c6 0%, #dfdfc2 100%);
   box-sizing: border-box;
-  transition: all 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940);
   pointer-events: auto;
   z-index: 10000;
   overflow: hidden;
 }
 
 #chat-bubble:not(.expanded) {
+  backdrop-filter: blur(5px);
+  background: rgba(255, 255, 255, 0.1);
   box-shadow:
     0 3px 8px 3px rgba(53, 53, 53, 0.25),
     inset 0 2px 10px 5px rgba(255, 255, 255, 0.25),
     inset 0 0 14px 0 rgba(255, 255, 255, 0.35),
     inset 1px 3px 5px 0 rgba(255, 255, 255, 0.30),
     inset -1px -3px 3px 0 rgba(255, 255, 255, 0.10);
+  transition: all 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940);
 }
 
 #chat-bubble:not(.expanded):hover .note-icon {
   transform: scale(1.2);
 }
 
+#chat-bubble:not(.expanded):hover {
+  background: white;
+}
 @property --deg {
   syntax: '<angle>';
   inherits: true;
@@ -946,6 +965,7 @@ body {
   right: -50px;
   border-radius: 24px;
   z-index: 1000001;
+  transition: all 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940);
 }
 
 .chat-bubble-background {
@@ -1026,6 +1046,10 @@ body {
   /* Hủy bỏ mọi hiệu ứng scale */
 }
 
+#chat-bubble:not(.expanded) #note-background {
+  background: transparent;
+  backdrop-filter: blur(0px);
+}
 /* Đảm bảo lớp phủ ::before KHÔNG BAO GIỜ HIỂN THỊ khi chưa expanded */
 #chat-bubble:not(.expanded) #note-background::before {
   display: none;
@@ -2043,6 +2067,11 @@ body.no-scroll {
   backface-visibility: hidden;
 }
 
+.expanded-panel:not(.active):hover {
+  transform: scale(1.2);
+  background-color: white;
+}
+
 /* Trạng thái khi panel mở rộng */
 .expanded-panel.active {
   width: 300px;
@@ -2183,7 +2212,7 @@ input:checked+.slider:before {
 
 .background-grid {
   display: grid;
-  padding: 10px;
+  padding: 10px 10px 0px 10px;
   grid-template-columns: repeat(2, 135px);
   grid-template-rows: repeat(auto-fit, 80px);
   gap: 10px;
@@ -2193,6 +2222,7 @@ input:checked+.slider:before {
   box-sizing: border-box;
   justify-content: center;
   flex: 1;
+  border: 1px solid rgba(0, 0, 0, 0);
 }
 
 .background-option {
