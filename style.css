@@ -1033,6 +1033,13 @@ body {
   transition: all 0.3s ease-in-out;
 }
 
+#chat-bubble:not(.expanded) .note-icon {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 30px;
+  height: 30px;
+}
 /* ---------------------------------------------------- */
 /* CÁC THAY ĐỔI ĐỂ ĐÁP ỨNG YÊU CẦU MỚI:                */
 /* ---------------------------------------------------- */
@@ -2089,16 +2096,10 @@ body.no-scroll {
   justify-content: center;
   align-items: center;
   width: 24px;
-  height: 18px;
+  height: 24px;
   z-index: 10;
   transition: all 0.3s cubic-bezier(0.250, 0.460, 0.450, 0.940);
   pointer-events: none;
-}
-
-.panel-icon img {
-  width: 24px;
-  height: 18px;
-  filter: invert(0.9);
 }
 
 /* Ẩn icon khi panel mở rộng */
