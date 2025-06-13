@@ -52,7 +52,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  z-index: 1;
+  z-index: 20;
 }
 
 .container {
@@ -73,7 +73,6 @@ body {
   position: relative;
   display: flex;
   flex-wrap: wrap;
-  z-index: 2;
   transition: all 0.3s ease;
 }
 
@@ -88,7 +87,6 @@ body {
   flex-direction: column;
   align-items: center;
   position: relative;
-  z-index: 3;
 }
 
 .container .bookmark-item a {
@@ -106,7 +104,6 @@ body {
   left: 50%;
   transform: translateX(-50%);
   top: 0;
-  z-index: 4;
 }
 
 #google-bookmark-avatar {
@@ -116,7 +113,6 @@ body {
   left: 50%;
   transform: translateX(-50%);
   top: 0;
-  z-index: 4;
 }
 .container .bookmark-item a:hover {
   transform: scale(1.05);
@@ -131,7 +127,6 @@ body {
   color: #000000;
   position: absolute;
   white-space: nowrap;
-  z-index: 5;
   text-shadow:
     0px 0px 5px rgb(255, 255, 255),
     0px 0px 10px rgb(255, 255, 255),
@@ -147,18 +142,11 @@ body {
   left: 50%;
   transform: translateX(-50%);
   width: 100%;
-  height: 100%;
-  z-index: 8;
-}
-
-#sticky-bar {
-  width: 100%;
   max-width: 800px;
   height: 70px;
-  position: absolute;
   box-sizing: border-box;
   font-size: 16px;
-  z-index: 9;
+  z-index: 40;
 }
 
 #search-bar {
@@ -180,9 +168,9 @@ body {
   font-size: 16px;
   border-radius: 100px;
   position: absolute;
-  z-index: 1;
   outline-color: #FEC319;
   transition: all 0.3s cubic-bezier(0.250, 0.460, 0.450, 0.940);
+  z-index: 1;
 }
 
 #search-bar::placeholder {
@@ -206,7 +194,7 @@ body {
   width: 30px;
   height: 30px;
   cursor: pointer;
-  z-index: 20;
+  z-index: 2;
   transition: all 0.3s ease;
   filter: drop-shadow(0 0 10px rgba(255, 255, 255, 1))
    drop-shadow(0 0 5px rgba(255, 255, 255, 1));
@@ -239,7 +227,6 @@ body {
   opacity: 0;
   visibility: hidden;
   transition: all 0.3s cubic-bezier(0.250, 0.460, 0.450, 0.940);
-  z-index: 13;
 }
 
 #search-options a {
@@ -268,7 +255,6 @@ body {
   pointer-events: auto;
   transform: scale(1);
   opacity: 1;
-  z-index: 13;
   visibility: visible;
 }
 
@@ -278,23 +264,23 @@ body {
   margin-right: 20px;
 }
 
-#background-blur {
+#background-blur-search-options {
+  pointer-events: none;
   position: fixed;
-  top: -200px;
-  left: -460px;
+  top: 0;
+  left: 0;
   width: 100vw;
   height: 100vh;
   backdrop-filter: blur(10px);
   background: rgba(0, 0, 0, 0.2);
   opacity: 0;
   transition: opacity 0.3s ease;
-  z-index: 10;
 }
 
-#background-blur.active {
+#background-blur-search-options.active {
   pointer-events: auto;
   opacity: 1;
-  z-index: 10;
+  z-index: 30;
 }
 
 #clock-container {
@@ -304,7 +290,7 @@ body {
   transform: translateX(-50%);
   width: 650px;
   height: 150px;
-  z-index: 4;
+  z-index: 10;
 }
 
 #area:hover {
@@ -320,7 +306,6 @@ body {
   height: 100%;
   top: 0;
   left: 0;
-  z-index: 14;
   transition: all 0.3s ease;
   border-radius: 24px;
 }
@@ -332,7 +317,6 @@ body {
   padding-top: 12px;
   padding-left: 14px;
   box-sizing: border-box;
-  z-index: 15;
   border-radius: 20px;
   box-shadow:
     0 3px 8px 3px rgba(53, 53, 53, 0.25),
@@ -343,10 +327,6 @@ body {
   border: 1px solid rgba(255, 255, 255, .5);
 }
 
-.block {
-  z-index: 16;
-}
-
 #sep3 {
   top: 48px;
   left: 415px;
@@ -355,7 +335,6 @@ body {
   height: 15px;
   position: absolute;
   border-radius: 3.5px;
-  z-index: 17;
   opacity: 1;
   will-change: transform;
   animation: moveDown 1s ease-out infinite;
@@ -369,7 +348,6 @@ body {
   height: 15px;
   position: absolute;
   border-radius: 3.5px;
-  z-index: 17;
   opacity: 1;
   will-change: transform;
   animation: moveUp 1s ease-out infinite;
@@ -711,7 +689,6 @@ body {
   background: radial-gradient(ellipse at bottom, #6d97c6 0%, #dfdfc2 100%);
   box-sizing: border-box;
   pointer-events: auto;
-  z-index: 10000;
   overflow: hidden;
 }
 
@@ -725,6 +702,7 @@ body {
     inset 1px 3px 5px 0 rgba(255, 255, 255, 0.30),
     inset -1px -3px 3px 0 rgba(255, 255, 255, 0.10);
   transition: all 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940);
+  z-index: 5;
 }
 
 #chat-bubble:not(.expanded):hover .note-icon {
@@ -749,7 +727,6 @@ body {
   top: 10px;
   border-radius: 100px;
   /* Ban đầu là hình tròn */
-  z-index: 9;
   /* Đặt dưới chat-bubble nhưng trên background-blur-chat */
   opacity: 0;
   transition: all 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940);
@@ -796,6 +773,7 @@ body {
   border-radius: 29px;
   /* Hình vuông/chữ nhật với góc bo */
   opacity: 1;
+  z-index: 4;
   /* Hiển thị khi expanded */
 }
 
@@ -805,7 +783,7 @@ body {
   top: -80px;
   right: -50px;
   border-radius: 24px;
-  z-index: 1000001;
+  z-index: 5;
   transition: all 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940);
 }
 
@@ -997,16 +975,16 @@ body {
 
 .background-blur-chat {
   position: fixed;
-  top: 0;
-  left: 0;
+  top: -190px;
+  left: 50%;
+  transform: translateX(-50%);
   width: 100vw;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(20px);
-  z-index: 7;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
+  transition: all 0.5s ease;
 }
 
 #chat-bubble.expanded+.background-blur-chat {
@@ -1017,6 +995,7 @@ body {
 .background-blur-chat.active {
   opacity: 1;
   visibility: visible;
+  z-index: 3;
 }
 
 .chat-toolbar {
@@ -1774,7 +1753,7 @@ body.no-scroll {
   position: fixed;
   box-shadow: 0rem 0rem 1.2rem 0.6rem rgb(0, 172, 255);
   pointer-events: none;
-  z-index: 1;
+  z-index: 30;
 }
 
 .starMouse {
@@ -1842,13 +1821,25 @@ body.no-scroll {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
 .background {
   position: fixed;
   top: 0px;
   left: 0px;
   width: 100vw;
   height: 100vh;
-  z-index: 0;
+  z-index: 1;
 }
 
 .background img {

@@ -2,7 +2,7 @@ const searchIcon = document.getElementById('search-icon');
 const searchOptions = document.getElementById('search-options');
 const searchForm = document.getElementById('search-form');
 const searchBar = document.getElementById('search-bar');
-const blur = document.getElementById('background-blur');
+const blur = document.getElementById('background-blur-search-options');
 const searchLinks = searchOptions.querySelectorAll('a');
 
 // Placeholder mặc định theo công cụ tìm kiếm
