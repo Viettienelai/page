@@ -1,3 +1,7 @@
+
+/* Import font for Loading . . . */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+
 :root {
   --blur: blur(20px);
   --bg: rgba(255, 255, 255, 0.5);
@@ -70,7 +74,6 @@ body {
   display: flex;
   flex-wrap: wrap;
   z-index: 2;
-  animation: bookmark-container 1s cubic-bezier(0.175, 0.885, 0.32, 2);
   transition: all 0.3s ease;
 }
 
@@ -83,10 +86,8 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  opacity: 0;
   position: relative;
   z-index: 3;
-  animation: bounce 1s ease-in-out forwards;
 }
 
 .container .bookmark-item a {
@@ -163,10 +164,6 @@ body {
   box-sizing: border-box;
   font-size: 16px;
   z-index: 9;
-  transform-origin: bottom;
-  transform: scale(0);
-  animation: sticky-bar 1s cubic-bezier(0.2, 0.95, 0.4, 0.95) forwards;
-  opacity: 1;
 }
 
 #search-bar {
@@ -210,14 +207,14 @@ body {
   position: absolute;
   pointer-events: auto;
   top: 20px;
+  left: calc(8% - 25px);
   width: 30px;
   height: 30px;
   cursor: pointer;
-  opacity: 0;
   z-index: 20;
   transition: all 0.3s ease;
-  animation: search-icon 1s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
-  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 1)) drop-shadow(0 0 5px rgba(255, 255, 255, 1));
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 1))
+   drop-shadow(0 0 5px rgba(255, 255, 255, 1));
 }
 
 #search-icon:hover {
@@ -290,8 +287,8 @@ body {
   position: fixed;
   top: -200px;
   left: -460px;
-  width: 250%;
-  height: 1500%;
+  width: 100vw;
+  height: 100vh;
   backdrop-filter: blur(10px);
   background: rgba(0, 0, 0, 0.2);
   opacity: 0;
@@ -313,7 +310,6 @@ body {
   width: 650px;
   height: 150px;
   z-index: 4;
-  animation: clock 1s cubic-bezier(0.2, 0.95, 0.4, 0.95) forwards;
 }
 
 #area:hover {
@@ -353,7 +349,6 @@ body {
 }
 
 .block {
-  fill: #ffd500;
   z-index: 16;
 }
 
@@ -397,66 +392,6 @@ body {
 
   #search-bar {
     padding-left: 10%;
-  }
-
-  .bookmark-item:nth-child(10n + 1) {
-    animation-delay: 0s;
-  }
-
-  .bookmark-item:nth-child(10n + 2) {
-    animation-delay: 0.1s;
-  }
-
-  .bookmark-item:nth-child(10n + 3) {
-    animation-delay: 0.2s;
-  }
-
-  .bookmark-item:nth-child(10n + 4) {
-    animation-delay: 0.3s;
-  }
-
-  .bookmark-item:nth-child(10n + 5) {
-    animation-delay: 0.4s;
-  }
-
-  .bookmark-item:nth-child(10n + 6) {
-    animation-delay: 0.5s;
-  }
-
-  .bookmark-item:nth-child(10n + 7) {
-    animation-delay: 0.6s;
-  }
-
-  .bookmark-item:nth-child(10n + 8) {
-    animation-delay: 0.7s;
-  }
-
-  .bookmark-item:nth-child(10n + 9) {
-    animation-delay: 0.8s;
-  }
-
-  .bookmark-item:nth-child(10n + 10) {
-    animation-delay: 0.9s;
-  }
-
-  .bookmark-item:nth-child(10n + 11) {
-    animation-delay: 1s;
-  }
-
-  .bookmark-item:nth-child(10n + 12) {
-    animation-delay: 0.1s;
-  }
-
-  .bookmark-item:nth-child(10n + 13) {
-    animation-delay: 0.2s;
-  }
-
-  .bookmark-item:nth-child(10n + 14) {
-    animation-delay: 0.3s;
-  }
-
-  .bookmark-item:nth-child(10n + 15) {
-    animation-delay: 0.4s;
   }
 
   .popup-container {
@@ -573,7 +508,7 @@ body {
   }
 }
 
-@media (min-width: 300px) and (max-width: 499px) {
+@media (max-width: 499px) {
   .container {
     width: 350px;
     grid-template-columns: repeat(5, 1fr);
@@ -589,102 +524,6 @@ body {
 
   #search-bar {
     padding-left: 14%;
-  }
-}
-
-@media (max-width: 999px) {
-  .bookmark-item:nth-child(5n + 1) {
-    animation-delay: 0s;
-  }
-
-  .bookmark-item:nth-child(5n + 2),
-  .bookmark-item:nth-child(5n + 6) {
-    animation-delay: 0.1s;
-  }
-
-  .bookmark-item:nth-child(5n + 3),
-  .bookmark-item:nth-child(5n + 7),
-  .bookmark-item:nth-child(5n + 11) {
-    animation-delay: 0.2s;
-  }
-
-  .bookmark-item:nth-child(5n + 4),
-  .bookmark-item:nth-child(5n + 8),
-  .bookmark-item:nth-child(5n + 12) {
-    animation-delay: 0.3s;
-  }
-
-  .bookmark-item:nth-child(5n + 5),
-  .bookmark-item:nth-child(5n + 9),
-  .bookmark-item:nth-child(5n + 13) {
-    animation-delay: 0.4s;
-  }
-
-  .bookmark-item:nth-child(5n + 10),
-  .bookmark-item:nth-child(5n + 14) {
-    animation-delay: 0.5s;
-  }
-
-  .bookmark-item:nth-child(5n + 15) {
-    animation-delay: 0.6s;
-  }
-}
-
-@keyframes bookmark-container {
-  0% {
-    transform: scale(1.1);
-  }
-
-  100% {
-    transform: scale(1);
-  }
-}
-
-@keyframes bounce {
-  0% {
-    opacity: 0;
-    transform: scale(0);
-  }
-
-  50% {
-    transform: scale(1.2);
-  }
-
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes sticky-bar {
-  0% {
-    transform: scaleX(0) scaleY(0.1);
-  }
-
-  100% {
-    transform: scaleX(1) scaleY(1);
-  }
-}
-
-@keyframes search-icon {
-  0% {
-    left: calc(50% - 25px);
-    opacity: 0;
-  }
-
-  100% {
-    left: calc(8% - 25px);
-    opacity: 1;
-  }
-}
-
-@keyframes clock {
-  0% {
-    transform: translateY(-500px) translateX(-50%) scale(3);
-  }
-
-  100% {
-    transform: translateY(0px) translateX(-50%) scale(1);
   }
 }
 
@@ -1334,6 +1173,7 @@ body {
   width: 900px;
   height: 600px;
   top: 0px;
+  left: 0px;
   box-sizing: border-box;
   overflow-y: auto;
   position: absolute;
@@ -1768,8 +1608,6 @@ body {
 
 
 
-/* Import font */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
 
 /* Reset cho loader (để không ảnh hưởng đến body chính của trang) */
 .loader * {
@@ -1846,8 +1684,6 @@ body {
 @keyframes animate {
   0% {
     transform: translateY(0px);
-    color: transparent;
-    text-shadow: none;
   }
 
   20% {
@@ -1919,100 +1755,6 @@ body {
 body.no-scroll {
   overflow: hidden;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-.glow-point {
-  position: fixed;
-  box-shadow: 0rem 0rem 1.2rem 0.6rem rgb(0, 172, 255);
-  pointer-events: none;
-  z-index: 1;
-}
-
-.starMouse {
-  position: absolute;
-  z-index: 200000000000;
-  color: white;
-  font-size: 1rem;
-  animation-duration: 1500ms;
-  animation-fill-mode: forwards;
-  pointer-events: none;
-}
-
-@keyframes fall-1 {
-  0% {
-    transform: translate(0px, 0px) rotateX(45deg) rotateY(30deg) rotateZ(0deg) scale(0.25);
-    opacity: 0;
-  }
-
-  5% {
-    transform: translate(10px, -10px) rotateX(45deg) rotateY(30deg) rotateZ(0deg) scale(1);
-    opacity: 1;
-  }
-
-  100% {
-    transform: translate(25px, 200px) rotateX(180deg) rotateY(270deg) rotateZ(90deg) scale(1);
-    opacity: 0;
-  }
-}
-
-@keyframes fall-2 {
-  0% {
-    transform: translate(0px, 0px) rotateX(-20deg) rotateY(10deg) scale(0.25);
-    opacity: 0;
-  }
-
-  10% {
-    transform: translate(-10px, -5px) rotateX(-20deg) rotateY(10deg) scale(1);
-    opacity: 1;
-  }
-
-  100% {
-    transform: translate(-10px, 160px) rotateX(-90deg) rotateY(45deg) scale(0.25);
-    opacity: 0;
-  }
-}
-
-@keyframes fall-3 {
-  0% {
-    transform: translate(0px, 0px) rotateX(0deg) rotateY(45deg) scale(0.5);
-    opacity: 0;
-  }
-
-  15% {
-    transform: translate(7px, 5px) rotateX(0deg) rotateY(45deg) scale(1);
-    opacity: 1;
-  }
-
-  100% {
-    transform: translate(20px, 120px) rotateX(-180deg) rotateY(-90deg) scale(0.5);
-    opacity: 0;
-  }
-}
-
 
 
 
@@ -2318,4 +2060,5 @@ input:checked+.slider:before {
 
 .background-active-5 img {
   width: 100vw;
+  height: 100vh;
 }
