@@ -1461,8 +1461,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Mảng chứa các đường dẫn ảnh nền và màu phân đoạn tương ứng
     const backgroundImages = [
-        { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749755201/wxsmp3khl4rxetoll3mx.webp', segmentColor: 'rgba(255, 213, 0, 1)' }, // Vàng
-        { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749752086/hgvojcdwc3gafgerqva4.webp', segmentColor: 'rgb(255, 242, 0)' }, // Xanh lam nhạt
+        { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749755201/wxsmp3khl4rxetoll3mx.webp', segmentColor: 'rgb(255, 213, 0)' }, // Vàng
+        { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749752086/hgvojcdwc3gafgerqva4.webp', segmentColor: 'rgb(57, 162, 255)' }, // Xanh lam nhạt
         { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749752086/zi3eumhtq0be5mmeciii.webp', segmentColor: 'rgb(255, 138, 120)' }, // Hồng
         { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749752086/oqqf3ctq28yl8mz7bpja.webp', segmentColor: 'rgb(255, 200, 0)' }, // Xanh lá
         { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749752088/xyy466nsxhehepuuon7j.webp', segmentColor: 'rgb(255, 135, 141)' },
