@@ -78,6 +78,7 @@ body {
 }
 
 .container:hover {
+  transform: scale(1.01, 1.05);
   background-color: rgba(255, 255, 255, 0);
 }
 
@@ -131,16 +132,10 @@ body {
   position: absolute;
   white-space: nowrap;
   z-index: 5;
-  text-shadow: 0px 0px 10px rgb(255, 255, 255),
-  0px 0px 20px rgb(255, 255, 255),
-  0px 0px 30px rgb(255, 255, 255),
-  0px 0px 40px rgb(255, 255, 255),
-  0px 0px 50px rgb(255, 255, 255),
-  0px 0px 60px rgb(255, 255, 255),
-  0px 0px 70px rgb(255, 255, 255),
-  0px 0px 80px rgb(255, 255, 255),
-  0px 0px 90px rgb(255, 255, 255),
-  0px 0px 100px rgb(255, 255, 255);
+  text-shadow:
+    0px 0px 5px rgb(255, 255, 255),
+    0px 0px 10px rgb(255, 255, 255),
+    0px 0px 15px rgb(255, 255, 255);
 }
 
 #bar-container {
@@ -1775,6 +1770,73 @@ body.no-scroll {
 
 
 
+.glow-point {
+  position: fixed;
+  box-shadow: 0rem 0rem 1.2rem 0.6rem rgb(0, 172, 255);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.starMouse {
+  position: absolute;
+  z-index: 200000000000;
+  color: white;
+  font-size: 1rem;
+  animation-duration: 1500ms;
+  animation-fill-mode: forwards;
+  pointer-events: none;
+}
+
+@keyframes fall-1 {
+  0% {
+    transform: translate(0px, 0px) rotateX(45deg) rotateY(30deg) rotateZ(0deg) scale(0.25);
+    opacity: 0;
+  }
+
+  5% {
+    transform: translate(10px, -10px) rotateX(45deg) rotateY(30deg) rotateZ(0deg) scale(1);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate(25px, 200px) rotateX(180deg) rotateY(270deg) rotateZ(90deg) scale(1);
+    opacity: 0;
+  }
+}
+
+@keyframes fall-2 {
+  0% {
+    transform: translate(0px, 0px) rotateX(-20deg) rotateY(10deg) scale(0.25);
+    opacity: 0;
+  }
+
+  10% {
+    transform: translate(-10px, -5px) rotateX(-20deg) rotateY(10deg) scale(1);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate(-10px, 160px) rotateX(-90deg) rotateY(45deg) scale(0.25);
+    opacity: 0;
+  }
+}
+
+@keyframes fall-3 {
+  0% {
+    transform: translate(0px, 0px) rotateX(0deg) rotateY(45deg) scale(0.5);
+    opacity: 0;
+  }
+
+  15% {
+    transform: translate(7px, 5px) rotateX(0deg) rotateY(45deg) scale(1);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate(20px, 120px) rotateX(-180deg) rotateY(-90deg) scale(0.5);
+    opacity: 0;
+  }
+}
 
 
 
