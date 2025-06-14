@@ -144,6 +144,21 @@ body {
 
 
 
+#search-form:has(#search-icon:hover) #search-bar-container {
+  transform: scale(1.02, 1.1);
+  background-color: rgba(255, 255, 255, 0);
+}
+
+
+
+
+
+
+
+
+
+
+
 #bar-container {
   position: absolute;
   display: flex;
@@ -218,7 +233,6 @@ body {
 
 #search-bar-container:has(#search-bar:focus) {
   transform: scale(1.02, 1.1);
-  background-color: rgba(255, 255, 255, 0);
 }
 
 #search-bar-container:hover+#search-icon {
@@ -243,67 +257,83 @@ body {
   height: 30px;
   cursor: pointer;
   z-index: 2;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 3);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 2.5);
   filter: drop-shadow(0 0 10px rgba(255, 255, 255, 1)) drop-shadow(0 0 5px rgba(255, 255, 255, 1));
 }
 
 #search-icon:hover {
-  transform: scale(1.2);
+  transform: scale(1.1) translateX(-8px);
 }
 
 #search-options {
-  padding: 9px 0px 9px 0px;
   position: absolute;
-  border-radius: 12px;
+  width: 200px;
+  height: 270px;
+  border-radius: 24px;
   pointer-events: auto;
   top: 55px;
   left: 7%;
-  backdrop-filter: blur(5px);
-  background: rgba(255, 255, 255, 0.5);
-  box-shadow:
-    0 3px 8px 3px rgba(53, 53, 53, 0.25),
-    inset 0 2px 10px 5px rgba(255, 255, 255, 0.25),
-    inset 0 0 14px 0 rgba(255, 255, 255, 0.35),
-    inset 1px 3px 5px 0 rgba(255, 255, 255, 0.30),
-    inset -1px -3px 3px 0 rgba(255, 255, 255, 0.10);
-  width: 200px;
   pointer-events: none;
   overflow: hidden;
-  transform-origin: top left;
   transform: scale(0);
-  opacity: 0;
-  visibility: hidden;
-  transition: all 0.3s cubic-bezier(0.250, 0.460, 0.450, 0.940);
+  transform-origin: top left;
+  box-shadow:
+    0 6px 6px rgba(0, 0, 0, 0.2),
+    0 0 20px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1);
 }
 
-#search-options a {
-  margin-left: 9.7px;
-  height: 30px;
-  width: 140px;
-  padding: 10px 15px;
-  cursor: pointer;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  color: rgb(255, 255, 255);
-  text-decoration: none;
-  opacity: 1;
-  transform: scale(1);
-  transition: all 0.3s cubic-bezier(0.250, 0.460, 0.450, 0.940);
+#search-options-glass-effect-1 {
+  position: absolute;
+  inset: 0;
+  backdrop-filter: blur(0px);
+  filter: url(#glass-distortion);
+  z-index: 0;
 }
 
-#search-options a:hover {
-  transform: translateX(5px) scale(1.1);
-  background-color: rgba(255, 255, 255, 0.6);
+#search-options-glass-effect-2 {
+  position: absolute;
+  width: 200px;
+  height: 270px;
+  padding: 10px;
+  border-radius: 24px;
+  box-sizing: border-box;
+  z-index: 1;
+  inset: 0;
+  backdrop-filter: blur(5px);
+  background: rgba(255, 255, 255, 0.3);
+  box-shadow:
+    inset 10px 10px 7px -7px rgba(255, 255, 255, 1),
+    inset -12px -12px 10px -8px rgba(255, 255, 255, .7);
 }
 
 #search-options.active {
   pointer-events: auto;
   transform: scale(1);
+}
+
+#search-options a {
+  height: 30px;
+  width: auto;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  color: #484848;
+  text-decoration: none;
   opacity: 1;
-  visibility: visible;
+  transform: scale(1);
+  transition: all 0.3s ease-out;
+}
+
+#search-options a:hover {
+  box-shadow:
+    inset 10px 10px 7px -7px rgba(255, 255, 255, 1),
+    inset -12px -12px 10px -8px rgba(255, 255, 255, .7);
 }
 
 .option-icon {
@@ -355,7 +385,6 @@ body {
 
 .container {
   position: relative;
-  border-radius: 24px;
   z-index: 0;
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 2.2);
 }
@@ -375,7 +404,6 @@ body {
 #container-glass-effect-1 {
   position: absolute;
   height: 100%;
-  border-radius: 24px;
   inset: 0;
   backdrop-filter: blur(0px);
   filter: url(#glass-distortion);
@@ -437,7 +465,9 @@ body {
 
 .container .bookmark-item a:hover {
   transform: scale(1.05);
-  background-color: rgba(255, 255, 255, 0.5);
+  box-shadow:
+    inset 10px 10px 7px -7px rgba(255, 255, 255, 1),
+    inset -12px -12px 10px -8px rgba(255, 255, 255, .7);
 }
 
 .bookmark-name {
@@ -1985,14 +2015,13 @@ body.no-scroll {
   position: fixed;
   top: 10px;
   left: 20px;
-  border-radius: 24px;
   z-index: 50;
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 2.2);
 }
 
 #panel-glass-effect {
   position: absolute;
-  border-radius: 24px;
+  border-radius: 14px;
   z-index: 0;
   inset: 0;
   backdrop-filter: blur(0px);
@@ -2003,8 +2032,8 @@ body.no-scroll {
   position: relative;
   width: 40px;
   height: 40px;
-  border-radius: 24px;
   cursor: pointer;
+  border-radius: 24px;
   overflow: hidden;
   backface-visibility: hidden;
   z-index: 1;
@@ -2030,8 +2059,7 @@ body.no-scroll {
 /* Trạng thái khi panel mở rộng */
 .expanded-panel.active {
   width: 300px;
-  height: 420px;
-  border-radius: 14px;
+  height: 383px;
   cursor: default;
 }
 
@@ -2065,7 +2093,7 @@ body.no-scroll {
   opacity: 0;
   visibility: hidden;
   width: 300px;
-  height: 400px;
+  height: 100%;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -2086,7 +2114,7 @@ body.no-scroll {
   width: 280px;
   display: flex;
   justify-content: space-between;
-  padding: 15px 20px 5px 15px;
+  padding: 15px 20px 0px 15px;
   align-items: center;
   box-sizing: border-box;
 }
@@ -2167,9 +2195,8 @@ input:checked+.slider:before {
 .background-grid {
   display: grid;
   padding: 10px 10px 0px 10px;
-  grid-template-columns: repeat(2, 135px);
+  grid-template-columns: repeat(2, 140px);
   grid-template-rows: repeat(auto-fit, 80px);
-  gap: 10px;
   width: 100%;
   height: 100%;
   box-sizing: border-box;
@@ -2179,12 +2206,12 @@ input:checked+.slider:before {
 
 .background-option {
   position: relative;
-  border-radius: 4px;
+  border-radius: 14px;
   overflow: hidden;
   cursor: pointer;
   background-color: transparent;
   transition: all 0.3s cubic-bezier(0.250, 0.460, 0.450, 0.940);
-  width: 135px;
+  width: 140px;
   height: 80px;
   border: none;
   box-sizing: border-box;
@@ -2202,24 +2229,33 @@ input:checked+.slider:before {
   height: 80px;
   object-fit: cover;
   display: block;
+  border-radius: 4px;
   border: none;
   filter: brightness(0.5);
   transition: all 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940);
   /* Tối ưu hóa rendering */
-  transform: translateZ(0);
+  transform: translateZ(0) scale(0.7);
   will-change: opacity;
   image-rendering: -webkit-optimize-contrast;
   image-rendering: crisp-edges;
 }
 
+.background-option:hover {
+  box-shadow:
+    inset 10px 10px 7px -7px rgba(255, 255, 255, 1),
+    inset -12px -12px 10px -8px rgba(255, 255, 255, .7),
+    0 6px 6px rgba(0, 0, 0, 0.2),
+    0 0 20px rgba(0, 0, 0, 0.1);
+}
+
 .background-option:hover img {
-  transform: scale(1.05);
+  border-radius: 14px;
+  transform: scale(0.8);
   filter: brightness(1);
 }
 
 .background-option.selected img {
-  opacity: 1;
-  transform: scale(1.05);
+  transform: scale(1);
   filter: brightness(1);
 }
 
