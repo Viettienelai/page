@@ -1,6 +1,3 @@
-/* Import font for Loading . . . */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
-
 :root {
   --blur: blur(20px);
   --bg: rgba(255, 255, 255, 0.5);
@@ -28,7 +25,6 @@ body {
   width: 100%;
   min-height: 100vh;
   font-family: 'Rubik', sans-serif;
-  font-weight: 400;
   z-index: 0;
   overflow-x: hidden;
 }
@@ -478,7 +474,8 @@ body {
   transform: translateX(-50%);
   margin-top: 7px;
   font-size: 12px;
-  color: #000000;
+  font-weight: 600;
+  color: #323232;
   position: absolute;
   white-space: nowrap;
 }
@@ -1795,15 +1792,6 @@ body {
 
 
 
-
-/* Reset cho loader (để không ảnh hưởng đến body chính của trang) */
-.loader * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Poppins', sans-serif;
-}
-
 /* Styles cho lớp phủ loading mới */
 .loading-overlay {
   position: absolute;
@@ -1847,26 +1835,6 @@ body {
   visibility: visible;
 }
 
-/* Styles cho text loader */
-.loader {
-  position: relative;
-  cursor: default;
-  -webkit-box-reflect: below -25px linear-gradient(transparent, #0005);
-}
-
-.loader span {
-  position: relative;
-  display: inline-flex;
-  /* Đảm bảo hiển thị inline nhưng vẫn có thể dùng transform */
-  font-size: 3em;
-  /* Có thể điều chỉnh kích thước chữ nếu cần */
-  color: transparent;
-  -webkit-text-stroke: 1px #fff9;
-  text-transform: uppercase;
-  font-weight: 800;
-  animation: animate 2s ease-in-out infinite;
-  animation-delay: calc(0.15s * var(--i));
-}
 
 @keyframes animate {
   0% {
