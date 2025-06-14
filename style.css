@@ -106,7 +106,9 @@ body {
   backdrop-filter: blur(10px);
   box-shadow:
     inset 10px 10px 7px -7px rgba(255, 255, 255, 1),
-    inset -12px -12px 10px -8px rgba(255, 255, 255, .7);
+    inset -12px -12px 10px -8px rgba(255, 255, 255, .7),
+    0 6px 6px rgba(0, 0, 0, 0.2),
+    0 0 20px rgba(0, 0, 0, 0.1);
 }
 
 #sep1, #sep2 {
