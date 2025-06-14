@@ -451,15 +451,6 @@ body {
   top: 0;
 }
 
-#google-bookmark-avatar {
-  width: 50px;
-  height: 50px;
-  position: relative;
-  left: 50%;
-  transform: translateX(-50%);
-  top: 0;
-}
-
 .container .bookmark-item a:hover {
   transform: scale(1.05);
   box-shadow:
@@ -892,6 +883,9 @@ body {
 
 #chat-bubble:not(.expanded) {
   background: rgba(0, 0, 0, 0);
+  box-shadow:
+    0 6px 6px rgba(0, 0, 0, 0.2),
+    0 0 20px rgba(0, 0, 0, 0.1);
   z-index: 5;
 }
 
@@ -922,9 +916,7 @@ body {
   background: rgba(255, 255, 255, 0.1);
   box-shadow:
     inset 10px 10px 7px -7px rgba(255, 255, 255, 1),
-    inset -12px -12px 10px -8px rgba(255, 255, 255, .7),
-    0 6px 6px rgba(0, 0, 0, 0.2),
-    0 0 20px rgba(0, 0, 0, 0.1);
+    inset -12px -12px 10px -8px rgba(255, 255, 255, .7);
 }
 
 #chat-bubble:not(.expanded):hover .note-icon {
