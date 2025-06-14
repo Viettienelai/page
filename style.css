@@ -99,35 +99,52 @@ body {
   position: absolute;
   width: 650px;
   height: 150px;
-  padding-top: 13px;
-  padding-left: 14px;
   z-index: 2;
+}
+
+.separator {
+  backdrop-filter: blur(10px);
+  box-shadow:
+    inset 10px 10px 7px -7px rgba(255, 255, 255, 1),
+    inset -12px -12px 10px -8px rgba(255, 255, 255, .7);
+}
+
+#sep1, #sep2 {
+  left: 217.5px;
+  width: 15px;
+  height: 15px;
+  position: absolute;
+  border-radius: 3.5px;
+  opacity: 1;
+  will-change: transform;
+}
+
+#sep1 {
+  top: 48px;
+}
+
+#sep2 {
+  top: 87px;
+}
+
+#sep3, #sep4 {
+  left: 417.3px;
+  width: 15px;
+  height: 15px;
+  position: absolute;
+  border-radius: 3.5px;
+  opacity: 1;
+  will-change: transform;
 }
 
 #sep3 {
   top: 48px;
-  left: 415px;
-  background-color: rgb(255, 255, 255);
-  width: 15px;
-  height: 15px;
-  position: absolute;
-  border-radius: 3.5px;
-  opacity: 1;
-  will-change: transform;
-  animation: moveDown 1s ease-out infinite;
+  animation: moveDown 1s linear infinite;
 }
 
 #sep4 {
-  top: 88px;
-  left: 415px;
-  background-color: rgb(255, 255, 255);
-  width: 15px;
-  height: 15px;
-  position: absolute;
-  border-radius: 3.5px;
-  opacity: 1;
-  will-change: transform;
-  animation: moveUp 1s ease-out infinite;
+  top: 87px;
+  animation: moveUp 1s linear infinite;
 }
 
 
@@ -656,15 +673,15 @@ body {
     transform: translateY(0) scale(1);
   }
 
-  30% {
+  20% {
     transform: translateY(0) scale(1);
   }
 
   50% {
-    transform: translateY(20px) scaleX(0.5);
+    transform: translateY(20px) scale(0.6, 1.5);
   }
 
-  70% {
+  80% {
     transform: translateY(40px) scale(1);
   }
 
@@ -678,15 +695,15 @@ body {
     transform: translateY(0) scale(1);
   }
 
-  30% {
+  20% {
     transform: translateY(0) scale(1);
   }
 
   50% {
-    transform: translateY(-20px) scaleX(1.5);
+    transform: translateY(-20px) scale(1.5, 0.6);
   }
 
-  70% {
+  80% {
     transform: translateY(-40px) scale(1);
   }
 
