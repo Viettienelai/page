@@ -1456,7 +1456,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const autoChangeToggle = document.getElementById('autoChangeToggle');
     const backgroundGrid = document.querySelector('.background-grid');
     const mainBackground = document.querySelector('.background img');
-    const backgroundContainer = document.querySelector('.background'); // Thêm dòng này để lấy container
+    const backgroundContainer = document.querySelector('.background');
     const settingText = document.getElementById('settingText');
 
     // Mảng chứa các đường dẫn ảnh nền và màu phân đoạn tương ứng
@@ -1470,10 +1470,73 @@ document.addEventListener('DOMContentLoaded', () => {
         { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749754674/yjcbwpkqobft3m5ecmy9.webp', segmentColor: 'rgb(233, 135, 255)' },
     ];
 
-    let currentBackgroundIndex = 4; // Bắt đầu với ảnh cuối cùng (đang hiển thị)
+    let currentBackgroundIndex = 0;
     let autoChangeInterval;
     let preloadedImages = [];
     let isExpanded = false;
+    let userLastSelectedTime = null; // Thời gian user chọn ảnh cuối cùng
+
+    // Keys cho localStorage
+    const STORAGE_KEYS = {
+        BACKGROUND_INDEX: 'selectedBackgroundIndex',
+        AUTO_CHANGE: 'autoChangeEnabled',
+        LAST_CHANGE_TIME: 'lastBackgroundChangeTime'
+    };
+
+    // --- Hàm tính toán index ảnh theo thời gian thực ---
+    function calculateTimeBasedIndex() {
+        const now = new Date();
+        const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const minutesSinceStartOfDay = Math.floor((now - startOfDay) / (1000 * 60));
+        
+        // Mỗi 5 phút đổi ảnh một lần
+        const cycleIndex = Math.floor(minutesSinceStartOfDay / 5) % backgroundImages.length;
+        return cycleIndex;
+    }
+
+    // --- Hàm tải trạng thái đã lưu ---
+    function loadSavedState() {
+        try {
+            const savedIndex = localStorage.getItem(STORAGE_KEYS.BACKGROUND_INDEX);
+            const savedAutoChange = localStorage.getItem(STORAGE_KEYS.AUTO_CHANGE);
+            const lastChangeTime = localStorage.getItem(STORAGE_KEYS.LAST_CHANGE_TIME);
+
+            // Kiểm tra xem có trạng thái đã lưu không
+            if (savedAutoChange !== null) {
+                const autoChangeEnabled = savedAutoChange === 'true';
+                autoChangeToggle.checked = autoChangeEnabled;
+                
+                if (autoChangeEnabled) {
+                    // Nếu auto change được bật, tính toán index theo thời gian
+                    currentBackgroundIndex = calculateTimeBasedIndex();
+                } else {
+                    // Nếu auto change bị tắt, sử dụng index đã lưu
+                    currentBackgroundIndex = savedIndex !== null ? 
+                        parseInt(savedIndex) : calculateTimeBasedIndex();
+                }
+            } else {
+                // Lần đầu tiên truy cập, bật auto change và tính theo thời gian
+                autoChangeToggle.checked = true;
+                currentBackgroundIndex = calculateTimeBasedIndex();
+            }
+        } catch (error) {
+            console.error('Error loading saved state:', error);
+            // Fallback: sử dụng thời gian thực
+            autoChangeToggle.checked = true;
+            currentBackgroundIndex = calculateTimeBasedIndex();
+        }
+    }
+
+    // --- Hàm lưu trạng thái ---
+    function saveState() {
+        try {
+            localStorage.setItem(STORAGE_KEYS.BACKGROUND_INDEX, currentBackgroundIndex.toString());
+            localStorage.setItem(STORAGE_KEYS.AUTO_CHANGE, autoChangeToggle.checked.toString());
+            localStorage.setItem(STORAGE_KEYS.LAST_CHANGE_TIME, Date.now().toString());
+        } catch (error) {
+            console.error('Error saving state:', error);
+        }
+    }
 
     // --- Hàm preload ảnh để giảm lag ---
     function preloadImages() {
@@ -1511,28 +1574,36 @@ document.addEventListener('DOMContentLoaded', () => {
                 event.stopPropagation();
                 clearTimeout(clickTimeout);
                 clickTimeout = setTimeout(() => {
-                    selectBackground(index);
-                    // Restart auto change nếu đang bật, nhưng không chuyển ngay
+                    selectBackground(index, true); // true = user selected
+                    
+                    // Restart auto change nếu đang bật, bắt đầu từ ảnh được chọn
                     if (autoChangeToggle.checked) {
-                        // Reset lại interval để tính thời gian từ lúc user chọn
+                        userLastSelectedTime = Date.now();
                         stopAutoChange();
-                        autoChangeInterval = setInterval(moveToNextBackground, 300000);
+                        startAutoChange();
                         console.log('Auto change restarted from user selection.');
                     }
+                    
+                    // Lưu trạng thái
+                    saveState();
                 }, 100);
             });
         });
 
         // Đánh dấu background hiện tại là selected
-        selectBackground(currentBackgroundIndex);
+        selectBackground(currentBackgroundIndex, false);
     }
 
     // --- Hàm chọn hình nền với animation mượt ---
-    function selectBackground(index) {
+    function selectBackground(index, isUserSelected = false) {
         // Cập nhật màu phân đoạn đồng hồ dựa trên hình nền được chọn
-        currentSegmentColor = backgroundImages[index].segmentColor;
-        // Kích hoạt cập nhật đồng hồ để thay đổi màu ngay lập tức
-        updateClock();
+        if (typeof currentSegmentColor !== 'undefined') {
+            currentSegmentColor = backgroundImages[index].segmentColor;
+            // Kích hoạt cập nhật đồng hồ để thay đổi màu ngay lập tức
+            if (typeof updateClock === 'function') {
+                updateClock();
+            }
+        }
 
         // Xóa class selected từ tất cả options
         document.querySelectorAll('.background-option').forEach(option => {
@@ -1558,7 +1629,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Thay đổi background với fade effect
         const currentSrc = mainBackground.src;
-        const newSrc = backgroundImages[index].src; // Lấy src từ đối tượng
+        const newSrc = backgroundImages[index].src;
 
         if (currentSrc !== newSrc) {
             mainBackground.style.opacity = '0.8';
@@ -1569,24 +1640,77 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         currentBackgroundIndex = index;
+        
+        // Chỉ lưu state khi không phải là khởi tạo ban đầu
+        if (isUserSelected) {
+            saveState();
+        }
     }
 
     // --- Hàm chuyển sang hình nền tiếp theo ---
     function moveToNextBackground() {
-        let nextIndex = currentBackgroundIndex + 1;
-        if (nextIndex >= backgroundImages.length) {
-            nextIndex = 0;
+        // Nếu auto change đang bật
+        if (autoChangeToggle.checked) {
+            let nextIndex;
+            
+            // Nếu user vừa chọn ảnh (trong vòng 5 phút), tiếp tục từ ảnh đó
+            if (userLastSelectedTime && (Date.now() - userLastSelectedTime < 300000)) {
+                nextIndex = currentBackgroundIndex + 1;
+                if (nextIndex >= backgroundImages.length) {
+                    nextIndex = 0;
+                }
+            } else {
+                // Nếu không, tính theo thời gian thực
+                nextIndex = calculateTimeBasedIndex();
+                userLastSelectedTime = null; // Reset flag
+            }
+            
+            selectBackground(nextIndex, false);
+            saveState();
         }
-        selectBackground(nextIndex);
+    }
+
+    // --- Hàm tính thời gian còn lại đến lần đổi ảnh tiếp theo ---
+    function getTimeUntilNextChange() {
+        const now = new Date();
+        const currentMinute = now.getMinutes();
+        const currentSecond = now.getSeconds();
+        
+        // Tính số phút đã trải qua trong chu kỳ 5 phút hiện tại
+        const minutesInCurrentCycle = currentMinute % 5;
+        const secondsInCurrentCycle = minutesInCurrentCycle * 60 + currentSecond;
+        
+        // Thời gian còn lại đến chu kỳ tiếp theo (tính bằng milliseconds)
+        const remainingSeconds = (5 * 60) - secondsInCurrentCycle;
+        return remainingSeconds * 1000;
     }
 
     // --- Hàm bắt đầu chế độ tự động thay đổi ---
     function startAutoChange() {
         stopAutoChange();
-        // Không moveToNextBackground() ngay lập tức, chỉ set interval
-        autoChangeInterval = setInterval(moveToNextBackground, 300000); // 5 phút
+        
+        if (userLastSelectedTime && (Date.now() - userLastSelectedTime < 300000)) {
+            // Nếu user vừa chọn ảnh, đợi 5 phút từ lúc chọn
+            const timeElapsed = Date.now() - userLastSelectedTime;
+            const timeRemaining = 300000 - timeElapsed; // 5 phút - thời gian đã trôi qua
+            
+            setTimeout(() => {
+                moveToNextBackground();
+                autoChangeInterval = setInterval(moveToNextBackground, 300000);
+            }, timeRemaining);
+        } else {
+            // Đồng bộ với thời gian thực - đợi đến lần đổi ảnh tiếp theo
+            const timeUntilNext = getTimeUntilNextChange();
+            
+            setTimeout(() => {
+                moveToNextBackground();
+                autoChangeInterval = setInterval(moveToNextBackground, 300000);
+            }, timeUntilNext);
+        }
+        
         console.log('Auto change started.');
         updateSettingText(true);
+        saveState();
     }
 
     // --- Hàm dừng chế độ tự động thay đổi ---
@@ -1597,6 +1721,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('Auto change stopped.');
         }
         updateSettingText(false);
+        saveState();
     }
 
     // --- Hàm cập nhật văn bản trạng thái ---
@@ -1647,10 +1772,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Khởi tạo ban đầu ---
     preloadImages();
+    loadSavedState(); // Tải trạng thái đã lưu
     initializeBackgroundOptions();
-
-    // Đảm bảo đồng hồ được cập nhật màu đúng ngay từ đầu
-    autoChangeToggle.checked = true;
-    startAutoChange();
+    
+    // Bắt đầu auto change nếu được bật
+    if (autoChangeToggle.checked) {
+        startAutoChange();
+    }
+    
     updateSettingText(autoChangeToggle.checked);
 });
