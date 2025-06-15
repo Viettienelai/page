@@ -156,7 +156,9 @@ body {
 
 
 
-
+#search-form {
+  z-index: 2;
+}
 #search-form:has(#search-icon:hover) #search-bar-container {
   transform: scale(1.02, 1.1);
   background-color: rgba(255, 255, 255, 0);
@@ -298,6 +300,7 @@ body {
     0 6px 6px rgba(0, 0, 0, 0.2),
     0 0 20px rgba(0, 0, 0, 0.1);
     box-sizing: border-box;
+    z-index: 1;
   transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1);
 }
 
@@ -887,7 +890,12 @@ body {
   box-sizing: border-box;
   pointer-events: auto;
   overflow: hidden;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 2.2);
+  z-index: 4;
+  transition: transform .4s cubic-bezier(0.175, 0.885, 0.32, 3.5),
+  width 1s cubic-bezier(0.175, 0.885, 0.32, 1.1),
+  height 1s cubic-bezier(0.175, 0.885, 0.32, 1.1),
+  top 1s ease-in-out,
+  right 1s ease-in-out;
 }
 
 #chat-bubble.expanded {
@@ -896,9 +904,12 @@ body {
   width: 900px;
   height: 600px;
   border-radius: 24px;
-  background: radial-gradient(ellipse at bottom, #6d97c6 0%, #dfdfc2 100%);
   z-index: 5;
-  transition: all 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.2);
+  transition: 
+  top 1s cubic-bezier(0.175, 0.885, 0.32, 1.1),
+  right 1s cubic-bezier(0.175, 0.885, 0.32, 1.1),
+  height 1s ease-in-out,
+  width 1s ease-in-out;
 }
 
 #chat-bubble:not(.expanded) {
@@ -910,15 +921,12 @@ body {
 }
 
 #chat-bubble:not(.expanded):hover {
-  transform: scale(1.2);
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 2.2);
+  transform: scale(1.1);
 }
 
 #chat-bubble-glass-effect-1 {
   position: absolute;
-  width: 50px;
-  height: 50px;
-  border-radius: 25px;
+  border-radius: inherit;
   inset: 0;
   backdrop-filter: blur(0px);
   filter: url(#glass-distortion);
@@ -927,13 +935,11 @@ body {
 
 #chat-bubble-glass-effect-2 {
   position: absolute;
-  width: 50px;
-  height: 50px;
-  border-radius: 25px;
+  border-radius: inherit;
   z-index: 1;
   inset: 0;
   backdrop-filter: blur(2px);
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.2);
   box-shadow:
     inset 10px 10px 7px -7px rgba(255, 255, 255, 1),
     inset -12px -12px 10px -8px rgba(255, 255, 255, .7);
@@ -943,78 +949,14 @@ body {
   transform: scale(1.2);
 }
 
-@property --deg {
-  syntax: '<angle>';
-  inherits: true;
-  initial-value: 0deg;
-}
-
-.chat-bubble-border-effect {
-  position: absolute;
-  /* Kích thước ban đầu giống bubble thu gọn, sẽ thay đổi bằng JS */
-  width: 50px;
-  height: 50px;
-  right: 10px;
-  top: 10px;
-  border-radius: 100px;
-  /* Ban đầu là hình tròn */
-  /* Đặt dưới chat-bubble nhưng trên background-blur-chat */
-  opacity: 0;
-  transition: all 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.2);
-}
-
-.chat-bubble-border-effect::before,
-.chat-bubble-border-effect::after {
-  content: "";
-  position: absolute;
-  height: 100%;
-  width: 100%;
-  background: conic-gradient(from var(--deg) at center,
-      #00c3ff,
-      #b3a1ff,
-      #fd8eff,
-      #ff7171,
-      #fec319,
-      #77ff99,
-      #00c3ff);
-  border-radius: inherit;
-  animation: autoRotate 4s linear infinite;
-  /* Animation xoay */
-}
-
-.chat-bubble-border-effect::after {
-  filter: blur(20px);
-  /* Hiệu ứng mờ cho lớp sau */
-}
-
-@keyframes autoRotate {
-  to {
-    --deg: 360deg;
-    /* Thay đổi giá trị của --deg để xoay */
-  }
-}
-
-/* Khi chat-bubble.expanded, điều chỉnh border-effect theo */
-#chat-bubble.expanded+.chat-bubble-border-effect {
-  width: 910px;
-  height: 610px;
-  top: -85px;
-  right: -55px;
-  border-radius: 29px;
-  /* Hình vuông/chữ nhật với góc bo */
-  opacity: 1;
-  z-index: 4;
-  /* Hiển thị khi expanded */
-}
-
-.chat-bubble-background {
+.background-stars {
   position: absolute;
   top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  right: 0;
+  width: 900px;
+  height: 600px;
   border-radius: inherit;
-  z-index: 0;
+  z-index: 2;
 }
 
 #note-background {
@@ -1024,13 +966,15 @@ body {
   width: 70px;
   height: 70px;
   border-bottom-right-radius: 100%;
-  backdrop-filter: blur(10px);
-  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(2px);
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow:
+    inset 10px 10px 7px -7px rgba(255, 255, 255, 1),
+    inset -12px -12px 10px -8px rgba(255, 255, 255, .7);
   position: relative;
   cursor: pointer;
-  z-index: 2;
-  /* Bỏ transition transform ở đây nếu bạn không muốn scale khi không expanded */
-  /* transition: transform 0.3s ease-out; */
+  z-index: 5;
+  transition: all .3s linear;
 }
 
 /* Pseudo-element cho hiệu ứng hover - TRẠNG THÁI EXPANDED */
@@ -1049,8 +993,8 @@ body {
   border-bottom-right-radius: 100%;
   transform: translateX(-45px) translateY(-45px);
   transition: all 0.3s ease-in-out;
-  z-index: 1;
   opacity: 0;
+  z-index: 1;
   /* Mặc định ẩn, chỉ hiện khi #chat-bubble.expanded */
   display: none;
 }
@@ -1061,7 +1005,6 @@ body {
   opacity: 1;
 }
 
-/* Các icon (note-default và note-hover) */
 .note-icon {
   position: absolute;
   top: 10px;
@@ -1081,26 +1024,12 @@ body {
   height: 30px;
 }
 
-/* ---------------------------------------------------- */
-/* CÁC THAY ĐỔI ĐỂ ĐÁP ỨNG YÊU CẦU MỚI:                */
-/* ---------------------------------------------------- */
-
-/* 1. Khi chat-bubble KHÔNG EXPANDED: */
-
-/* Đảm bảo #note-background không scale khi hover */
-#chat-bubble:not(.expanded) #note-background:hover {
-  transform: none;
-  /* Hủy bỏ mọi hiệu ứng scale */
-}
-
 #chat-bubble:not(.expanded) #note-background {
-  background: transparent;
   backdrop-filter: blur(0px);
-}
-
-/* Đảm bảo lớp phủ ::before KHÔNG BAO GIỜ HIỂN THỊ khi chưa expanded */
-#chat-bubble:not(.expanded) #note-background::before {
-  display: none;
+  background: rgba(255, 255, 255, 0);
+  box-shadow:
+    inset 10px 10px 7px -7px rgba(255, 255, 255, 0),
+    inset -12px -12px 10px -8px rgba(255, 255, 255, 0);
 }
 
 /* Luôn hiển thị note.png và ẩn reload.png khi chat-bubble chưa expanded */
@@ -1120,10 +1049,8 @@ body {
 /* Kích hoạt lớp phủ ::before khi expanded */
 #chat-bubble.expanded #note-background::before {
   display: block;
-  /* Hiển thị ::before khi expanded */
 }
 
-/* Luôn hiển thị note-default khi expanded và KHÔNG HOVER */
 #chat-bubble.expanded #note-default {
   opacity: 1;
   /* Mặc định note.png hiển thị */
@@ -1155,18 +1082,6 @@ body {
   position: absolute;
   --star-animation-height: 500px;
   animation: animStar var(--animation-duration, 50s) linear infinite;
-}
-
-#stars:after,
-#stars2:after,
-#stars3:after {
-  content: " ";
-  position: absolute;
-  top: var(--star-animation-height);
-  width: inherit;
-  height: inherit;
-  background: transparent;
-  box-shadow: inherit;
 }
 
 #stars {
@@ -1202,16 +1117,12 @@ body {
   transform: translateX(-50%);
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(20px);
+  background-color: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
   opacity: 0;
   visibility: hidden;
-  transition: all 0.5s ease;
-}
-
-#chat-bubble.expanded+.background-blur-chat {
-  opacity: 1;
-  visibility: visible;
+  z-index: 3;
+  transition: all .3s linear;
 }
 
 .background-blur-chat.active {
@@ -1223,28 +1134,30 @@ body {
 .chat-toolbar {
   position: absolute;
   width: 700px;
-  bottom: 0px;
+  bottom: 0;
   right: 100px;
+  padding: 15px;
   box-sizing: border-box;
-  gap: 20px;
-  z-index: 1;
-  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: flex-end;
+  backdrop-filter: blur(5px);
   border-radius: 24px 24px 0px 0px;
   background: rgba(255, 255, 255, 0.2);
+  box-shadow:
+    inset 10px 10px 7px -7px rgba(255, 255, 255, 1);
+  z-index: 7;
   transition: all 0.3s ease;
 }
 
 .plus-button {
-  position: absolute;
+  position: relative;
+  background: transparent;
+  border: none;
   height: 50px;
   width: 50px;
-  background-color: transparent;
-  bottom: 15px;
-  left: 15px;
-  border: none;
   cursor: pointer;
+  border-radius: 50%;
   transition: all 0.3s ease;
-  border-radius: 25px;
 }
 
 .plus-button svg {
@@ -1252,20 +1165,19 @@ body {
   height: 30px;
 }
 
-.plus-button:hover {
-  background-color: rgba(255, 255, 255, 0.5);
+.plus-button:hover {box-shadow:
+    inset 10px 10px 7px -7px rgba(255, 255, 255, 1),
+    inset -12px -12px 10px -8px rgba(255, 255, 255, .7);
 }
 
-.chat-toolbar .send-button {
-  position: absolute;
-  background-color: transparent;
-  bottom: 15px;
-  right: 15px;
+.send-button {
+  position: relative;
+  background: transparent;
   border: none;
   height: 50px;
   width: 50px;
   cursor: pointer;
-  border-radius: 100%;
+  border-radius: 50%;
   transition: all 0.3s ease;
 }
 
@@ -1275,28 +1187,26 @@ body {
   display: block;
 }
 
-.send-button:hover {
-  background-color: rgba(255, 255, 255, 0.5);
+.send-button:hover {box-shadow:
+    inset 10px 10px 7px -7px rgba(255, 255, 255, 1),
+    inset -12px -12px 10px -8px rgba(255, 255, 255, .7);
 }
 
 .text-area {
   position: relative;
-  margin: 20px 0px;
-  width: 550px;
-  left: 75px;
+  margin: 5px 10px;
+  flex-grow: 1;
   border-radius: 25px;
-  display: inline-block;
   z-index: 0;
 }
 
-.chat-toolbar .text-area .text-input {
+.text-input {
   position: relative;
   max-height: 400px;
   width: 100%;
-  flex-grow: 1;
   background: rgba(255, 255, 255, 0.5);
   border: none;
-  border-radius: 25px;
+  border-radius: 24px;
   padding: 9px 15px 10px 15px;
   font-size: 16px;
   resize: none;
@@ -1306,7 +1216,7 @@ body {
   z-index: 1000000;
 }
 
-.chat-toolbar .text-area .text-input:focus {
+.text-input:focus {
   outline: none;
 }
 
@@ -1331,26 +1241,6 @@ body {
   transition: all 0.5s ease;
 }
 
-.text-area:focus-within .text-gradient-2 {
-  opacity: 1;
-}
-
-.text-gradient-2 {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  border-radius: 25px;
-  background: linear-gradient(to left, #7cc6ff, #81ff9a, #fff895, #ffacb4, #df9bff, #7cc6ff, #81ff9a, #fff895, #ffacb4, #df9bff, #7cc6ff);
-  background-position: 100% 0%;
-  background-size: 200% 100%;
-  animation: gradientAnimation 1s linear infinite;
-  z-index: 0;
-  transition: all 0.5s ease;
-}
-
 @keyframes gradientAnimation {
   0% {
     background-position: 100% 0%;
@@ -1361,63 +1251,61 @@ body {
   }
 }
 
-#chat-bubble:not(.expanded) .chat-toolbar {
-  display: none;
-}
-
 .chat-content-area {
+  position: absolute;
+  top: 0;
+  right: 0;
   width: 900px;
   height: 600px;
-  top: 0px;
-  left: 0px;
+  padding: 30px 100px 100px 0;
   box-sizing: border-box;
   overflow-y: auto;
-  position: absolute;
-  z-index: 1;
   display: flex;
   flex-direction: column;
   gap: 15px;
-  padding-bottom: 100px;
-  padding-top: 30px;
   align-items: flex-end;
-  z-index: 0;
+  z-index: 3;
 }
 
 .message-box {
-  margin-right: 100px;
+  position: relative;
+  backdrop-filter: blur(10px);
   background: rgba(255, 255, 255, 0.5);
+  box-shadow:
+    inset 10px 10px 7px -7px rgba(255, 255, 255, 1),
+    inset -12px -12px 10px -8px rgba(255, 255, 255, .7);
   border-radius: 14px;
+  min-width: 40px;
   max-width: 700px;
   width: fit-content;
-  min-height: 40px;
   box-sizing: border-box;
   word-wrap: break-word;
   flex-shrink: 0;
-  backdrop-filter: blur(10px);
-  position: relative;
   align-self: flex-end;
-  z-index: 20;
-  transition: all 0.3s ease-out;
+  transition: all 0.3s ease;
+  transform-origin: right;
   display: flex;
   justify-content: center;
-  /* Căn giữa ngang */
-  align-items: center;
 }
 
 .message-box:hover {
+  transform: scale(1.05);
   background: rgba(255, 255, 255, 1);
-  box-shadow: 0 0px 32px rgba(0, 0, 0, 0.2);
+  box-shadow:
+    inset 10px 10px 7px -7px rgba(255, 255, 255, 1),
+    inset -12px -12px 10px -8px rgba(255, 255, 255, .7),
+    0 0 14px rgba(0, 0, 0, 0.7);
 }
 
 /* Styles cho tin nhắn văn bản */
 .message-box .message-content p {
-  margin: 5px 15px;
+  margin: 8px 13px;
   /* Giữ margin của bạn */
   font-size: 16px;
   color: #333;
   /* Màu chữ cho tin nhắn văn bản, thường là đen hoặc xám đậm */
   line-height: 1.5;
-  text-align: left;
+  text-align: justify;
   white-space: pre-wrap;
   /* Giữ định dạng khoảng trắng và xuống dòng */
 }
@@ -1425,112 +1313,98 @@ body {
 /* Styles cho ảnh trong message-box */
 .chat-image {
   max-width: 400px;
-  /* Chiều rộng tối đa */
   max-height: 300px;
-  /* Chiều cao tối đa */
-  height: auto;
-  /* Đảm bảo tỷ lệ khung hình được duy trì */
-  display: block;
-  /* Loại bỏ khoảng trắng thừa dưới ảnh */
   border-radius: 14px;
-  /* Bo tròn góc cho ảnh */
-  object-fit: cover;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 2.2);
 }
 
-.message-box:has(.chat-video) {
-  background-color: transparent;
+.message-box:has(.chat-image):hover {
+  background: transparent;
+}
+
+.message-box:has(.chat-image):hover .chat-image {
+  transform: scale(0.9);
 }
 
 /* Styles cho video trong message-box */
 .chat-video {
-  height: 200px;
-  display: block;
-  width: auto;
-  /* Loại bỏ khoảng trắng thừa dưới video */
+  max-width: 400px;
+  max-height: 300px;
   border-radius: 14px;
-  /* Bo tròn góc cho video */
-  object-fit: cover;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 2.2);
 }
 
-/* Styles chung cho box chứa file (không phải ảnh/video/audio) */
+.message-box:has(.chat-video):hover {
+  background: transparent;
+}
+
+.message-box:has(.chat-video):hover .chat-video {
+  transform: scale(0.9);
+}
+
 .chat-file {
-  display: flex;
-  align-items: center;
-  min-width: 200px;
-  max-width: 400px;
+  min-width: 180px;
   height: 80px;
-  /* Chiều cao cố định cho box file */
-  padding: 10px 20px;
   box-sizing: border-box;
-  border-radius: 20px;
-  background-color: rgba(80, 80, 80, 0.3);
-  /* Màu nền mặc định cho file box */
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 14px;
+  background-color: rgba(80, 80, 80, 0.5);
+  transition: all 0.3s ease;
 }
 
 .chat-file:hover {
-  background-color: rgba(80, 80, 80, 0.6);
+  background-color: rgba(80, 80, 80, 0.8);
   box-shadow: 0 0px 20px rgba(255, 255, 255, 0.5);
 }
 
 .message-box:has(.chat-file) {
-  background-color: transparent;
+  background: transparent;
+  box-shadow: none;
 }
 
 .message-box:has(.chat-file):hover {
-  box-shadow: 0 0px 12px rgba(255, 255, 255, 0.5);
+  box-shadow: 0 0px 12px #ffffff80;
 }
 
-/* Styles cho phần thông tin file (icon, tên, kích thước) */
 .file-info {
+  width: 100%;
+  height: 100%;
+  padding: 19px;
+  box-sizing: border-box;
   display: flex;
+  gap: 15px;
   align-items: center;
-  flex-grow: 1;
-  /* Cho phép phần info chiếm đủ không gian */
-  height: 55px;
 }
 
-/* Styles cho tên file */
-.file-details .file-name {
-  font-size: 17px;
-  position: relative;
-  top: 0px;
-  color: #ffffff;
-  /* Màu chữ trắng cho tên file */
-  font-weight: 500;
-  white-space: nowrap;
-  /* Ngăn tên file xuống dòng */
-  overflow: hidden;
-  /* Ẩn phần tràn */
-  text-overflow: ellipsis;
-}
-
-/* Styles cho kích thước file */
-.file-details .file-size {
-  font-size: 14px;
-  margin-top: 10px;
-  /* Khoảng cách với tên file */
-  color: #dcdcdc;
-  /* Màu chữ xám nhạt cho kích thước file */
-  display: block;
-  /* Đảm bảo kích thước file nằm trên dòng mới */
-}
-
-/* Styles cho container icon file SVG */
 .file-avatar-container {
+  flex-shrink: 0;
   width: 55px;
   height: 55px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  margin-right: 13px;
 }
 
 .file-avatar-container svg {
   width: 55px;
-  /* Điều chỉnh kích thước icon bên trong container */
   height: 55px;
+}
+
+.file-details {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+
+.file-name {
+  font-size: 17px;
+  font-weight: 600;
+  position: relative;
+  top: 0px;
+  color: #ffffff;
+}
+
+.file-size {
+  font-size: 14px;
+  color: #dcdcdc;
+  display: block;
 }
 
 .message-box:has(.chat-audio) {
@@ -1585,23 +1459,9 @@ body {
   /* Chiều cao của audio control */
 }
 
-/* Điều chỉnh lại chiều cao tổng thể của message-box khi nó chứa audio
-   Không cần điều chỉnh `message-box` dựa trên `.chat-audio` bằng :has()
-   vì `.chat-audio` đã là một phần tử có kích thước xác định
-*/
-/*
-.message-box:has(.chat-audio) {
-    width: 600px;
-    height: 100px;
-    border-radius: 30px;
-    background-color: rgba(80, 80, 80, 0.3);
-}
-*/
-
-/* Styles cho thông báo tạm thời */
 .temporary-notification {
   position: fixed;
-  bottom: 20px;
+  bottom: 40px;
   left: 50%;
   transform: translateX(-50%) translateY(100%);
   background-color: rgba(0, 0, 0, 0.7);
@@ -1610,7 +1470,7 @@ body {
   border-radius: 5px;
   opacity: 0;
   transition: transform 0.3s ease-out, opacity 0.3s ease-out;
-  z-index: 1000;
+  z-index: 100;
   font-size: 0.9em;
 }
 
@@ -1741,10 +1601,13 @@ body {
   }
 }
 
+.waterfall {
+  backdrop-filter: blur(10px);
+}
 .waterfall div {
   -webkit-animation: waterfall 1.5s infinite;
   animation: waterfall 1.5s infinite;
-  background-color: var(--primary);
+  background-color: var(--dot);
   height: 20px;
   left: 50%;
   margin-top: -10px;
@@ -1753,9 +1616,9 @@ body {
   top: 50%;
   width: 20px;
   border-radius: 50%;
-  box-shadow: 0 0 5px var(--primary),
-    0 0 25px var(--primary),
-    0 0 50px var(--primary);
+  box-shadow: 0 0 5px var(--dot),
+    0 0 25px var(--dot),
+    0 0 50px var(--dot);
 }
 
 .waterfall div:nth-of-type(5) {
@@ -1819,10 +1682,10 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 999;
   /* Đảm bảo nó nằm trên tất cả các nội dung khác trong chat-bubble */
   opacity: 0;
   visibility: hidden;
+  z-index: 6;
   transition: all 0.3s ease
     /* Kế thừa border-radius từ parent #chat-bubble */
 }
@@ -1882,14 +1745,14 @@ body {
   background: rgba(71, 71, 71, 0.2);
   border: none;
   cursor: pointer;
-  z-index: 10;
   display: flex;
   align-items: center;
   justify-content: center;
   opacity: 0;
   visibility: hidden;
-  transition: all 0.3s ease-out;
   backdrop-filter: blur(10px);
+  z-index: 4;
+  transition: all 0.3s ease-out;
 }
 
 .scroll-to-bottom-btn svg {

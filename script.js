@@ -644,7 +644,7 @@ function formatFileSize(bytes) {
 }
 
 // --- HÀM HỖ TRỢ RÚT GỌN TÊN FILE ---
-function shortenFileName(fileName, maxLength = 30, isAudioFile = false) {
+function shortenFileName(fileName, maxLength = 35, isAudioFile = false) {
     if (isAudioFile) {
         return fileName;
     }
@@ -866,7 +866,7 @@ function appendMessageToChat(message) {
         const fileSizeFormatted = formatFileSize(message.fileSize);
         const fileIconSvg = typeof getFileIconSvg === 'function' ? getFileIconSvg(fileExtension) : '';
         const isAudio = message.mimeType.startsWith('audio/');
-        const displayFileName = shortenFileName(message.fileName, 30, isAudio);
+        const displayFileName = shortenFileName(message.fileName, 35, isAudio);
         if (message.mimeType.startsWith('image/')) {
             contentHtml = `<img src="${message.fileUrl}" alt="${escapeHtml(message.fileName)}" class="chat-image">`;
         } else if (message.mimeType.startsWith('video/')) {

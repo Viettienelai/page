@@ -167,23 +167,27 @@
     <div id="bar-container">
         <div class="background-blur-chat"></div>
         <div id="chat-bubble">
+
             <div id="chat-bubble-glass-effect-1"></div>
+
             <div id="chat-bubble-glass-effect-2"></div>
-            <div class="chat-bubble-background">
+            
+            <div class="background-stars">
                 <div id="stars"></div>
                 <div id="stars2"></div>
                 <div id="stars3"></div>
             </div>
 
-            <div id="sync-loading-overlay" class="loading-overlay">
-                <div class="waterfall">
-                    <div style="--primary: #489dff;"></div>
-                    <div style="--primary: #ff7171;"></div>
-                    <div style="--primary: #e969ff;"></div>
-                    <div style="--primary: #6cff71;"></div>
-                    <div style="--primary: #ffd862;"></div>
-                </div>
+            <div class="chat-content-area">
             </div>
+
+            <button id="scroll-to-bottom-btn" class="scroll-to-bottom-btn">
+                <svg viewBox="0 0 48 48">
+                    <path fill="#FFFFFF"
+                        d="M26.981 9.461c-.002-1.414-1.107-2.459-2.504-2.461-1.396 0-2.472 1.17-2.47 2.586l.024 20.699-5.718-5.763c-.987-1-2.588-.998-3.576 0-0.985.998-.983 2.619.005 3.621l9.843 9.967.071.068c.463.508 1.125.826 1.859.826.734.002 1.397-.314 1.857-.82l.068-.071 9.822-9.945c.985-.998.985-2.619-.005-3.619-.987-1-2.588-1.004-3.575-.004l-5.677 5.619-.024-20.699z" />
+                </svg>
+
+            </button>
 
             <div id="note-background">
                 <svg id="note-default" class="note-icon active" viewBox="0 0 100 100" fill="none">
@@ -204,14 +208,15 @@
 
             </div>
 
-            <div class="chat-content-area"></div>
-            <button id="scroll-to-bottom-btn" class="scroll-to-bottom-btn">
-                <svg viewBox="0 0 48 48">
-                    <path fill="#FFFFFF"
-                        d="M26.981 9.461c-.002-1.414-1.107-2.459-2.504-2.461-1.396 0-2.472 1.17-2.47 2.586l.024 20.699-5.718-5.763c-.987-1-2.588-.998-3.576 0-0.985.998-.983 2.619.005 3.621l9.843 9.967.071.068c.463.508 1.125.826 1.859.826.734.002 1.397-.314 1.857-.82l.068-.071 9.822-9.945c.985-.998.985-2.619-.005-3.619-.987-1-2.588-1.004-3.575-.004l-5.677 5.619-.024-20.699z" />
-                </svg>
-
-            </button>
+            <div id="sync-loading-overlay" class="loading-overlay">
+                <div class="waterfall">
+                    <div style="--dot: #489dff;"></div>
+                    <div style="--dot: #ff7171;"></div>
+                    <div style="--dot: #e969ff;"></div>
+                    <div style="--dot: #6cff71;"></div>
+                    <div style="--dot: #ffd862;"></div>
+                </div>
+            </div>
 
             <div class="chat-toolbar">
                 <button class="plus-button" aria-label="Thêm">
@@ -233,9 +238,10 @@
                 <div class="text-area">
                     <div class="text-gradient-1"></div>
                     <div class="text-gradient-1"></div>
-                    <div class="text-gradient-2"></div>
+                    <div class="text-gradient-1"></div>
                     <textarea class="text-input" placeholder="Nhập tin nhắn..." rows="1"></textarea>
                 </div>
+
                 <button class="send-button" aria-label="Gửi">
                     <svg viewBox="0 0 200 200">
                         <defs>
@@ -252,16 +258,16 @@
 
                 <div id="toolbar-loading-overlay">
                     <div class="waterfall">
-                        <div style="--primary: #489dff;"></div>
-                        <div style="--primary: #ff7171;"></div>
-                        <div style="--primary: #e969ff;"></div>
-                        <div style="--primary: #6cff71;"></div>
-                        <div style="--primary: #ffd862;"></div>
+                        <div style="--dot: #489dff;"></div>
+                        <div style="--dot: #ff7171;"></div>
+                        <div style="--dot: #e969ff;"></div>
+                        <div style="--dot: #6cff71;"></div>
+                        <div style="--dot: #ffd862;"></div>
                     </div>
                 </div>
             </div>
+
         </div>
-        <div class="chat-bubble-border-effect"></div>
 
         <ul id="search-options">
             <div id="search-options-glass-effect-1"></div>
