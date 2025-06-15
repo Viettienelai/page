@@ -1910,7 +1910,7 @@ body.no-scroll {
   top: 10px;
   left: 20px;
   z-index: 50;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 2.2);
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 2.2);
 }
 
 #panel-glass-effect {
@@ -1939,7 +1939,7 @@ body.no-scroll {
     inset -12px -12px 10px -8px rgba(255, 255, 255, .7),
     0 6px 6px rgba(0, 0, 0, 0.2),
     0 0 20px rgba(0, 0, 0, 0.1);
-  transition: all 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.2);
+  transition: all 0.875s cubic-bezier(0.175, 0.885, 0.32, 1.2);
 }
 
 .background-changer-container:has(.expanded-panel:not(.active)):hover {
