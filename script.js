@@ -1539,16 +1539,52 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Hàm preload ảnh để giảm lag ---
+    function preloadCurrentImage(index) {
+        // Preload ảnh hiện tại với độ ưu tiên cao (full size)
+        const currentImg = new Image();
+        currentImg.onload = () => {
+            console.log(`Current image ${index + 1} preloaded`);
+            // Set ảnh ngay khi preload xong
+            if (mainBackground.src !== backgroundImages[index].src) {
+                mainBackground.src = backgroundImages[index].src;
+            }
+        };
+        currentImg.src = backgroundImages[index].src;
+        preloadedImages[index] = currentImg;
+        
+        // Preload ảnh tiếp theo để chuẩn bị
+        const nextIndex = (index + 1) % backgroundImages.length;
+        const nextImg = new Image();
+        nextImg.onload = () => {
+            console.log(`Next image ${nextIndex + 1} preloaded`);
+        };
+        nextImg.src = backgroundImages[nextIndex].src;
+        preloadedImages[nextIndex] = nextImg;
+    }
+
     function preloadImages() {
-        backgroundImages.forEach((imageData, index) => {
-            const img = new Image();
-            img.onload = () => {
-                console.log(`Preloaded image ${index + 1}`);
-            };
-            const optimizedSrc = imageData.src.replace('/upload/', '/upload/w_135,h_80,c_fill/');
-            img.src = optimizedSrc;
-            preloadedImages[index] = img;
-        });
+        // Preload ảnh hiện tại trước
+        preloadCurrentImage(currentBackgroundIndex);
+        
+        // Sau đó preload các ảnh còn lại với độ ưu tiên thấp hơn
+        setTimeout(() => {
+            backgroundImages.forEach((imageData, index) => {
+                if (!preloadedImages[index]) {
+                    const img = new Image();
+                    img.onload = () => {
+                        console.log(`Background image ${index + 1} preloaded`);
+                    };
+                    // Sử dụng ảnh thumbnail cho grid options
+                    const optimizedSrc = imageData.src.replace('/upload/', '/upload/w_135,h_80,c_fill/');
+                    img.src = optimizedSrc;
+                    
+                    // Preload cả ảnh full size
+                    const fullImg = new Image();
+                    fullImg.src = imageData.src;
+                    preloadedImages[index] = fullImg;
+                }
+            });
+        }, 100);
     }
 
     // --- Hàm khởi tạo và hiển thị các lựa chọn hình nền ---
@@ -1627,19 +1663,43 @@ document.addEventListener('DOMContentLoaded', () => {
         backgroundContainer.classList.add(`background-active-${index}`);
         // --- Kết thúc cập nhật class ---
 
-        // Thay đổi background với fade effect
-        const currentSrc = mainBackground.src;
+        // Thay đổi background với fade effect - tối ưu hóa
         const newSrc = backgroundImages[index].src;
+        const currentSrc = mainBackground.src;
 
         if (currentSrc !== newSrc) {
-            mainBackground.style.opacity = '0.8';
-            setTimeout(() => {
-                mainBackground.src = newSrc;
-                mainBackground.style.opacity = '1';
-            }, 150);
+            // Kiểm tra xem ảnh đã được preload chưa
+            if (preloadedImages[index] && preloadedImages[index].complete) {
+                // Nếu đã preload, chuyển ngay
+                mainBackground.style.opacity = '0.8';
+                setTimeout(() => {
+                    mainBackground.src = newSrc;
+                    mainBackground.style.opacity = '1';
+                }, 100); // Giảm thời gian transition
+            } else {
+                // Nếu chưa preload, preload ngay và chuyển
+                const tempImg = new Image();
+                tempImg.onload = () => {
+                    mainBackground.style.opacity = '0.8';
+                    setTimeout(() => {
+                        mainBackground.src = newSrc;
+                        mainBackground.style.opacity = '1';
+                    }, 100);
+                };
+                tempImg.src = newSrc;
+                preloadedImages[index] = tempImg;
+            }
         }
 
         currentBackgroundIndex = index;
+        
+        // Preload ảnh tiếp theo để chuẩn bị
+        const nextIndex = (index + 1) % backgroundImages.length;
+        if (!preloadedImages[nextIndex] || !preloadedImages[nextIndex].complete) {
+            const nextImg = new Image();
+            nextImg.src = backgroundImages[nextIndex].src;
+            preloadedImages[nextIndex] = nextImg;
+        }
         
         // Chỉ lưu state khi không phải là khởi tạo ban đầu
         if (isUserSelected) {
@@ -1771,8 +1831,17 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // --- Khởi tạo ban đầu ---
+    // Tải trạng thái đã lưu trước khi preload
+    loadSavedState();
+    
+    // Set ảnh ban đầu ngay lập tức để tránh delay
+    const initialSrc = backgroundImages[currentBackgroundIndex].src;
+    if (mainBackground.src !== initialSrc) {
+        mainBackground.src = initialSrc;
+    }
+    
+    // Preload ảnh sau khi đã set ảnh ban đầu
     preloadImages();
-    loadSavedState(); // Tải trạng thái đã lưu
     initializeBackgroundOptions();
     
     // Bắt đầu auto change nếu được bật
