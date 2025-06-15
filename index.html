@@ -3,11 +3,100 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ViệtTiến┇ᴱᴸᴬᴵ</title>
     <link rel="stylesheet" href="style.css">
+<script>
+        // --- Dữ liệu và các hàm cần thiết để chạy ngay lập tức ---
+        const backgroundImages = [
+            { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749755201/wxsmp3khl4rxetoll3mx.webp', segmentColor: 'rgb(255, 213, 0)' },
+            { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749752086/hgvojcdwc3gafgerqva4.webp', segmentColor: 'rgb(57, 162, 255)' },
+            { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749752086/zi3eumhtq0be5mmeciii.webp', segmentColor: 'rgb(255, 138, 120)' },
+            { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749752086/oqqf3ctq28yl8mz7bpja.webp', segmentColor: 'rgb(255, 200, 0)' },
+            { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749752088/xyy466nsxhehepuuon7j.webp', segmentColor: 'rgb(255, 135, 141)' },
+            { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749752087/o7bleciiuuqpzxkwnbad.webp', segmentColor: 'rgb(255, 83, 92)' },
+            { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749754674/yjcbwpkqobft3m5ecmy9.webp', segmentColor: 'rgb(233, 135, 255)' },
+        ];
+
+        const STORAGE_KEYS = {
+            BACKGROUND_INDEX: 'selectedBackgroundIndex',
+            AUTO_CHANGE: 'autoChangeEnabled',
+        };
+
+        function calculateTimeBasedIndex() {
+            const now = new Date();
+            const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const minutesSinceStartOfDay = Math.floor((now - startOfDay) / (1000 * 60));
+            return Math.floor(minutesSinceStartOfDay / 5) % backgroundImages.length;
+        }
+
+        // --- Logic xác định ảnh nền ban đầu ---
+        let initialIndex = 0;
+        try {
+            const savedAutoChange = localStorage.getItem(STORAGE_KEYS.AUTO_CHANGE);
+            if (savedAutoChange === 'false') {
+                const savedIndex = localStorage.getItem(STORAGE_KEYS.BACKGROUND_INDEX);
+                initialIndex = savedIndex !== null ? parseInt(savedIndex, 10) : calculateTimeBasedIndex();
+            } else {
+                initialIndex = calculateTimeBasedIndex();
+            }
+        } catch (e) {
+            initialIndex = 0; // Fallback an toàn
+        }
+        
+        window.initialBackgroundIndex = initialIndex;
+        
+        const initialImage = backgroundImages[initialIndex];
+        const initialImageSrc = initialImage.src;
+        const backgroundClass = `background-active-${initialIndex}`;
+
+        // *** BẮT ĐẦU PHẦN SỬA ĐỔI QUAN TRỌNG ***
+
+        // Quy tắc cho thẻ <IMG> chính thức (như trong file CSS của bạn)
+        const finalImgCssRules = {
+            'background-active-0': 'img { width: 100vw; height: 100vh; object-fit: cover; }',
+            'background-active-1': 'img { height: 100vh; position: absolute; top: 0; right: 0; }',
+            'background-active-2': 'img { height: 100vh; position: absolute; top: 0; left: 0; }',
+            'background-active-3': 'img { height: 100vh; position: absolute; top: 0; left: 0; }',
+            'background-active-4': 'img { width: 100vw; height: 100vh; object-fit: cover; }',
+            'background-active-5': 'img { position: absolute; top: 0; right: 0; width: 100vw; }',
+            'background-active-6': 'img { height: 100vh; position: absolute; top: 0; left: 0; }'
+        };
+
+        // Quy tắc "dịch" sang cho `background-image` của div.preload
+        const preloadContainerCssRules = {
+            'background-active-0': '{ background-size: cover; background-position: center center; }',
+            'background-active-1': '{ background-size: auto 100vh; background-position: right center; background-repeat: no-repeat; }',
+            'background-active-2': '{ background-size: auto 100vh; background-position: left center; background-repeat: no-repeat; }',
+            'background-active-3': '{ background-size: auto 100vh; background-position: left center; background-repeat: no-repeat; }',
+            'background-active-4': '{ background-size: cover; background-position: center center; }',
+            'background-active-5': '{ background-size: 100vw auto; background-position: center top; background-repeat: no-repeat; }',
+            'background-active-6': '{ background-size: auto 100vh; background-position: left center; background-repeat: no-repeat; }'
+        };
+        
+        const finalImgSizingRule = finalImgCssRules[backgroundClass] || finalImgCssRules['background-active-0'];
+        const preloadContainerSizingRule = preloadContainerCssRules[backgroundClass] || preloadContainerCssRules['background-active-0'];
+
+        // --- Dùng document.write để chèn preload và CSS đã sửa ---
+        document.write(`
+            <link rel="preload" as="image" href="${initialImageSrc}" />
+            <style>
+                /* 1. Áp dụng các quy tắc ĐÚNG cho div.preload */
+                .background.preload ${preloadContainerSizingRule}
+
+                /* Luôn áp dụng ảnh nền cho div.preload */
+                .background.preload {
+                    background-image: url('${initialImageSrc}');
+                }
+
+                /* 2. Chuẩn bị sẵn quy tắc cho thẻ <img> chính thức */
+                .${backgroundClass} ${finalImgSizingRule}
+            </style>
+        `);
+        // *** KẾT THÚC PHẦN SỬA ĐỔI ***
+    </script>
 </head>
 
 <body>
-    <div class="background">
-        <img alt="">
+    <div class="background preload" id="backgroundContainer">
+        <img alt="Dynamic background" id="mainBackground">
     </div>
 
     <div class="background-changer-container">
@@ -21,29 +110,13 @@
                         <span class="slider round"></span>
                     </label>
                 </div>
-
-                <div class="background-grid">
-                    <div class="background-option" id="background-1">
-                    </div>
-                    <div class="background-option" id="background-2">
-                    </div>
-                    <div class="background-option" id="background-3">
-                    </div>
-                    <div class="background-option" id="background-4">
-                    </div>
-                    <div class="background-option" id="background-5">
-                    </div>
-                    <div class="background-option" id="background-6">
-                    </div>
-                    <div class="background-option" id="background-7">
-                    </div>
-                </div>
+                <div class="background-grid"></div>
             </div>
         </div>
         <div class="panel-icon">
-            <svg viewBox="30 30 256 256">
+             <svg viewBox="30 30 256 256">
                 <path fill="rgb(70, 70, 70)"
-                    d="M105.06 145.202a.7.7 0 0 1 .498.208l23.56 23.581a.7.7 0 0 1-.488 1.188h-6.022a.72.72 0 0 0-.721.7v53.015a12.72 12.72 0 0 0 3.71 8.949l3.52 3.52a.7.7 0 0 1-.487 1.187h-27.78c-7.027 0-12.723-5.696-12.723-12.723v-53.948a.7.7 0 0 0-.7-.7h-5.938a.7.7 0 0 1-.509-1.188l23.581-23.58a.7.7 0 0 1 .499-.21m52.103 13.656a.7.7 0 0 1 .498.209l23.581 23.496a.7.7 0 0 1-.509 1.188h-6.022a.72.72 0 0 0-.7.72v39.423a12.72 12.72 0 0 0 3.69 8.949l3.541 3.52a.7.7 0 0 1-.509 1.187h-27.716c-7.027 0-12.724-5.696-12.724-12.723v-40.313a.72.72 0 0 0-.7-.721h-6a.7.7 0 0 1-.488-1.188l23.56-23.538a.7.7 0 0 1 .498-.209m52.114 13.51c.183 0 .36.075.487.207l23.581 23.56a.7.7 0 0 1-.487 1.209h-6.044a.7.7 0 0 0-.7.7v25.85a12.72 12.72 0 0 0 3.711 8.949l3.52 3.52a.7.7 0 0 1-.487 1.187h-27.801c-7.027 0-12.724-5.696-12.724-12.723v-26.784a.7.7 0 0 0-.7-.7h-5.937a.7.7 0 0 1-.488-1.208l23.58-23.56a.68.68 0 0 1 .489-.207m-52.591-102.37c37.04.27 69.71 24.323 80.964 59.614 27.509 3.59 48.149 26.928 48.35 54.669 0 22.895-14.319 41.921-37.438 49.842l-.86.289-1.06.339v-17.092c14.695-6.192 23.326-18.428 23.326-33.378-.075-21.097-16.782-38.323-37.78-39.126l-.709-.02h-6.361l-1.527-6.066c-7.494-30.93-35.08-52.79-66.905-53.015a68.18 68.18 0 0 0-61.576 38.23l-2.36 4.861-4.454.467c-20.112 2.151-36.627 16.862-41.08 36.593-4.39 19.449 3.898 39.527 20.646 50.231l.734.46v18.025h-.106l-1.59-.721c-25.155-11.564-39.89-38.12-36.389-65.584 3.501-27.463 24.427-49.474 51.678-54.358 14.723-27.407 43.386-44.435 74.497-44.26" />
+                     d="M105.06 145.202a.7.7 0 0 1 .498.208l23.56 23.581a.7.7 0 0 1-.488 1.188h-6.022a.72.72 0 0 0-.721.7v53.015a12.72 12.72 0 0 0 3.71 8.949l3.52 3.52a.7.7 0 0 1-.487 1.187h-27.78c-7.027 0-12.723-5.696-12.723-12.723v-53.948a.7.7 0 0 0-.7-.7h-5.938a.7.7 0 0 1-.509-1.188l23.581-23.58a.7.7 0 0 1 .499-.21m52.103 13.656a.7.7 0 0 1 .498.209l23.581 23.496a.7.7 0 0 1-.509 1.188h-6.022a.72.72 0 0 0-.7.72v39.423a12.72 12.72 0 0 0 3.69 8.949l3.541 3.52a.7.7 0 0 1-.509 1.187h-27.716c-7.027 0-12.724-5.696-12.724-12.723v-40.313a.72.72 0 0 0-.7-.721h-6a.7.7 0 0 1-.488-1.188l23.56-23.538a.7.7 0 0 1 .498-.209m52.114 13.51c.183 0 .36.075.487.207l23.581 23.56a.7.7 0 0 1-.487 1.209h-6.044a.7.7 0 0 0-.7.7v25.85a12.72 12.72 0 0 0 3.711 8.949l3.52 3.52a.7.7 0 0 1-.487 1.187h-27.801c-7.027 0-12.724-5.696-12.724-12.723v-26.784a.7.7 0 0 0-.7-.7h-5.937a.7.7 0 0 1-.488-1.208l23.58-23.56a.68.68 0 0 1 .489-.207m-52.591-102.37c37.04.27 69.71 24.323 80.964 59.614 27.509 3.59 48.149 26.928 48.35 54.669 0 22.895-14.319 41.921-37.438 49.842l-.86.289-1.06.339v-17.092c14.695-6.192 23.326-18.428 23.326-33.378-.075-21.097-16.782-38.323-37.78-39.126l-.709-.02h-6.361l-1.527-6.066c-7.494-30.93-35.08-52.79-66.905-53.015a68.18 68.18 0 0 0-61.576 38.23l-2.36 4.861-4.454.467c-20.112 2.151-36.627 16.862-41.08 36.593-4.39 19.449 3.898 39.527 20.646 50.231l.734.46v18.025h-.106l-1.59-.721c-25.155-11.564-39.89-38.12-36.389-65.584 3.501-27.463 24.427-49.474 51.678-54.358 14.723-27.407 43.386-44.435 74.497-44.26" />
             </svg>
         </div>
     </div>
@@ -916,7 +989,7 @@
                     <div class="bookmark-item">
                         <a href="https://animevietsub.link">
                             <img class="bookmark-avatar"
-                                src="https://res.cloudinary.com/dxwwkauuj/image/upload/v1749915710/hwyzieztqqtu0ve4kx2e.webp"
+                                src="https://res.cloudinary.com/dxwwkauuj/image/upload/w_70,h_70,c_fill/v1749915710/hwyzieztqqtu0ve4kx2e.webp"
                                 alt="">
                             <div class="bookmark-name">Anime</div>
                         </a>

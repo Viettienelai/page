@@ -1450,404 +1450,387 @@ document.body.onmouseleave = () => updateLastMousePosition(originPosition);
 
 
 
-document.addEventListener('DOMContentLoaded', () => {
-    // Lấy các phần tử cần thiết từ DOM
-    const expandedPanel = document.getElementById('expandedPanel');
-    const autoChangeToggle = document.getElementById('autoChangeToggle');
-    const backgroundGrid = document.querySelector('.background-grid');
-    const mainBackground = document.querySelector('.background img');
-    const backgroundContainer = document.querySelector('.background');
-    const settingText = document.getElementById('settingText');
+document.addEventListener("DOMContentLoaded", () => {
+  // Lấy các phần tử cần thiết từ DOM
+  const expandedPanel = document.getElementById("expandedPanel");
+  const autoChangeToggle = document.getElementById("autoChangeToggle");
+  const backgroundGrid = document.querySelector(".background-grid");
+  const mainBackground = document.getElementById("mainBackground");
+  const backgroundContainer = document.getElementById("backgroundContainer");
+  const settingText = document.getElementById("settingText");
 
-    // Mảng chứa các đường dẫn ảnh nền và màu phân đoạn tương ứng
-    const backgroundImages = [
-        { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749755201/wxsmp3khl4rxetoll3mx.webp', segmentColor: 'rgb(255, 213, 0)' }, // Vàng
-        { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749752086/hgvojcdwc3gafgerqva4.webp', segmentColor: 'rgb(57, 162, 255)' }, // Xanh lam nhạt
-        { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749752086/zi3eumhtq0be5mmeciii.webp', segmentColor: 'rgb(255, 138, 120)' }, // Hồng
-        { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749752086/oqqf3ctq28yl8mz7bpja.webp', segmentColor: 'rgb(255, 200, 0)' }, // Xanh lá
-        { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749752088/xyy466nsxhehepuuon7j.webp', segmentColor: 'rgb(255, 135, 141)' },
-        { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749752087/o7bleciiuuqpzxkwnbad.webp', segmentColor: 'rgb(255, 83, 92)' },
-        { src: 'https://res.cloudinary.com/dxwwkauuj/image/upload/v1749754674/yjcbwpkqobft3m5ecmy9.webp', segmentColor: 'rgb(233, 135, 255)' },
-    ];
+  // Mảng chứa các đường dẫn ảnh nền (giữ lại để các hàm khác sử dụng)
+  const backgroundImages = [
+    {
+      src:
+        "https://res.cloudinary.com/dxwwkauuj/image/upload/v1749755201/wxsmp3khl4rxetoll3mx.webp",
+      segmentColor: "rgb(255, 213, 0)"
+    },
+    {
+      src:
+        "https://res.cloudinary.com/dxwwkauuj/image/upload/v1749752086/hgvojcdwc3gafgerqva4.webp",
+      segmentColor: "rgb(57, 162, 255)"
+    },
+    {
+      src:
+        "https://res.cloudinary.com/dxwwkauuj/image/upload/v1749752086/zi3eumhtq0be5mmeciii.webp",
+      segmentColor: "rgb(255, 138, 120)"
+    },
+    {
+      src:
+        "https://res.cloudinary.com/dxwwkauuj/image/upload/v1749752086/oqqf3ctq28yl8mz7bpja.webp",
+      segmentColor: "rgb(255, 200, 0)"
+    },
+    {
+      src:
+        "https://res.cloudinary.com/dxwwkauuj/image/upload/v1749752088/xyy466nsxhehepuuon7j.webp",
+      segmentColor: "rgb(255, 135, 141)"
+    },
+    {
+      src:
+        "https://res.cloudinary.com/dxwwkauuj/image/upload/v1749752087/o7bleciiuuqpzxkwnbad.webp",
+      segmentColor: "rgb(255, 83, 92)"
+    },
+    {
+      src:
+        "https://res.cloudinary.com/dxwwkauuj/image/upload/v1749754674/yjcbwpkqobft3m5ecmy9.webp",
+      segmentColor: "rgb(233, 135, 255)"
+    }
+  ];
 
-    let currentBackgroundIndex = 0;
-    let autoChangeInterval;
-    let preloadedImages = [];
-    let isExpanded = false;
-    let userLastSelectedTime = null; // Thời gian user chọn ảnh cuối cùng
+  // Index ban đầu được lấy từ script trong <head>
+  let currentBackgroundIndex = window.initialBackgroundIndex || 0;
 
-    // Keys cho localStorage
-    const STORAGE_KEYS = {
-        BACKGROUND_INDEX: 'selectedBackgroundIndex',
-        AUTO_CHANGE: 'autoChangeEnabled',
-        LAST_CHANGE_TIME: 'lastBackgroundChangeTime'
+  const STORAGE_KEYS = {
+    BACKGROUND_INDEX: "selectedBackgroundIndex",
+    AUTO_CHANGE: "autoChangeEnabled",
+    LAST_CHANGE_TIME: "lastBackgroundChangeTime"
+  };
+  let autoChangeInterval;
+  let userLastSelectedTime = null;
+  let isExpanded = false;
+
+  // --- HÀM ÁP DỤNG STYLING CHO ẢNH DỰA TRÊN INDEX ---
+  function applyImageStyling(img, index) {
+    // Reset tất cả các style về mặc định
+    img.style.width = "";
+    img.style.height = "";
+    img.style.position = "";
+    img.style.top = "";
+    img.style.left = "";
+    img.style.right = "";
+    img.style.objectFit = "";
+
+    // Áp dụng styling dựa trên index
+    switch (index) {
+      case 0:
+        img.style.width = "100vw";
+        img.style.height = "100vh";
+        img.style.objectFit = "cover";
+        break;
+      case 1:
+        img.style.height = "100vh";
+        img.style.position = "absolute";
+        img.style.top = "0";
+        img.style.right = "0";
+        break;
+      case 2:
+        img.style.height = "100vh";
+        img.style.position = "absolute";
+        img.style.top = "0";
+        img.style.left = "0";
+        break;
+      case 3:
+        img.style.height = "100vh";
+        img.style.position = "absolute";
+        img.style.top = "0";
+        img.style.left = "0";
+        break;
+      case 4:
+        img.style.width = "100vw";
+        img.style.height = "100vh";
+        img.style.objectFit = "cover";
+        break;
+      case 5:
+        img.style.position = "absolute";
+        img.style.top = "0";
+        img.style.right = "0";
+        img.style.width = "100vw";
+        break;
+      case 6:
+        img.style.height = "100vh";
+        img.style.position = "absolute";
+        img.style.top = "0";
+        img.style.left = "0";
+        break;
+        break;
+      default:
+        img.style.width = "100vw";
+        img.style.height = "100vh";
+        img.style.objectFit = "cover";
+        break;
+    }
+  }
+
+  // --- KHỞI TẠO BAN ĐẦU (TỐI ƯU HÓA) ---
+  function initialize() {
+    // Áp dụng class active ban đầu cho container
+    backgroundContainer.classList.add(
+      `background-active-${currentBackgroundIndex}`
+    );
+
+    // Set src cho thẻ <img> để bắt đầu tải
+    const initialImageSrc = backgroundImages[currentBackgroundIndex].src;
+    if (mainBackground.src !== initialImageSrc) {
+      mainBackground.src = initialImageSrc;
+    }
+
+    // Áp dụng styling cho ảnh ban đầu
+    applyImageStyling(mainBackground, currentBackgroundIndex);
+
+    // Khi ảnh <img> đã tải xong, gỡ bỏ class preload để xóa background-image
+    mainBackground.onload = () => {
+      backgroundContainer.classList.remove("preload");
+      mainBackground.style.opacity = "1"; // Đảm bảo ảnh hiện rõ
+    };
+    // Xử lý lỗi nếu ảnh không tải được
+    mainBackground.onerror = () => {
+      backgroundContainer.classList.remove("preload"); // Vẫn gỡ bỏ để tránh hiển thị nền trống
+      console.error("Failed to load the main image.");
     };
 
-    // --- Hàm tính toán index ảnh theo thời gian thực ---
-    function calculateTimeBasedIndex() {
-        const now = new Date();
-        const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        const minutesSinceStartOfDay = Math.floor((now - startOfDay) / (1000 * 60));
-        
-        // Mỗi 5 phút đổi ảnh một lần
-        const cycleIndex = Math.floor(minutesSinceStartOfDay / 5) % backgroundImages.length;
-        return cycleIndex;
-    }
+    // Cập nhật trạng thái của nút gạt
+    const savedAutoChange = localStorage.getItem("autoChangeEnabled");
+    autoChangeToggle.checked = savedAutoChange !== "false"; // Mặc định là bật
+    updateSettingText(autoChangeToggle.checked);
 
-    // --- Hàm tải trạng thái đã lưu ---
-    function loadSavedState() {
-        try {
-            const savedIndex = localStorage.getItem(STORAGE_KEYS.BACKGROUND_INDEX);
-            const savedAutoChange = localStorage.getItem(STORAGE_KEYS.AUTO_CHANGE);
-            const lastChangeTime = localStorage.getItem(STORAGE_KEYS.LAST_CHANGE_TIME);
-
-            // Kiểm tra xem có trạng thái đã lưu không
-            if (savedAutoChange !== null) {
-                const autoChangeEnabled = savedAutoChange === 'true';
-                autoChangeToggle.checked = autoChangeEnabled;
-                
-                if (autoChangeEnabled) {
-                    // Nếu auto change được bật, tính toán index theo thời gian
-                    currentBackgroundIndex = calculateTimeBasedIndex();
-                } else {
-                    // Nếu auto change bị tắt, sử dụng index đã lưu
-                    currentBackgroundIndex = savedIndex !== null ? 
-                        parseInt(savedIndex) : calculateTimeBasedIndex();
-                }
-            } else {
-                // Lần đầu tiên truy cập, bật auto change và tính theo thời gian
-                autoChangeToggle.checked = true;
-                currentBackgroundIndex = calculateTimeBasedIndex();
-            }
-        } catch (error) {
-            console.error('Error loading saved state:', error);
-            // Fallback: sử dụng thời gian thực
-            autoChangeToggle.checked = true;
-            currentBackgroundIndex = calculateTimeBasedIndex();
-        }
-    }
-
-    // --- Hàm lưu trạng thái ---
-    function saveState() {
-        try {
-            localStorage.setItem(STORAGE_KEYS.BACKGROUND_INDEX, currentBackgroundIndex.toString());
-            localStorage.setItem(STORAGE_KEYS.AUTO_CHANGE, autoChangeToggle.checked.toString());
-            localStorage.setItem(STORAGE_KEYS.LAST_CHANGE_TIME, Date.now().toString());
-        } catch (error) {
-            console.error('Error saving state:', error);
-        }
-    }
-
-    // --- Hàm preload ảnh để giảm lag ---
-    function preloadCurrentImage(index) {
-        // Preload ảnh hiện tại với độ ưu tiên cao (full size)
-        const currentImg = new Image();
-        currentImg.onload = () => {
-            console.log(`Current image ${index + 1} preloaded`);
-            // Set ảnh ngay khi preload xong
-            if (mainBackground.src !== backgroundImages[index].src) {
-                mainBackground.src = backgroundImages[index].src;
-            }
-        };
-        currentImg.src = backgroundImages[index].src;
-        preloadedImages[index] = currentImg;
-        
-        // Preload ảnh tiếp theo để chuẩn bị
-        const nextIndex = (index + 1) % backgroundImages.length;
-        const nextImg = new Image();
-        nextImg.onload = () => {
-            console.log(`Next image ${nextIndex + 1} preloaded`);
-        };
-        nextImg.src = backgroundImages[nextIndex].src;
-        preloadedImages[nextIndex] = nextImg;
-    }
-
-    function preloadImages() {
-        // Preload ảnh hiện tại trước
-        preloadCurrentImage(currentBackgroundIndex);
-        
-        // Sau đó preload các ảnh còn lại với độ ưu tiên thấp hơn
-        setTimeout(() => {
-            backgroundImages.forEach((imageData, index) => {
-                if (!preloadedImages[index]) {
-                    const img = new Image();
-                    img.onload = () => {
-                        console.log(`Background image ${index + 1} preloaded`);
-                    };
-                    // Sử dụng ảnh thumbnail cho grid options
-                    const optimizedSrc = imageData.src.replace('/upload/', '/upload/w_135,h_80,c_fill/');
-                    img.src = optimizedSrc;
-                    
-                    // Preload cả ảnh full size
-                    const fullImg = new Image();
-                    fullImg.src = imageData.src;
-                    preloadedImages[index] = fullImg;
-                }
-            });
-        }, 100);
-    }
-
-    // --- Hàm khởi tạo và hiển thị các lựa chọn hình nền ---
-    function initializeBackgroundOptions() {
-        backgroundGrid.innerHTML = '';
-        backgroundImages.forEach((imageData, index) => {
-            const optionDiv = document.createElement('div');
-            optionDiv.classList.add('background-option');
-            optionDiv.id = `background-option-${index}`;
-
-            const img = document.createElement('img');
-            const optimizedSrc = imageData.src.replace('/upload/', '/upload/w_135,h_80,c_fill/');
-            img.src = optimizedSrc;
-            img.alt = `Background ${index + 1}`;
-            img.loading = 'lazy';
-
-            optionDiv.appendChild(img);
-            backgroundGrid.appendChild(optionDiv);
-
-            // Thêm hiệu ứng click với debounce
-            let clickTimeout;
-            optionDiv.addEventListener('click', (event) => {
-                event.stopPropagation();
-                clearTimeout(clickTimeout);
-                clickTimeout = setTimeout(() => {
-                    selectBackground(index, true); // true = user selected
-                    
-                    // Restart auto change nếu đang bật, bắt đầu từ ảnh được chọn
-                    if (autoChangeToggle.checked) {
-                        userLastSelectedTime = Date.now();
-                        stopAutoChange();
-                        startAutoChange();
-                        console.log('Auto change restarted from user selection.');
-                    }
-                    
-                    // Lưu trạng thái
-                    saveState();
-                }, 100);
-            });
-        });
-
-        // Đánh dấu background hiện tại là selected
-        selectBackground(currentBackgroundIndex, false);
-    }
-
-    // --- Hàm chọn hình nền với animation mượt ---
-    function selectBackground(index, isUserSelected = false) {
-        // Cập nhật màu phân đoạn đồng hồ dựa trên hình nền được chọn
-        if (typeof currentSegmentColor !== 'undefined') {
-            currentSegmentColor = backgroundImages[index].segmentColor;
-            // Kích hoạt cập nhật đồng hồ để thay đổi màu ngay lập tức
-            if (typeof updateClock === 'function') {
-                updateClock();
-            }
-        }
-
-        // Xóa class selected từ tất cả options
-        document.querySelectorAll('.background-option').forEach(option => {
-            option.classList.remove('selected');
-        });
-
-        // Thêm class selected cho option được chọn
-        const selectedOption = document.getElementById(`background-option-${index}`);
-        if (selectedOption) {
-            selectedOption.classList.add('selected');
-        }
-
-        // --- Cập nhật class trên phần tử backgroundContainer ---
-        // Xóa tất cả các class background-active-X cũ
-        backgroundContainer.classList.forEach(className => {
-            if (className.startsWith('background-active-')) {
-                backgroundContainer.classList.remove(className);
-            }
-        });
-        // Thêm class mới
-        backgroundContainer.classList.add(`background-active-${index}`);
-        // --- Kết thúc cập nhật class ---
-
-        // Thay đổi background với fade effect - tối ưu hóa
-        const newSrc = backgroundImages[index].src;
-        const currentSrc = mainBackground.src;
-
-        if (currentSrc !== newSrc) {
-            // Kiểm tra xem ảnh đã được preload chưa
-            if (preloadedImages[index] && preloadedImages[index].complete) {
-                // Nếu đã preload, chuyển ngay
-                mainBackground.style.opacity = '0.8';
-                setTimeout(() => {
-                    mainBackground.src = newSrc;
-                    mainBackground.style.opacity = '1';
-                }, 100); // Giảm thời gian transition
-            } else {
-                // Nếu chưa preload, preload ngay và chuyển
-                const tempImg = new Image();
-                tempImg.onload = () => {
-                    mainBackground.style.opacity = '0.8';
-                    setTimeout(() => {
-                        mainBackground.src = newSrc;
-                        mainBackground.style.opacity = '1';
-                    }, 100);
-                };
-                tempImg.src = newSrc;
-                preloadedImages[index] = tempImg;
-            }
-        }
-
-        currentBackgroundIndex = index;
-        
-        // Preload ảnh tiếp theo để chuẩn bị
-        const nextIndex = (index + 1) % backgroundImages.length;
-        if (!preloadedImages[nextIndex] || !preloadedImages[nextIndex].complete) {
-            const nextImg = new Image();
-            nextImg.src = backgroundImages[nextIndex].src;
-            preloadedImages[nextIndex] = nextImg;
-        }
-        
-        // Chỉ lưu state khi không phải là khởi tạo ban đầu
-        if (isUserSelected) {
-            saveState();
-        }
-    }
-
-    // --- Hàm chuyển sang hình nền tiếp theo ---
-    function moveToNextBackground() {
-        // Nếu auto change đang bật
-        if (autoChangeToggle.checked) {
-            let nextIndex;
-            
-            // Nếu user vừa chọn ảnh (trong vòng 5 phút), tiếp tục từ ảnh đó
-            if (userLastSelectedTime && (Date.now() - userLastSelectedTime < 300000)) {
-                nextIndex = currentBackgroundIndex + 1;
-                if (nextIndex >= backgroundImages.length) {
-                    nextIndex = 0;
-                }
-            } else {
-                // Nếu không, tính theo thời gian thực
-                nextIndex = calculateTimeBasedIndex();
-                userLastSelectedTime = null; // Reset flag
-            }
-            
-            selectBackground(nextIndex, false);
-            saveState();
-        }
-    }
-
-    // --- Hàm tính thời gian còn lại đến lần đổi ảnh tiếp theo ---
-    function getTimeUntilNextChange() {
-        const now = new Date();
-        const currentMinute = now.getMinutes();
-        const currentSecond = now.getSeconds();
-        
-        // Tính số phút đã trải qua trong chu kỳ 5 phút hiện tại
-        const minutesInCurrentCycle = currentMinute % 5;
-        const secondsInCurrentCycle = minutesInCurrentCycle * 60 + currentSecond;
-        
-        // Thời gian còn lại đến chu kỳ tiếp theo (tính bằng milliseconds)
-        const remainingSeconds = (5 * 60) - secondsInCurrentCycle;
-        return remainingSeconds * 1000;
-    }
-
-    // --- Hàm bắt đầu chế độ tự động thay đổi ---
-    function startAutoChange() {
-        stopAutoChange();
-        
-        if (userLastSelectedTime && (Date.now() - userLastSelectedTime < 300000)) {
-            // Nếu user vừa chọn ảnh, đợi 5 phút từ lúc chọn
-            const timeElapsed = Date.now() - userLastSelectedTime;
-            const timeRemaining = 300000 - timeElapsed; // 5 phút - thời gian đã trôi qua
-            
-            setTimeout(() => {
-                moveToNextBackground();
-                autoChangeInterval = setInterval(moveToNextBackground, 300000);
-            }, timeRemaining);
-        } else {
-            // Đồng bộ với thời gian thực - đợi đến lần đổi ảnh tiếp theo
-            const timeUntilNext = getTimeUntilNextChange();
-            
-            setTimeout(() => {
-                moveToNextBackground();
-                autoChangeInterval = setInterval(moveToNextBackground, 300000);
-            }, timeUntilNext);
-        }
-        
-        console.log('Auto change started.');
-        updateSettingText(true);
-        saveState();
-    }
-
-    // --- Hàm dừng chế độ tự động thay đổi ---
-    function stopAutoChange() {
-        if (autoChangeInterval) {
-            clearInterval(autoChangeInterval);
-            autoChangeInterval = null;
-            console.log('Auto change stopped.');
-        }
-        updateSettingText(false);
-        saveState();
-    }
-
-    // --- Hàm cập nhật văn bản trạng thái ---
-    function updateSettingText(isOn) {
-        settingText.textContent = isOn ? "Change after 5 mins" : "Remain constant";
-    }
-
-    // --- Hàm toggle panel ---
-    function togglePanel() {
-        isExpanded = !isExpanded;
-        if (isExpanded) {
-            expandedPanel.classList.add('active');
-        } else {
-            expandedPanel.classList.remove('active');
-        }
-    }
-
-    // --- Xử lý sự kiện click cho panel ---
-    expandedPanel.addEventListener('click', (event) => {
-        // Chỉ toggle khi click vào chính panel (không phải các element con khi đã expanded)
-        if (!isExpanded || event.target === expandedPanel) {
-            event.stopPropagation();
-            togglePanel();
-        }
-    });
-
-    // --- Xử lý sự kiện click bên ngoài panel ---
-    document.addEventListener('click', (event) => {
-        if (!expandedPanel.contains(event.target) && isExpanded) {
-            togglePanel();
-        }
-    });
-
-    // --- Xử lý sự kiện thay đổi của công tắc ---
-    autoChangeToggle.addEventListener('change', (event) => {
-        event.stopPropagation();
-        if (autoChangeToggle.checked) {
-            startAutoChange();
-        } else {
-            stopAutoChange();
-        }
-    });
-
-    // --- Ngăn việc đóng panel khi click vào nội dung ---
-    document.querySelector('.panel-content').addEventListener('click', (event) => {
-        event.stopPropagation();
-    });
-
-    // --- Khởi tạo ban đầu ---
-    // Tải trạng thái đã lưu trước khi preload
-    loadSavedState();
-    
-    // Set ảnh ban đầu ngay lập tức để tránh delay
-    const initialSrc = backgroundImages[currentBackgroundIndex].src;
-    if (mainBackground.src !== initialSrc) {
-        mainBackground.src = initialSrc;
-    }
-    
-    // Preload ảnh sau khi đã set ảnh ban đầu
-    preloadImages();
+    // Khởi tạo các phần còn lại của UI
     initializeBackgroundOptions();
-    
+    preloadOtherImages();
+
     // Bắt đầu auto change nếu được bật
     if (autoChangeToggle.checked) {
-        startAutoChange();
+      startAutoChange();
     }
-    
-    updateSettingText(autoChangeToggle.checked);
+  }
+
+  // --- HÀM PRELOAD CÁC ẢNH CÒN LẠI (SAU KHI TẢI XONG ẢNH CHÍNH) ---
+  function preloadOtherImages() {
+    setTimeout(() => {
+      backgroundImages.forEach((imageData, index) => {
+        if (index !== currentBackgroundIndex) {
+          const img = new Image();
+          img.src = imageData.src;
+        }
+      });
+    }, 500); // Delay một chút để ưu tiên các tác vụ quan trọng
+  }
+
+  // --- HÀM CHỌN HÌNH NỀN ---
+  function selectBackground(index, isUserSelected = false) {
+    if (typeof currentSegmentColor !== "undefined") {
+      currentSegmentColor = backgroundImages[index].segmentColor;
+      if (typeof updateClock === "function") {
+        updateClock();
+      }
+    }
+    document.querySelectorAll(".background-option").forEach((option) => {
+      option.classList.remove("selected");
+    });
+    const selectedOption = document.getElementById(
+      `background-option-${index}`
+    );
+    if (selectedOption) {
+      selectedOption.classList.add("selected");
+    }
+
+    // Cập nhật class trên phần tử backgroundContainer
+    backgroundContainer.classList.forEach((className) => {
+      if (className.startsWith("background-active-")) {
+        backgroundContainer.classList.remove(className);
+      }
+    });
+    backgroundContainer.classList.add(`background-active-${index}`);
+
+    // Thay đổi background với fade effect
+    const newSrc = backgroundImages[index].src;
+    if (mainBackground.src !== newSrc) {
+      mainBackground.style.opacity = "0"; // Mờ đi
+      setTimeout(() => {
+        mainBackground.src = newSrc;
+        // Áp dụng styling mới cho ảnh TRƯỚC KHI hiển thị
+        applyImageStyling(mainBackground, index);
+        // Event onload của ảnh sẽ tự xử lý việc làm nó hiện ra
+        mainBackground.onload = () => {
+          mainBackground.style.opacity = "1";
+        };
+      }, 300); // Đợi transition kết thúc
+    } else {
+      // Nếu src giống nhau, vẫn cần áp dụng styling mới
+      applyImageStyling(mainBackground, index);
+    }
+
+    currentBackgroundIndex = index;
+    if (isUserSelected) {
+      saveState();
+    }
+  }
+
+  // --- HÀM LƯU TRẠNG THÁI ---
+  function saveState() {
+    try {
+      localStorage.setItem(
+        STORAGE_KEYS.BACKGROUND_INDEX,
+        currentBackgroundIndex.toString()
+      );
+      localStorage.setItem(
+        STORAGE_KEYS.AUTO_CHANGE,
+        autoChangeToggle.checked.toString()
+      );
+      localStorage.setItem(
+        STORAGE_KEYS.LAST_CHANGE_TIME,
+        Date.now().toString()
+      );
+    } catch (error) {
+      console.error("Error saving state:", error);
+    }
+  }
+
+  // --- HÀM KHỞI TẠO CÁC LỰA CHỌN ẢNH ---
+  function initializeBackgroundOptions() {
+    backgroundGrid.innerHTML = "";
+    backgroundImages.forEach((imageData, index) => {
+      const optionDiv = document.createElement("div");
+      optionDiv.classList.add("background-option");
+      optionDiv.id = `background-option-${index}`;
+      const img = document.createElement("img");
+      // Tối ưu ảnh cho thumbnail
+      const optimizedSrc = imageData.src.replace(
+        "/upload/",
+        "/upload/w_140,h_80,c_fill/"
+      );
+      img.src = optimizedSrc;
+      img.alt = `Background ${index + 1}`;
+      img.loading = "lazy";
+      optionDiv.appendChild(img);
+      backgroundGrid.appendChild(optionDiv);
+
+      optionDiv.addEventListener("click", (event) => {
+        event.stopPropagation();
+        selectBackground(index, true);
+        if (autoChangeToggle.checked) {
+          userLastSelectedTime = Date.now();
+          stopAutoChange();
+          startAutoChange();
+        }
+        saveState();
+      });
+    });
+    const selectedOption = document.getElementById(
+      `background-option-${currentBackgroundIndex}`
+    );
+    if (selectedOption) selectedOption.classList.add("selected");
+  }
+
+  // --- CÁC HÀM XỬ LÝ AUTO CHANGE ---
+  function calculateTimeBasedIndex() {
+    const now = new Date();
+    const startOfDay = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate()
+    );
+    const minutesSinceStartOfDay = Math.floor((now - startOfDay) / (1000 * 60));
+    return Math.floor(minutesSinceStartOfDay / 5) % backgroundImages.length;
+  }
+
+  function moveToNextBackground() {
+    if (autoChangeToggle.checked) {
+      let nextIndex;
+      if (userLastSelectedTime && Date.now() - userLastSelectedTime < 300000) {
+        // 5 phút
+        nextIndex = (currentBackgroundIndex + 1) % backgroundImages.length;
+      } else {
+        nextIndex = calculateTimeBasedIndex();
+        userLastSelectedTime = null;
+      }
+      selectBackground(nextIndex, false);
+      saveState();
+    }
+  }
+
+  function getTimeUntilNextChange() {
+    const now = new Date();
+    const secondsInCurrentCycle =
+      (now.getMinutes() % 5) * 60 + now.getSeconds();
+    const remainingSeconds = 5 * 60 - secondsInCurrentCycle;
+    return remainingSeconds * 1000;
+  }
+
+  function startAutoChange() {
+    stopAutoChange();
+    let delay = getTimeUntilNextChange();
+
+    if (userLastSelectedTime && Date.now() - userLastSelectedTime < 300000) {
+      delay = 300000 - (Date.now() - userLastSelectedTime);
+    }
+
+    setTimeout(() => {
+      moveToNextBackground();
+      autoChangeInterval = setInterval(moveToNextBackground, 300000); // 5 phút
+    }, delay);
+
+    updateSettingText(true);
+    saveState();
+  }
+
+  function stopAutoChange() {
+    if (autoChangeInterval) {
+      clearInterval(autoChangeInterval);
+      autoChangeInterval = null;
+    }
+    updateSettingText(false);
+    saveState();
+  }
+
+  // --- CÁC HÀM TIỆN ÍCH CHO UI ---
+  function updateSettingText(isOn) {
+    settingText.textContent = isOn ? "Change after 5 mins" : "Remain constant";
+  }
+
+  function togglePanel() {
+    isExpanded = !isExpanded;
+    expandedPanel.classList.toggle("active", isExpanded);
+  }
+
+  // --- GÁN CÁC EVENT LISTENER ---
+  expandedPanel.addEventListener("click", (event) => {
+    if (!isExpanded) {
+      togglePanel();
+    }
+  });
+
+  document.addEventListener("click", (event) => {
+    if (!expandedPanel.contains(event.target) && isExpanded) {
+      togglePanel();
+    }
+  });
+
+  autoChangeToggle.addEventListener("change", (event) => {
+    event.stopPropagation();
+    if (autoChangeToggle.checked) {
+      startAutoChange();
+    } else {
+      stopAutoChange();
+    }
+  });
+
+  document
+    .querySelector(".panel-content")
+    .addEventListener("click", (event) => {
+      event.stopPropagation();
+    });
+
+  // --- BẮT ĐẦU KHỞI TẠO TOÀN BỘ SCRIPT ---
+  initialize();
 });
