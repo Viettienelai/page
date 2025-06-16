@@ -5,6 +5,29 @@ const searchBar = document.getElementById('search-bar');
 const blurElement = document.getElementById('background-blur-search-options');
 const searchLinks = searchOptions.querySelectorAll('a');
 
+gsap.from("#clock-container", {
+    duration: 1,
+    ease: "back.out(1)",
+    y: -325,
+    scale: 2,
+    delay: .4,
+});
+
+gsap.from("#bar-container", {
+    duration: 1.5,
+    ease: "power2.out",
+    scale: .1,
+    transformOrigin: "bottom",
+    delay: .4,
+});
+
+gsap.from("#container-all", {
+    duration: 1,
+    ease: "back.out(4)",
+    scale: 1.1,
+    delay: .4,
+});
+
 // Dữ liệu cho từng công cụ tìm kiếm, bao gồm placeholder, màu outline, HTML của SVG và viewBox
 const engineData = {
     "https://www.google.com/search": {
@@ -57,26 +80,26 @@ const engineData = {
         outlineColor: "#5083DF",
         viewBox: "0 2 42 42", // Thêm viewBox cho Bing
         svgHtml: `
-              <linearGradient id="bing-a" gradientUnits="userSpaceOnUse" x1="11.905" y1="1.952" x2="17.941" y2="40.401">
-    <stop offset="0" style="stop-color:#3dbffc"/>
-    <stop offset="1" style="stop-color:#183efb"/>
-  </linearGradient>
-  <path style="fill:url(#bing-a)" d="M17.572 37.076 20 35.619V10.603a5 5 0 0 0-2.133-4.096L12.36 2.652c-.994-.696-2.36.015-2.36 1.229V32.5c0 .22.02.555.033.772.336 3.595 4.349 5.718 7.539 3.804"/>
-  <linearGradient id="bing-b" gradientUnits="userSpaceOnUse" x1="14.342" y1="41.478" x2="34.121" y2="25.575">
-    <stop offset="0" style="stop-color:#33bef0"/>
-    <stop offset=".159" style="stop-color:#32b9f0"/>
-    <stop offset=".341" style="stop-color:#2facf2"/>
-    <stop offset=".533" style="stop-color:#2a95f4"/>
-    <stop offset=".733" style="stop-color:#2475f6"/>
-    <stop offset=".936" style="stop-color:#1b4cfa"/>
-    <stop offset="1" style="stop-color:#183efb"/>
-  </linearGradient>
-  <path style="fill:url(#bing-b)" d="M32.682 27.904 20 35.5l-2.428 1.457c-3.191 1.915-7.203-.209-7.54-3.804C10.372 38.922 15.145 43.5 21 43.5c1.963 0 3.888-.536 5.568-1.551l6.834-4.126a11 11 0 0 0 2.15-1.707c2.354-2.701 1.187-7.447-2.87-8.212"/>
-  <linearGradient id="bing-c" gradientUnits="userSpaceOnUse" x1="24.223" y1="17.113" x2="45.699" y2="38.588">
-    <stop offset="0" style="stop-color:#3dbffd"/>
-    <stop offset="1" style="stop-color:#1de9b6"/>
-  </linearGradient>
-  <path style="fill:url(#bing-c)" d="m33.636 19.568-7.607-3.803c-1.234-.617-2.576.618-2.064 1.899l1.755 5.886a5 5 0 0 0 2.719 2.758L32.5 28c4.057.766 5.352 5.251 3.052 8.117 4.847-4.877 4.536-13.323-1.916-16.549"/> `
+            <linearGradient id="bing-a" gradientUnits="userSpaceOnUse" x1="11.905" y1="1.952" x2="17.941" y2="40.401">
+                <stop offset="0" style="stop-color:#3dbffc"/>
+                <stop offset="1" style="stop-color:#183efb"/>
+             </linearGradient>
+            <path style="fill:url(#bing-a)" d="M17.572 37.076 20 35.619V10.603a5 5 0 0 0-2.133-4.096L12.36 2.652c-.994-.696-2.36.015-2.36 1.229V32.5c0 .22.02.555.033.772.336 3.595 4.349 5.718 7.539 3.804"/>
+            <linearGradient id="bing-b" gradientUnits="userSpaceOnUse" x1="14.342" y1="41.478" x2="34.121" y2="25.575">
+                <stop offset="0" style="stop-color:#33bef0"/>
+                <stop offset=".159" style="stop-color:#32b9f0"/>
+                <stop offset=".341" style="stop-color:#2facf2"/>
+                <stop offset=".533" style="stop-color:#2a95f4"/>
+                <stop offset=".733" style="stop-color:#2475f6"/>
+                <stop offset=".936" style="stop-color:#1b4cfa"/>
+                <stop offset="1" style="stop-color:#183efb"/>
+            </linearGradient>
+            <path style="fill:url(#bing-b)" d="M32.682 27.904 20 35.5l-2.428 1.457c-3.191 1.915-7.203-.209-7.54-3.804C10.372 38.922 15.145 43.5 21 43.5c1.963 0 3.888-.536 5.568-1.551l6.834-4.126a11 11 0 0 0 2.15-1.707c2.354-2.701 1.187-7.447-2.87-8.212"/>
+            <linearGradient id="bing-c" gradientUnits="userSpaceOnUse" x1="24.223" y1="17.113" x2="45.699" y2="38.588">
+                <stop offset="0" style="stop-color:#3dbffd"/>
+                <stop offset="1" style="stop-color:#1de9b6"/>
+            </linearGradient>
+            <path style="fill:url(#bing-c)" d="m33.636 19.568-7.607-3.803c-1.234-.617-2.576.618-2.064 1.899l1.755 5.886a5 5 0 0 0 2.719 2.758L32.5 28c4.057.766 5.352 5.251 3.052 8.117 4.847-4.877 4.536-13.323-1.916-16.549"/> `
     },
     "https://duckduckgo.com/": {
         placeholder: "Search on DuckDuckGo . . .",
@@ -101,38 +124,72 @@ function updateSearchUI(engineUrl) {
         searchForm.action = engineUrl;
         searchBar.placeholder = data.placeholder;
         searchBar.style.outlineColor = data.outlineColor;
-        // Cập nhật viewBox và nội dung SVG của icon chính
-        searchIconContainer.setAttribute('viewBox', data.viewBox); // Cập nhật viewBox
+        searchIconContainer.setAttribute('viewBox', data.viewBox);
         searchIconContainer.innerHTML = data.svgHtml;
     }
+}
+// --- GSAP INTEGRATION (Không dùng reverse()) ---
+
+// 1. Khởi tạo trạng thái ban đầu
+gsap.set(searchOptions, { scale: 0, transformOrigin: "top left" });
+
+// Biến theo dõi trạng thái menu (mở/đóng)
+let isSearchOptionsOpen = false;
+
+// Hàm để mở searchOptions
+function openSearchOptions() {
+    // Dừng mọi animation đang chạy trên searchOptions để tránh xung đột
+    gsap.killTweensOf(searchOptions);
+    gsap.to(searchOptions, {
+        scale: 1,
+        ease: "back.out",
+        duration: .7,
+        onComplete: () => {
+            isSearchOptionsOpen = true;
+        }
+    });
+    blurElement.classList.add('active');
+}
+
+function closeSearchOptions() {
+    gsap.to(searchOptions, {
+        scale: 0,
+        duration: .3,
+        onComplete: () => {
+            isSearchOptionsOpen = false;
+        }
+    });
+    blurElement.classList.remove('active');
 }
 
 // Toggle options visibility
 searchIconContainer.addEventListener('click', () => {
-    searchOptions.classList.toggle('active');
-    blurElement.classList.toggle('active');
+    if (!isSearchOptionsOpen) {
+        openSearchOptions();
+    } else {
+        closeSearchOptions();
+    }
 });
 
 // Change search engine and placeholder
 searchOptions.addEventListener('click', (event) => {
     const link = event.target.closest('a');
     if (link) {
-        event.preventDefault(); // Ngăn chuyển hướng
+        event.preventDefault();
 
         const engine = link.getAttribute('data-engine');
-        updateSearchUI(engine); // Cập nhật UI
+        updateSearchUI(engine);
 
-        // Ẩn menu sau khi chọn
-        searchOptions.classList.remove('active');
-        blurElement.classList.remove('active');
+        // Đóng menu sau khi chọn
+        closeSearchOptions();
     }
 });
 
 // Close options when clicking outside
 document.addEventListener('click', (event) => {
-    if (!searchIconContainer.contains(event.target) && !searchOptions.contains(event.target)) {
-        searchOptions.classList.remove('active');
-        blurElement.classList.remove('active');
+    // Chỉ đóng nếu click bên ngoài và menu đang mở
+    if (isSearchOptionsOpen && !searchIconContainer.contains(event.target) && !searchOptions.contains(event.target)) {
+        closeSearchOptions();
     }
 });
 
@@ -1451,386 +1508,386 @@ document.body.onmouseleave = () => updateLastMousePosition(originPosition);
 
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Lấy các phần tử cần thiết từ DOM
-  const expandedPanel = document.getElementById("expandedPanel");
-  const autoChangeToggle = document.getElementById("autoChangeToggle");
-  const backgroundGrid = document.querySelector(".background-grid");
-  const mainBackground = document.getElementById("mainBackground");
-  const backgroundContainer = document.getElementById("backgroundContainer");
-  const settingText = document.getElementById("settingText");
+    // Lấy các phần tử cần thiết từ DOM
+    const expandedPanel = document.getElementById("expandedPanel");
+    const autoChangeToggle = document.getElementById("autoChangeToggle");
+    const backgroundGrid = document.querySelector(".background-grid");
+    const mainBackground = document.getElementById("mainBackground");
+    const backgroundContainer = document.getElementById("backgroundContainer");
+    const settingText = document.getElementById("settingText");
 
-  // Mảng chứa các đường dẫn ảnh nền (giữ lại để các hàm khác sử dụng)
-  const backgroundImages = [
-    {
-      src:
-        "https://res.cloudinary.com/dxwwkauuj/image/upload/v1749755201/wxsmp3khl4rxetoll3mx.webp",
-      segmentColor: "rgb(255, 213, 0)"
-    },
-    {
-      src:
-        "https://res.cloudinary.com/dxwwkauuj/image/upload/v1749752086/hgvojcdwc3gafgerqva4.webp",
-      segmentColor: "rgb(57, 162, 255)"
-    },
-    {
-      src:
-        "https://res.cloudinary.com/dxwwkauuj/image/upload/v1749752086/zi3eumhtq0be5mmeciii.webp",
-      segmentColor: "rgb(255, 138, 120)"
-    },
-    {
-      src:
-        "https://res.cloudinary.com/dxwwkauuj/image/upload/v1749752086/oqqf3ctq28yl8mz7bpja.webp",
-      segmentColor: "rgb(255, 200, 0)"
-    },
-    {
-      src:
-        "https://res.cloudinary.com/dxwwkauuj/image/upload/v1749752088/xyy466nsxhehepuuon7j.webp",
-      segmentColor: "rgb(255, 135, 141)"
-    },
-    {
-      src:
-        "https://res.cloudinary.com/dxwwkauuj/image/upload/v1749752087/o7bleciiuuqpzxkwnbad.webp",
-      segmentColor: "rgb(255, 83, 92)"
-    },
-    {
-      src:
-        "https://res.cloudinary.com/dxwwkauuj/image/upload/v1749754674/yjcbwpkqobft3m5ecmy9.webp",
-      segmentColor: "rgb(233, 135, 255)"
-    }
-  ];
-
-  // Index ban đầu được lấy từ script trong <head>
-  let currentBackgroundIndex = window.initialBackgroundIndex || 0;
-
-  const STORAGE_KEYS = {
-    BACKGROUND_INDEX: "selectedBackgroundIndex",
-    AUTO_CHANGE: "autoChangeEnabled",
-    LAST_CHANGE_TIME: "lastBackgroundChangeTime"
-  };
-  let autoChangeInterval;
-  let userLastSelectedTime = null;
-  let isExpanded = false;
-
-  // --- HÀM ÁP DỤNG STYLING CHO ẢNH DỰA TRÊN INDEX ---
-  function applyImageStyling(img, index) {
-    // Reset tất cả các style về mặc định
-    img.style.width = "";
-    img.style.height = "";
-    img.style.position = "";
-    img.style.top = "";
-    img.style.left = "";
-    img.style.right = "";
-    img.style.objectFit = "";
-
-    // Áp dụng styling dựa trên index
-    switch (index) {
-      case 0:
-        img.style.width = "100vw";
-        img.style.height = "100vh";
-        img.style.objectFit = "cover";
-        break;
-      case 1:
-        img.style.height = "100vh";
-        img.style.position = "absolute";
-        img.style.top = "0";
-        img.style.right = "0";
-        break;
-      case 2:
-        img.style.height = "100vh";
-        img.style.position = "absolute";
-        img.style.top = "0";
-        img.style.left = "0";
-        break;
-      case 3:
-        img.style.height = "100vh";
-        img.style.position = "absolute";
-        img.style.top = "0";
-        img.style.left = "0";
-        break;
-      case 4:
-        img.style.width = "100vw";
-        img.style.height = "100vh";
-        img.style.objectFit = "cover";
-        break;
-      case 5:
-        img.style.position = "absolute";
-        img.style.top = "0";
-        img.style.right = "0";
-        img.style.width = "100vw";
-        break;
-      case 6:
-        img.style.height = "100vh";
-        img.style.position = "absolute";
-        img.style.top = "0";
-        img.style.left = "0";
-        break;
-        break;
-      default:
-        img.style.width = "100vw";
-        img.style.height = "100vh";
-        img.style.objectFit = "cover";
-        break;
-    }
-  }
-
-  // --- KHỞI TẠO BAN ĐẦU (TỐI ƯU HÓA) ---
-  function initialize() {
-    // Áp dụng class active ban đầu cho container
-    backgroundContainer.classList.add(
-      `background-active-${currentBackgroundIndex}`
-    );
-
-    // Set src cho thẻ <img> để bắt đầu tải
-    const initialImageSrc = backgroundImages[currentBackgroundIndex].src;
-    if (mainBackground.src !== initialImageSrc) {
-      mainBackground.src = initialImageSrc;
-    }
-
-    // Áp dụng styling cho ảnh ban đầu
-    applyImageStyling(mainBackground, currentBackgroundIndex);
-
-    // Khi ảnh <img> đã tải xong, gỡ bỏ class preload để xóa background-image
-    mainBackground.onload = () => {
-      backgroundContainer.classList.remove("preload");
-      mainBackground.style.opacity = "1"; // Đảm bảo ảnh hiện rõ
-    };
-    // Xử lý lỗi nếu ảnh không tải được
-    mainBackground.onerror = () => {
-      backgroundContainer.classList.remove("preload"); // Vẫn gỡ bỏ để tránh hiển thị nền trống
-      console.error("Failed to load the main image.");
-    };
-
-    // Cập nhật trạng thái của nút gạt
-    const savedAutoChange = localStorage.getItem("autoChangeEnabled");
-    autoChangeToggle.checked = savedAutoChange !== "false"; // Mặc định là bật
-    updateSettingText(autoChangeToggle.checked);
-
-    // Khởi tạo các phần còn lại của UI
-    initializeBackgroundOptions();
-    preloadOtherImages();
-
-    // Bắt đầu auto change nếu được bật
-    if (autoChangeToggle.checked) {
-      startAutoChange();
-    }
-  }
-
-  // --- HÀM PRELOAD CÁC ẢNH CÒN LẠI (SAU KHI TẢI XONG ẢNH CHÍNH) ---
-  function preloadOtherImages() {
-    setTimeout(() => {
-      backgroundImages.forEach((imageData, index) => {
-        if (index !== currentBackgroundIndex) {
-          const img = new Image();
-          img.src = imageData.src;
+    // Mảng chứa các đường dẫn ảnh nền (giữ lại để các hàm khác sử dụng)
+    const backgroundImages = [
+        {
+            src:
+                "https://res.cloudinary.com/dxwwkauuj/image/upload/v1749755201/wxsmp3khl4rxetoll3mx.webp",
+            segmentColor: "rgb(255, 213, 0)"
+        },
+        {
+            src:
+                "https://res.cloudinary.com/dxwwkauuj/image/upload/v1749752086/hgvojcdwc3gafgerqva4.webp",
+            segmentColor: "rgb(57, 162, 255)"
+        },
+        {
+            src:
+                "https://res.cloudinary.com/dxwwkauuj/image/upload/v1749752086/zi3eumhtq0be5mmeciii.webp",
+            segmentColor: "rgb(255, 138, 120)"
+        },
+        {
+            src:
+                "https://res.cloudinary.com/dxwwkauuj/image/upload/v1749752086/oqqf3ctq28yl8mz7bpja.webp",
+            segmentColor: "rgb(255, 200, 0)"
+        },
+        {
+            src:
+                "https://res.cloudinary.com/dxwwkauuj/image/upload/v1749752088/xyy466nsxhehepuuon7j.webp",
+            segmentColor: "rgb(255, 135, 141)"
+        },
+        {
+            src:
+                "https://res.cloudinary.com/dxwwkauuj/image/upload/v1749752087/o7bleciiuuqpzxkwnbad.webp",
+            segmentColor: "rgb(255, 83, 92)"
+        },
+        {
+            src:
+                "https://res.cloudinary.com/dxwwkauuj/image/upload/v1749754674/yjcbwpkqobft3m5ecmy9.webp",
+            segmentColor: "rgb(233, 135, 255)"
         }
-      });
-    }, 500); // Delay một chút để ưu tiên các tác vụ quan trọng
-  }
+    ];
 
-  // --- HÀM CHỌN HÌNH NỀN ---
-  function selectBackground(index, isUserSelected = false) {
-    if (typeof currentSegmentColor !== "undefined") {
-      currentSegmentColor = backgroundImages[index].segmentColor;
-      if (typeof updateClock === "function") {
-        updateClock();
-      }
+    // Index ban đầu được lấy từ script trong <head>
+    let currentBackgroundIndex = window.initialBackgroundIndex || 0;
+
+    const STORAGE_KEYS = {
+        BACKGROUND_INDEX: "selectedBackgroundIndex",
+        AUTO_CHANGE: "autoChangeEnabled",
+        LAST_CHANGE_TIME: "lastBackgroundChangeTime"
+    };
+    let autoChangeInterval;
+    let userLastSelectedTime = null;
+    let isExpanded = false;
+
+    // --- HÀM ÁP DỤNG STYLING CHO ẢNH DỰA TRÊN INDEX ---
+    function applyImageStyling(img, index) {
+        // Reset tất cả các style về mặc định
+        img.style.width = "";
+        img.style.height = "";
+        img.style.position = "";
+        img.style.top = "";
+        img.style.left = "";
+        img.style.right = "";
+        img.style.objectFit = "";
+
+        // Áp dụng styling dựa trên index
+        switch (index) {
+            case 0:
+                img.style.width = "100vw";
+                img.style.height = "100vh";
+                img.style.objectFit = "cover";
+                break;
+            case 1:
+                img.style.height = "100vh";
+                img.style.position = "absolute";
+                img.style.top = "0";
+                img.style.right = "0";
+                break;
+            case 2:
+                img.style.height = "100vh";
+                img.style.position = "absolute";
+                img.style.top = "0";
+                img.style.left = "0";
+                break;
+            case 3:
+                img.style.height = "100vh";
+                img.style.position = "absolute";
+                img.style.top = "0";
+                img.style.left = "0";
+                break;
+            case 4:
+                img.style.width = "100vw";
+                img.style.height = "100vh";
+                img.style.objectFit = "cover";
+                break;
+            case 5:
+                img.style.position = "absolute";
+                img.style.top = "0";
+                img.style.right = "0";
+                img.style.width = "100vw";
+                break;
+            case 6:
+                img.style.height = "100vh";
+                img.style.position = "absolute";
+                img.style.top = "0";
+                img.style.left = "0";
+                break;
+                break;
+            default:
+                img.style.width = "100vw";
+                img.style.height = "100vh";
+                img.style.objectFit = "cover";
+                break;
+        }
     }
-    document.querySelectorAll(".background-option").forEach((option) => {
-      option.classList.remove("selected");
-    });
-    const selectedOption = document.getElementById(
-      `background-option-${index}`
-    );
-    if (selectedOption) {
-      selectedOption.classList.add("selected");
-    }
 
-    // Cập nhật class trên phần tử backgroundContainer
-    backgroundContainer.classList.forEach((className) => {
-      if (className.startsWith("background-active-")) {
-        backgroundContainer.classList.remove(className);
-      }
-    });
-    backgroundContainer.classList.add(`background-active-${index}`);
+    // --- KHỞI TẠO BAN ĐẦU (TỐI ƯU HÓA) ---
+    function initialize() {
+        // Áp dụng class active ban đầu cho container
+        backgroundContainer.classList.add(
+            `background-active-${currentBackgroundIndex}`
+        );
 
-    // Thay đổi background với fade effect
-    const newSrc = backgroundImages[index].src;
-    if (mainBackground.src !== newSrc) {
-      mainBackground.style.opacity = "0"; // Mờ đi
-      setTimeout(() => {
-        mainBackground.src = newSrc;
-        // Áp dụng styling mới cho ảnh TRƯỚC KHI hiển thị
-        applyImageStyling(mainBackground, index);
-        // Event onload của ảnh sẽ tự xử lý việc làm nó hiện ra
+        // Set src cho thẻ <img> để bắt đầu tải
+        const initialImageSrc = backgroundImages[currentBackgroundIndex].src;
+        if (mainBackground.src !== initialImageSrc) {
+            mainBackground.src = initialImageSrc;
+        }
+
+        // Áp dụng styling cho ảnh ban đầu
+        applyImageStyling(mainBackground, currentBackgroundIndex);
+
+        // Khi ảnh <img> đã tải xong, gỡ bỏ class preload để xóa background-image
         mainBackground.onload = () => {
-          mainBackground.style.opacity = "1";
+            backgroundContainer.classList.remove("preload");
+            mainBackground.style.opacity = "1"; // Đảm bảo ảnh hiện rõ
         };
-      }, 300); // Đợi transition kết thúc
-    } else {
-      // Nếu src giống nhau, vẫn cần áp dụng styling mới
-      applyImageStyling(mainBackground, index);
-    }
+        // Xử lý lỗi nếu ảnh không tải được
+        mainBackground.onerror = () => {
+            backgroundContainer.classList.remove("preload"); // Vẫn gỡ bỏ để tránh hiển thị nền trống
+            console.error("Failed to load the main image.");
+        };
 
-    currentBackgroundIndex = index;
-    if (isUserSelected) {
-      saveState();
-    }
-  }
+        // Cập nhật trạng thái của nút gạt
+        const savedAutoChange = localStorage.getItem("autoChangeEnabled");
+        autoChangeToggle.checked = savedAutoChange !== "false"; // Mặc định là bật
+        updateSettingText(autoChangeToggle.checked);
 
-  // --- HÀM LƯU TRẠNG THÁI ---
-  function saveState() {
-    try {
-      localStorage.setItem(
-        STORAGE_KEYS.BACKGROUND_INDEX,
-        currentBackgroundIndex.toString()
-      );
-      localStorage.setItem(
-        STORAGE_KEYS.AUTO_CHANGE,
-        autoChangeToggle.checked.toString()
-      );
-      localStorage.setItem(
-        STORAGE_KEYS.LAST_CHANGE_TIME,
-        Date.now().toString()
-      );
-    } catch (error) {
-      console.error("Error saving state:", error);
-    }
-  }
+        // Khởi tạo các phần còn lại của UI
+        initializeBackgroundOptions();
+        preloadOtherImages();
 
-  // --- HÀM KHỞI TẠO CÁC LỰA CHỌN ẢNH ---
-  function initializeBackgroundOptions() {
-    backgroundGrid.innerHTML = "";
-    backgroundImages.forEach((imageData, index) => {
-      const optionDiv = document.createElement("div");
-      optionDiv.classList.add("background-option");
-      optionDiv.id = `background-option-${index}`;
-      const img = document.createElement("img");
-      // Tối ưu ảnh cho thumbnail
-      const optimizedSrc = imageData.src.replace(
-        "/upload/",
-        "/upload/w_140,h_80,c_fill/"
-      );
-      img.src = optimizedSrc;
-      img.alt = `Background ${index + 1}`;
-      img.loading = "lazy";
-      optionDiv.appendChild(img);
-      backgroundGrid.appendChild(optionDiv);
-
-      optionDiv.addEventListener("click", (event) => {
-        event.stopPropagation();
-        selectBackground(index, true);
+        // Bắt đầu auto change nếu được bật
         if (autoChangeToggle.checked) {
-          userLastSelectedTime = Date.now();
-          stopAutoChange();
-          startAutoChange();
+            startAutoChange();
         }
+    }
+
+    // --- HÀM PRELOAD CÁC ẢNH CÒN LẠI (SAU KHI TẢI XONG ẢNH CHÍNH) ---
+    function preloadOtherImages() {
+        setTimeout(() => {
+            backgroundImages.forEach((imageData, index) => {
+                if (index !== currentBackgroundIndex) {
+                    const img = new Image();
+                    img.src = imageData.src;
+                }
+            });
+        }, 500); // Delay một chút để ưu tiên các tác vụ quan trọng
+    }
+
+    // --- HÀM CHỌN HÌNH NỀN ---
+    function selectBackground(index, isUserSelected = false) {
+        if (typeof currentSegmentColor !== "undefined") {
+            currentSegmentColor = backgroundImages[index].segmentColor;
+            if (typeof updateClock === "function") {
+                updateClock();
+            }
+        }
+        document.querySelectorAll(".background-option").forEach((option) => {
+            option.classList.remove("selected");
+        });
+        const selectedOption = document.getElementById(
+            `background-option-${index}`
+        );
+        if (selectedOption) {
+            selectedOption.classList.add("selected");
+        }
+
+        // Cập nhật class trên phần tử backgroundContainer
+        backgroundContainer.classList.forEach((className) => {
+            if (className.startsWith("background-active-")) {
+                backgroundContainer.classList.remove(className);
+            }
+        });
+        backgroundContainer.classList.add(`background-active-${index}`);
+
+        // Thay đổi background với fade effect
+        const newSrc = backgroundImages[index].src;
+        if (mainBackground.src !== newSrc) {
+            mainBackground.style.opacity = "0"; // Mờ đi
+            setTimeout(() => {
+                mainBackground.src = newSrc;
+                // Áp dụng styling mới cho ảnh TRƯỚC KHI hiển thị
+                applyImageStyling(mainBackground, index);
+                // Event onload của ảnh sẽ tự xử lý việc làm nó hiện ra
+                mainBackground.onload = () => {
+                    mainBackground.style.opacity = "1";
+                };
+            }, 300); // Đợi transition kết thúc
+        } else {
+            // Nếu src giống nhau, vẫn cần áp dụng styling mới
+            applyImageStyling(mainBackground, index);
+        }
+
+        currentBackgroundIndex = index;
+        if (isUserSelected) {
+            saveState();
+        }
+    }
+
+    // --- HÀM LƯU TRẠNG THÁI ---
+    function saveState() {
+        try {
+            localStorage.setItem(
+                STORAGE_KEYS.BACKGROUND_INDEX,
+                currentBackgroundIndex.toString()
+            );
+            localStorage.setItem(
+                STORAGE_KEYS.AUTO_CHANGE,
+                autoChangeToggle.checked.toString()
+            );
+            localStorage.setItem(
+                STORAGE_KEYS.LAST_CHANGE_TIME,
+                Date.now().toString()
+            );
+        } catch (error) {
+            console.error("Error saving state:", error);
+        }
+    }
+
+    // --- HÀM KHỞI TẠO CÁC LỰA CHỌN ẢNH ---
+    function initializeBackgroundOptions() {
+        backgroundGrid.innerHTML = "";
+        backgroundImages.forEach((imageData, index) => {
+            const optionDiv = document.createElement("div");
+            optionDiv.classList.add("background-option");
+            optionDiv.id = `background-option-${index}`;
+            const img = document.createElement("img");
+            // Tối ưu ảnh cho thumbnail
+            const optimizedSrc = imageData.src.replace(
+                "/upload/",
+                "/upload/w_140,h_80,c_fill/"
+            );
+            img.src = optimizedSrc;
+            img.alt = `Background ${index + 1}`;
+            img.loading = "lazy";
+            optionDiv.appendChild(img);
+            backgroundGrid.appendChild(optionDiv);
+
+            optionDiv.addEventListener("click", (event) => {
+                event.stopPropagation();
+                selectBackground(index, true);
+                if (autoChangeToggle.checked) {
+                    userLastSelectedTime = Date.now();
+                    stopAutoChange();
+                    startAutoChange();
+                }
+                saveState();
+            });
+        });
+        const selectedOption = document.getElementById(
+            `background-option-${currentBackgroundIndex}`
+        );
+        if (selectedOption) selectedOption.classList.add("selected");
+    }
+
+    // --- CÁC HÀM XỬ LÝ AUTO CHANGE ---
+    function calculateTimeBasedIndex() {
+        const now = new Date();
+        const startOfDay = new Date(
+            now.getFullYear(),
+            now.getMonth(),
+            now.getDate()
+        );
+        const minutesSinceStartOfDay = Math.floor((now - startOfDay) / (1000 * 60));
+        return Math.floor(minutesSinceStartOfDay / 5) % backgroundImages.length;
+    }
+
+    function moveToNextBackground() {
+        if (autoChangeToggle.checked) {
+            let nextIndex;
+            if (userLastSelectedTime && Date.now() - userLastSelectedTime < 300000) {
+                // 5 phút
+                nextIndex = (currentBackgroundIndex + 1) % backgroundImages.length;
+            } else {
+                nextIndex = calculateTimeBasedIndex();
+                userLastSelectedTime = null;
+            }
+            selectBackground(nextIndex, false);
+            saveState();
+        }
+    }
+
+    function getTimeUntilNextChange() {
+        const now = new Date();
+        const secondsInCurrentCycle =
+            (now.getMinutes() % 5) * 60 + now.getSeconds();
+        const remainingSeconds = 5 * 60 - secondsInCurrentCycle;
+        return remainingSeconds * 1000;
+    }
+
+    function startAutoChange() {
+        stopAutoChange();
+        let delay = getTimeUntilNextChange();
+
+        if (userLastSelectedTime && Date.now() - userLastSelectedTime < 300000) {
+            delay = 300000 - (Date.now() - userLastSelectedTime);
+        }
+
+        setTimeout(() => {
+            moveToNextBackground();
+            autoChangeInterval = setInterval(moveToNextBackground, 300000); // 5 phút
+        }, delay);
+
+        updateSettingText(true);
         saveState();
-      });
-    });
-    const selectedOption = document.getElementById(
-      `background-option-${currentBackgroundIndex}`
-    );
-    if (selectedOption) selectedOption.classList.add("selected");
-  }
-
-  // --- CÁC HÀM XỬ LÝ AUTO CHANGE ---
-  function calculateTimeBasedIndex() {
-    const now = new Date();
-    const startOfDay = new Date(
-      now.getFullYear(),
-      now.getMonth(),
-      now.getDate()
-    );
-    const minutesSinceStartOfDay = Math.floor((now - startOfDay) / (1000 * 60));
-    return Math.floor(minutesSinceStartOfDay / 5) % backgroundImages.length;
-  }
-
-  function moveToNextBackground() {
-    if (autoChangeToggle.checked) {
-      let nextIndex;
-      if (userLastSelectedTime && Date.now() - userLastSelectedTime < 300000) {
-        // 5 phút
-        nextIndex = (currentBackgroundIndex + 1) % backgroundImages.length;
-      } else {
-        nextIndex = calculateTimeBasedIndex();
-        userLastSelectedTime = null;
-      }
-      selectBackground(nextIndex, false);
-      saveState();
-    }
-  }
-
-  function getTimeUntilNextChange() {
-    const now = new Date();
-    const secondsInCurrentCycle =
-      (now.getMinutes() % 5) * 60 + now.getSeconds();
-    const remainingSeconds = 5 * 60 - secondsInCurrentCycle;
-    return remainingSeconds * 1000;
-  }
-
-  function startAutoChange() {
-    stopAutoChange();
-    let delay = getTimeUntilNextChange();
-
-    if (userLastSelectedTime && Date.now() - userLastSelectedTime < 300000) {
-      delay = 300000 - (Date.now() - userLastSelectedTime);
     }
 
-    setTimeout(() => {
-      moveToNextBackground();
-      autoChangeInterval = setInterval(moveToNextBackground, 300000); // 5 phút
-    }, delay);
-
-    updateSettingText(true);
-    saveState();
-  }
-
-  function stopAutoChange() {
-    if (autoChangeInterval) {
-      clearInterval(autoChangeInterval);
-      autoChangeInterval = null;
+    function stopAutoChange() {
+        if (autoChangeInterval) {
+            clearInterval(autoChangeInterval);
+            autoChangeInterval = null;
+        }
+        updateSettingText(false);
+        saveState();
     }
-    updateSettingText(false);
-    saveState();
-  }
 
-  // --- CÁC HÀM TIỆN ÍCH CHO UI ---
-  function updateSettingText(isOn) {
-    settingText.textContent = isOn ? "Change after 5 mins" : "Remain constant";
-  }
-
-  function togglePanel() {
-    isExpanded = !isExpanded;
-    expandedPanel.classList.toggle("active", isExpanded);
-  }
-
-  // --- GÁN CÁC EVENT LISTENER ---
-  expandedPanel.addEventListener("click", (event) => {
-    if (!isExpanded) {
-      togglePanel();
+    // --- CÁC HÀM TIỆN ÍCH CHO UI ---
+    function updateSettingText(isOn) {
+        settingText.textContent = isOn ? "Change after 5 mins" : "Remain constant";
     }
-  });
 
-  document.addEventListener("click", (event) => {
-    if (!expandedPanel.contains(event.target) && isExpanded) {
-      togglePanel();
+    function togglePanel() {
+        isExpanded = !isExpanded;
+        expandedPanel.classList.toggle("active", isExpanded);
     }
-  });
 
-  autoChangeToggle.addEventListener("change", (event) => {
-    event.stopPropagation();
-    if (autoChangeToggle.checked) {
-      startAutoChange();
-    } else {
-      stopAutoChange();
-    }
-  });
-
-  document
-    .querySelector(".panel-content")
-    .addEventListener("click", (event) => {
-      event.stopPropagation();
+    // --- GÁN CÁC EVENT LISTENER ---
+    expandedPanel.addEventListener("click", (event) => {
+        if (!isExpanded) {
+            togglePanel();
+        }
     });
 
-  // --- BẮT ĐẦU KHỞI TẠO TOÀN BỘ SCRIPT ---
-  initialize();
+    document.addEventListener("click", (event) => {
+        if (!expandedPanel.contains(event.target) && isExpanded) {
+            togglePanel();
+        }
+    });
+
+    autoChangeToggle.addEventListener("change", (event) => {
+        event.stopPropagation();
+        if (autoChangeToggle.checked) {
+            startAutoChange();
+        } else {
+            stopAutoChange();
+        }
+    });
+
+    document
+        .querySelector(".panel-content")
+        .addEventListener("click", (event) => {
+            event.stopPropagation();
+        });
+
+    // --- BẮT ĐẦU KHỞI TẠO TOÀN BỘ SCRIPT ---
+    initialize();
 });
