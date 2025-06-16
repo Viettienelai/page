@@ -53,6 +53,7 @@ body {
 
 
 #clock-container {
+  position: relative;
   width: 650px;
   height: 150px;
   border-radius: 24px;
@@ -379,9 +380,8 @@ body {
 #background-blur-search-options {
   pointer-events: none;
   position: fixed;
-  top: -190px;
-  left: 50%;
-  transform: translateX(-50%);
+  top: 0;
+  left: 0;
   width: 100vw;
   height: 100vh;
   z-index: 0;
@@ -1044,9 +1044,8 @@ body {
 
 .background-blur-chat {
   position: fixed;
-  top: -190px;
-  left: 50%;
-  transform: translateX(-50%);
+  top: 0;
+  left: 0;
   width: 100vw;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.3);

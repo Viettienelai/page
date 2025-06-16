@@ -5,29 +5,6 @@ const searchBar = document.getElementById('search-bar');
 const blurElement = document.getElementById('background-blur-search-options');
 const searchLinks = searchOptions.querySelectorAll('a');
 
-gsap.from("#clock-container", {
-    duration: 1,
-    ease: "back.out(1)",
-    y: -325,
-    scale: 2,
-    delay: .4,
-});
-
-gsap.from("#bar-container", {
-    duration: 1.5,
-    ease: "power2.out",
-    scale: .1,
-    transformOrigin: "bottom",
-    delay: .4,
-});
-
-gsap.from("#container-all", {
-    duration: 1,
-    ease: "back.out(4)",
-    scale: 1.1,
-    delay: .4,
-});
-
 // Dữ liệu cho từng công cụ tìm kiếm, bao gồm placeholder, màu outline, HTML của SVG và viewBox
 const engineData = {
     "https://www.google.com/search": {
