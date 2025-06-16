@@ -105,47 +105,10 @@ function updateSearchUI(engineUrl) {
         searchIconContainer.innerHTML = data.svgHtml;
     }
 }
-// --- GSAP INTEGRATION (Không dùng reverse()) ---
-
-// 1. Khởi tạo trạng thái ban đầu
-gsap.set(searchOptions, { scale: 0, transformOrigin: "top left" });
-
-// Biến theo dõi trạng thái menu (mở/đóng)
-let isSearchOptionsOpen = false;
-
-// Hàm để mở searchOptions
-function openSearchOptions() {
-    // Dừng mọi animation đang chạy trên searchOptions để tránh xung đột
-    gsap.killTweensOf(searchOptions);
-    gsap.to(searchOptions, {
-        scale: 1,
-        ease: "back.out",
-        duration: .7,
-        onComplete: () => {
-            isSearchOptionsOpen = true;
-        }
-    });
-    blurElement.classList.add('active');
-}
-
-function closeSearchOptions() {
-    gsap.to(searchOptions, {
-        scale: 0,
-        duration: .3,
-        onComplete: () => {
-            isSearchOptionsOpen = false;
-        }
-    });
-    blurElement.classList.remove('active');
-}
-
 // Toggle options visibility
 searchIconContainer.addEventListener('click', () => {
-    if (!isSearchOptionsOpen) {
-        openSearchOptions();
-    } else {
-        closeSearchOptions();
-    }
+    searchOptions.classList.toggle('active');
+    blurElement.classList.toggle('active');
 });
 
 // Change search engine and placeholder
@@ -156,17 +119,16 @@ searchOptions.addEventListener('click', (event) => {
 
         const engine = link.getAttribute('data-engine');
         updateSearchUI(engine);
-
-        // Đóng menu sau khi chọn
-        closeSearchOptions();
+        searchOptions.classList.remove('active');
+        blurElement.classList.remove('active');
     }
 });
 
 // Close options when clicking outside
 document.addEventListener('click', (event) => {
-    // Chỉ đóng nếu click bên ngoài và menu đang mở
-    if (isSearchOptionsOpen && !searchIconContainer.contains(event.target) && !searchOptions.contains(event.target)) {
-        closeSearchOptions();
+    if (!searchIconContainer.contains(event.target) && !searchOptions.contains(event.target)) {
+        searchOptions.classList.remove('active');
+        blurElement.classList.remove('active');
     }
 });
 

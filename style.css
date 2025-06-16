@@ -260,6 +260,7 @@ body {
 #search-bar::placeholder {
   color: #484848;
 }
+
 /*
 #search-bar:focus {
   backdrop-filter: blur(20px);
@@ -314,7 +315,8 @@ body {
   width: 200px;
   height: 270px;
   border-radius: 24px;
-  pointer-events: auto;
+  transform: scale(0);
+  transform-origin: top left;
   top: 55px;
   left: 7%;
   overflow: hidden;
@@ -323,6 +325,11 @@ body {
     0 0 20px rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
   z-index: 1;
+  transition: all 0.7s cubic-bezier(0.175, 0.885, 0.32, 1);
+}
+
+#search-options.active {
+  transform: scale(1);
 }
 
 #search-options-glass-effect-1 {
@@ -425,6 +432,7 @@ body {
 #container-4 {
   z-index: 4;
 }
+
 #container-5 {
   z-index: 5;
 }
