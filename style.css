@@ -455,10 +455,12 @@ body {
 
 #container-glass-effect-1 {
   position: absolute;
+  width: 100%;
+  height: 100%;
   border-radius: 24px;
   height: 100%;
   inset: 0;
-  backdrop-filter: blur(0px);
+  backdrop-filter: blur(5px);
   filter: url(#glass-distortion);
   z-index: 1;
 }
@@ -471,7 +473,6 @@ body {
   display: flex;
   flex-wrap: wrap;
   inset: 0;
-  backdrop-filter: blur(5px);
   background: rgba(255, 255, 255, 0.3);
   box-shadow:
     inset 10px 10px 7px -7px rgba(255, 255, 255, 1),
@@ -786,7 +787,6 @@ body {
 
 .container:has(.popup-container:hover) {
   transform: scale(1);
-  background: rgba(255, 255, 255, 0.3);
 }
 
 /* Keyframes cho animation */
