@@ -177,7 +177,7 @@ const digitSegments = {
 };
 
 // Biến toàn cục để lưu màu phân đoạn hiện tại
-let currentSegmentColor = 'rgba(0, 0, 0, 0)'; // Màu mặc định ban đầu
+let currentSegmentColor = 'rgb(0, 0, 0)'; // Màu mặc định ban đầu
 
 // Function to update the clock
 function updateClock() {
