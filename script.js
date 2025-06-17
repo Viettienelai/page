@@ -177,7 +177,7 @@ const digitSegments = {
 };
 
 // Biến toàn cục để lưu màu phân đoạn hiện tại
-let currentSegmentColor = 'rgba(255, 213, 0, 1)'; // Màu mặc định ban đầu
+let currentSegmentColor = 'rgba(0, 0, 0, 0)'; // Màu mặc định ban đầu
 
 // Function to update the clock
 function updateClock() {
@@ -1591,6 +1591,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // --- KHỞI TẠO BAN ĐẦU (TỐI ƯU HÓA) ---
     function initialize() {
+        // *** FIX: Cập nhật currentSegmentColor ngay từ đầu ***
+        if (typeof currentSegmentColor !== "undefined") {
+            currentSegmentColor = backgroundImages[currentBackgroundIndex].segmentColor;
+            // Cập nhật clock ngay lập tức với màu mới
+            if (typeof updateClock === "function") {
+                updateClock();
+            }
+        }
+
         // Áp dụng class active ban đầu cho container
         backgroundContainer.classList.add(
             `background-active-${currentBackgroundIndex}`
