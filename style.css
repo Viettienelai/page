@@ -1907,7 +1907,7 @@ body.no-scroll {
 /* Trạng thái khi panel mở rộng */
 .expanded-panel.active {
   width: 300px;
-  height: 383px;
+  height: 463px;
   cursor: default;
 }
 
