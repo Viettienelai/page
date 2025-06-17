@@ -1496,11 +1496,6 @@ document.addEventListener("DOMContentLoaded", () => {
             src:
                 "https://res.cloudinary.com/dxwwkauuj/image/upload/v1750090674/abgbkz88zhtuswjogaz5.webp",
             segmentColor: "rgb(255, 230, 0)"
-        },
-        {
-            src:
-                "https://res.cloudinary.com/dxwwkauuj/image/upload/v1750138614/jgbjqusg6mrof3lgd2ld.webp",
-            segmentColor: "rgb(0, 183, 255)"
         }
     ];
 
@@ -1570,12 +1565,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 img.style.left = "0";
                 break;
             case 7:
-                img.style.height = "100vh";
-                img.style.position = "absolute";
-                img.style.top = "0";
-                img.style.left = "0";
-                break;
-            case 8:
                 img.style.height = "100vh";
                 img.style.position = "absolute";
                 img.style.top = "0";

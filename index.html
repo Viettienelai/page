@@ -47,36 +47,10 @@
         const initialImageSrc = initialImage.src;
         const backgroundClass = `background-active-${initialIndex}`;
 
-        // *** BẮT ĐẦU PHẦN SỬA ĐỔI QUAN TRỌNG ***
-
-        // Quy tắc cho thẻ <IMG> chính thức (như trong file CSS của bạn)
-        const finalImgCssRules = {
-            'background-active-0': 'img { width: 100vw; height: 100vh; object-fit: cover; }',
-            'background-active-1': 'img { height: 100vh; position: absolute; top: 0; right: 0; }',
-            'background-active-2': 'img { height: 100vh; position: absolute; top: 0; left: 0; }',
-            'background-active-3': 'img { height: 100vh; position: absolute; top: 0; left: 0; }',
-            'background-active-4': 'img { width: 100vw; height: 100vh; object-fit: cover; }',
-            'background-active-5': 'img { position: absolute; top: 0; right: 0; width: 100vw; }',
-            'background-active-6': 'img { height: 100vh; position: absolute; top: 0; left: 0; }',
-            'background-active-7': 'img { height: 100vh; position: absolute; top: 0; left: 0; }'
-        };
-
-        // Quy tắc "dịch" sang cho `background-image` của div.preload
-        const preloadContainerCssRules = {
-            'background-active-0': '{ background-size: cover; background-position: center center; }',
-            'background-active-1': '{ background-size: auto 100vh; background-position: right center; background-repeat: no-repeat; }',
-            'background-active-2': '{ background-size: auto 100vh; background-position: left center; background-repeat: no-repeat; }',
-            'background-active-3': '{ background-size: auto 100vh; background-position: left center; background-repeat: no-repeat; }',
-            'background-active-4': '{ background-size: cover; background-position: center center; }',
-            'background-active-5': '{ background-size: 100vw auto; background-position: center top; background-repeat: no-repeat; }',
-            'background-active-6': '{ background-size: auto 100vh; background-position: left center; background-repeat: no-repeat; }',
-            'background-active-7': '{ background-size: auto 100vh; background-position: left center; background-repeat: no-repeat; }'
-        };
 
         const finalImgSizingRule = finalImgCssRules[backgroundClass] || finalImgCssRules['background-active-0'];
         const preloadContainerSizingRule = preloadContainerCssRules[backgroundClass] || preloadContainerCssRules['background-active-0'];
 
-        // --- Dùng document.write để chèn preload và CSS đã sửa ---
         document.write(`
             <link rel="preload" as="image" href="${initialImageSrc}" />
             <style>
