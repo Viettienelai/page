@@ -345,7 +345,7 @@ const stars2Element = document.getElementById('stars2');
 const stars3Element = document.getElementById('stars3');
 
 const expandedWidth = 900;
-const expandedHeight = 480;
+const expandedHeight = 1200;
 const bufferHeight = 100;
 
 if (starsElement) {
@@ -1711,5 +1711,37 @@ document.addEventListener('mousemove', (e) => {
         const y = (mouseY - window.innerHeight / 2) * speed;
 
         circle.style.transform = `translate(${x}px, ${y}px)`;
+    });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const cursorOutline = document.querySelector('.cursor-outline');
+window.addEventListener('mousemove', function (e) {
+    const posX = e.clientX;
+    const posY = e.clientY;
+    cursorOutline.animate({
+        left: `${posX}px`,
+        top: `${posY}px`
+    }, {
+        duration: 400,
+        fill: "forwards"
     });
 });

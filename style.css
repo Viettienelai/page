@@ -46,6 +46,37 @@ body {
 
 
 
+.cursor-outline {
+  width: 40px;
+  height: 40px;
+  border: 2px solid #555;
+  border-radius: 50%;
+  position: fixed;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  pointer-events: none;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 #clock-container {
@@ -310,10 +341,10 @@ body {
   transform: scale(1.2);
   overflow: hidden;
   z-index: 1;
-  transition: 
-  transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 2.2),
-  width 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.5),
-  height 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.5);
+  transition:
+    transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 2.2),
+    width 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.5),
+    height 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.5);
 }
 
 #search-options.active {
@@ -322,10 +353,10 @@ body {
   height: 270px;
   box-sizing: border-box;
   transform: scale(1);
-  transition: 
-  transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 2.2),
-  width 0.875s cubic-bezier(0.175, 0.885, 0.32, 1.2),
-  height 0.875s cubic-bezier(0.175, 0.885, 0.32, 1.2);
+  transition:
+    transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 2.2),
+    width 0.875s cubic-bezier(0.175, 0.885, 0.32, 1.2),
+    height 0.875s cubic-bezier(0.175, 0.885, 0.32, 1.2);
 }
 
 #search-options-glass-effect-1 {
@@ -363,7 +394,7 @@ body {
 }
 
 #search-options-content li {
-    list-style-type: none;
+  list-style-type: none;
 }
 
 #search-options a {
@@ -890,7 +921,7 @@ body {
   top: 0;
   right: 0;
   width: 900px;
-  height: 600px;
+  height: 1200px;
   border-radius: inherit;
   z-index: 2;
 }
@@ -1015,7 +1046,6 @@ body {
   height: 1px;
   background: transparent;
   position: absolute;
-  --star-animation-height: 500px;
   animation: animStar var(--animation-duration, 50s) linear infinite;
 }
 
@@ -1041,7 +1071,7 @@ body {
   }
 
   to {
-    transform: translateY(calc(-1 * var(--star-animation-height)));
+    transform: translateY(calc(-600px));
   }
 }
 
