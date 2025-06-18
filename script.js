@@ -1691,10 +1691,10 @@ const bg = document.querySelector('.background');
 const bgCC = document.querySelector('#background-changer-container-1');
 const clC = document.querySelector('#clock-container');
 const cl = document.querySelector('#clock');
-const bC2 = document.querySelector('#bar-container-2')
+const bC = document.querySelector('.bar-container')
 const bmC = document.querySelector('#bookmark-container');
 
-const circles = [bg, bgCC, clC, cl, bC2, bmC];
+const circles = [bg, bgCC, clC, cl, bC, bmC];
 
 circles.forEach(circle => {
     circle.style.transition = 'transform 0.2s ease-out';

@@ -16,10 +16,11 @@
 
 body {
   position: relative;
-  margin: 0;
-  padding: 20px 0;
   width: 100%;
   min-height: 100vh;
+  margin: 0;
+  padding: 20px 0;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -38,47 +39,6 @@ body {
   z-index: 1;
 }
 
-
-
-
-
-
-
-
-
-.cursor-outline {
-  width: 40px;
-  height: 40px;
-  border: 2px solid #555;
-  border-radius: 50%;
-  position: fixed;
-  transform: translate(-50%, -50%);
-  z-index: 9999;
-  pointer-events: none;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #clock-container {
   position: relative;
   width: 650px;
@@ -87,39 +47,37 @@ body {
   z-index: 10;
 }
 
-
-#clock-glass-effect {
+.clock-glass-effect {
   position: absolute;
-  border-radius: 24px;
   inset: 0;
-  backdrop-filter: blur(0px);
-  filter: url(#glass-distortion);
-  z-index: 0;
+  border-radius: 24px;
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 2.2);
 }
 
-#area {
-  position: absolute;
-  border-radius: 24px;
-  z-index: 1;
-  inset: 0;
-  backdrop-filter: blur(2px);
+.clock-glass-effect.cl1 {
+  backdrop-filter: blur(0px);
+  filter: url(#glass-distortion);
+  z-index: 0;
+}
+
+.clock-glass-effect.cl2 {
+  backdrop-filter: blur(3px);
   background: rgba(255, 255, 255, 0.1);
   box-shadow:
     inset 10px 10px 7px -7px rgba(255, 255, 255, 1),
     inset -12px -12px 10px -8px rgba(255, 255, 255, .7),
     0 6px 6px rgba(0, 0, 0, 0.2),
     0 0 20px rgba(0, 0, 0, 0.1);
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 2.2);
+  z-index: 1;
 }
 
-#area:hover {
+.clock-glass-effect.cl2:hover {
   transform: scale(1.05);
   backdrop-filter: blur(1px);
   background: rgba(255, 255, 255, 0);
 }
 
-#area:hover+#clock-glass-effect {
+.clock-glass-effect.cl2:hover+.clock-glass-effect.cl1 {
   transform: scale(1.05);
 }
 
@@ -130,23 +88,22 @@ body {
 }
 
 .separator {
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  border-radius: 3.5px;
   backdrop-filter: blur(10px);
   box-shadow:
     inset 10px 10px 7px -7px rgba(255, 255, 255, 1),
     inset -12px -12px 10px -8px rgba(255, 255, 255, .7),
     0 6px 6px rgba(0, 0, 0, 0.2),
     0 0 20px rgba(0, 0, 0, 0.1);
+  will-change: transform;
 }
 
 #sep1,
 #sep2 {
   left: 217.5px;
-  width: 15px;
-  height: 15px;
-  position: absolute;
-  border-radius: 3.5px;
-  opacity: 1;
-  will-change: transform;
 }
 
 #sep1 {
@@ -160,12 +117,6 @@ body {
 #sep3,
 #sep4 {
   left: 417.3px;
-  width: 15px;
-  height: 15px;
-  position: absolute;
-  border-radius: 3.5px;
-  opacity: 1;
-  will-change: transform;
 }
 
 #sep3 {
@@ -178,21 +129,7 @@ body {
   animation: moveUp 1s linear infinite;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#bar-container {
+.bar-container.bC1 {
   position: relative;
   width: 92%;
   max-width: 800px;
@@ -201,7 +138,7 @@ body {
   z-index: 30;
 }
 
-#bar-container-2 {
+.bar-container.bC2 {
   position: relative;
   width: 100%;
   height: 100%;
@@ -258,16 +195,17 @@ body {
 
 #search-bar-glass-effect {
   position: absolute;
-  border-radius: 25px;
   inset: 0;
+  border-radius: 25px;
   backdrop-filter: blur(0px);
   filter: url(#glass-distortion);
   z-index: 1;
 }
 
 #search-bar {
-  position: absolute;
   pointer-events: auto;
+  position: absolute;
+  inset: 0;
   border: none;
   padding-left: 11%;
   box-sizing: border-box;
@@ -275,7 +213,6 @@ body {
   font-weight: 550;
   border-radius: 25px;
   outline-color: #FEC319;
-  inset: 0;
   backdrop-filter: blur(2px);
   background: rgba(255, 255, 255, 0.2);
   box-shadow:
@@ -300,14 +237,6 @@ body {
   backdrop-filter: blur(1px);
   background: rgba(255, 255, 255, 0);
 }
-
-
-
-
-
-
-
-
 
 #search-icon {
   position: absolute;
@@ -445,15 +374,6 @@ body {
   pointer-events: auto;
 }
 
-
-
-
-
-
-
-
-
-
 #bookmark-container {
   display: flex;
   flex-direction: column;
@@ -482,6 +402,7 @@ body {
 }
 
 .container {
+  position: relative;
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 2.2);
 }
 
@@ -489,32 +410,27 @@ body {
   transform: scale(1.01);
 }
 
-.container:hover #container-glass-effect-2 {
+.container:hover .container-glass-effect.bmg2 {
   background: rgba(255, 255, 255, 0.1);
 }
 
-#container-all {
-  position: relative;
+.container-glass-effect {
+  inset: 0;
+  border-radius: 24px;
 }
 
-#container-glass-effect-1 {
+.container-glass-effect.bmg1 {
   position: absolute;
-  border-radius: 24px;
-  height: 100%;
-  inset: 0;
   backdrop-filter: blur(5px);
   filter: url(#glass-distortion);
   z-index: 1;
 }
 
-#container-glass-effect-2 {
-  position: absolute;
-  border-radius: 24px;
+.container-glass-effect.bmg2 {
   padding: 10px 15px 10px 15px;
   position: relative;
   display: flex;
   flex-wrap: wrap;
-  inset: 0;
   background: rgba(255, 255, 255, 0.3);
   box-shadow:
     inset 10px 10px 7px -7px rgba(255, 255, 255, 1),
@@ -585,7 +501,6 @@ body {
 @media (min-width: 900px) and (max-width: 999px) {
   .container {
     width: 800px;
-    grid-template-columns: repeat(5, 1fr);
   }
 
   .bookmark-item {
@@ -596,7 +511,6 @@ body {
 @media (min-width: 800px) and (max-width: 899px) {
   .container {
     width: 700px;
-    grid-template-columns: repeat(5, 1fr);
   }
 
   .bookmark-item {
@@ -607,7 +521,6 @@ body {
 @media (min-width: 700px) and (max-width: 799px) {
   .container {
     width: 600px;
-    grid-template-columns: repeat(5, 1fr);
   }
 
   .bookmark-item {
@@ -618,7 +531,6 @@ body {
 @media (min-width: 600px) and (max-width: 699px) {
   .container {
     width: 500px;
-    grid-template-columns: repeat(5, 1fr);
   }
 
   .bookmark-item {
@@ -633,7 +545,6 @@ body {
 @media (min-width: 500px) and (max-width: 599px) {
   .container {
     width: 400px;
-    grid-template-columns: repeat(5, 1fr);
   }
 
   .bookmark-item {
@@ -648,7 +559,6 @@ body {
 @media (max-width: 499px) {
   .container {
     width: 350px;
-    grid-template-columns: repeat(5, 1fr);
   }
 
   .bookmark-item {
@@ -704,14 +614,6 @@ body {
   }
 }
 
-
-
-
-
-
-
-
-
 .popup-container {
   position: absolute;
   top: 50px;
@@ -730,23 +632,22 @@ body {
   height: 400px;
 }
 
-#popup-content-glass-effect {
+.popup-glass-effect {
   position: absolute;
-  border-radius: 24px;
-  overflow-y: auto;
   inset: 0;
+  border-radius: 24px;
+}
+
+.popup-glass-effect.pg1 {
   backdrop-filter: blur(0px);
   filter: url(#glass-distortion);
   z-index: 2;
 }
 
-.popup-content {
-  position: absolute;
-  border-radius: 24px;
+.popup-glass-effect.pg2 {
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  inset: 0;
   backdrop-filter: blur(7px);
   background: rgba(255, 255, 255, 0.5);
   box-shadow:
@@ -776,9 +677,9 @@ body {
   align-items: center;
   text-align: center;
   opacity: 0;
-  /* Initial opacity for animation */
+
   transform: translateY(-20px);
-  /* Initial position for animation */
+
   height: 90px;
   width: 90px;
   position: static;
@@ -787,7 +688,6 @@ body {
   border-radius: 14px;
 }
 
-/* Animation khi popup được kích hoạt */
 .popup-container.active .popup-bookmarks-grid .bookmark-item {
   animation: slideUpFadeIn 0.3s ease-out forwards;
 }
@@ -825,7 +725,6 @@ body {
   transform: scale(1);
 }
 
-/* Keyframes cho animation */
 @keyframes slideUpFadeIn {
   from {
     opacity: 0;
@@ -837,15 +736,6 @@ body {
     transform: translateY(0);
   }
 }
-
-
-
-
-
-
-
-
-
 
 #chat-bubble {
   position: absolute;
@@ -944,8 +834,6 @@ body {
   transition: all .3s linear;
 }
 
-/* Pseudo-element cho hiệu ứng hover - TRẠNG THÁI EXPANDED */
-/* Đây là trạng thái mặc định của ::before, sẽ được áp dụng chỉ khi .expanded */
 #note-background::before {
   content: '';
   position: absolute;
@@ -961,11 +849,10 @@ body {
   transition: all 0.3s ease-in-out;
   opacity: 0;
   z-index: 1;
-  /* Mặc định ẩn, chỉ hiện khi #chat-bubble.expanded */
+
   display: none;
 }
 
-/* Khi hover vào #note-background VÀ chat-bubble ĐÃ EXPANDED */
 #chat-bubble.expanded #note-background:hover::before {
   transform: translateX(0) translateY(0);
   opacity: 1;
@@ -998,45 +885,38 @@ body {
     inset -12px -12px 10px -8px rgba(255, 255, 255, 0);
 }
 
-/* Luôn hiển thị note.png và ẩn reload.png khi chat-bubble chưa expanded */
 #chat-bubble:not(.expanded) #note-default {
   opacity: 1;
-  /* Luôn hiển thị note.png */
+
 }
 
 #chat-bubble:not(.expanded) #note-hover {
   opacity: 0;
-  /* Luôn ẩn reload.png */
+
 }
 
-
-/* 2. Khi chat-bubble ĐÃ EXPANDED: */
-
-/* Kích hoạt lớp phủ ::before khi expanded */
 #chat-bubble.expanded #note-background::before {
   display: block;
 }
 
 #chat-bubble.expanded #note-default {
   opacity: 1;
-  /* Mặc định note.png hiển thị */
+
 }
 
-/* Ẩn note-hover khi expanded và KHÔNG HOVER */
 #chat-bubble.expanded #note-hover {
   opacity: 0;
-  /* Mặc định reload.png ẩn */
+
 }
 
-/* Khi hover #note-background VÀ chat-bubble ĐÃ EXPANDED: */
 #chat-bubble.expanded #note-background:hover #note-default {
   opacity: 0;
-  /* Ẩn note.png */
+
 }
 
 #chat-bubble.expanded #note-background:hover #note-hover {
   opacity: 1;
-  /* Hiện reload.png */
+
 }
 
 #stars,
@@ -1263,20 +1143,18 @@ body {
     0 0 14px rgba(0, 0, 0, 0.7);
 }
 
-/* Styles cho tin nhắn văn bản */
 .message-box .message-content p {
   margin: 8px 13px;
-  /* Giữ margin của bạn */
+
   font-size: 16px;
   color: #333;
-  /* Màu chữ cho tin nhắn văn bản, thường là đen hoặc xám đậm */
+
   line-height: 1.5;
   text-align: justify;
   white-space: pre-wrap;
-  /* Giữ định dạng khoảng trắng và xuống dòng */
+
 }
 
-/* Styles cho ảnh trong message-box */
 .chat-image {
   max-width: 400px;
   max-height: 300px;
@@ -1292,7 +1170,6 @@ body {
   transform: scale(0.9);
 }
 
-/* Styles cho video trong message-box */
 .chat-video {
   max-width: 400px;
   max-height: 300px;
@@ -1384,12 +1261,12 @@ body {
 
 .chat-audio {
   display: flex;
-  /* Sử dụng flexbox để căn chỉnh các phần tử bên trong */
+
   align-items: center;
   width: 500px;
-  /* Chiều rộng tối đa */
+
   height: 130px;
-  /* Chiều cao cố định cho audio box */
+
   padding: 10px 15px;
   box-sizing: border-box;
   border-radius: 25px;
@@ -1420,9 +1297,9 @@ body {
   left: 50%;
   transform: translateX(-50%);
   width: 94%;
-  /* Chiều rộng cố định cho audio control */
+
   height: 40px;
-  /* Chiều cao của audio control */
+
 }
 
 .temporary-notification {
@@ -1444,7 +1321,6 @@ body {
   transform: translateX(-50%) translateY(0);
   opacity: 1;
 }
-
 
 .interaction-button {
   position: absolute;
@@ -1517,12 +1393,6 @@ body {
   }
 }
 
-
-
-
-
-
-
 #toolbar-loading-overlay {
   position: absolute;
   top: 0;
@@ -1592,7 +1462,6 @@ body {
   margin-left: -80px;
 }
 
-
 .waterfall div:nth-of-type(3) {
   -webkit-animation-delay: 0.75s;
   animation-delay: 0.75s;
@@ -1617,63 +1486,45 @@ body {
   margin-left: 60px;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* Styles cho lớp phủ loading mới */
 .loading-overlay {
   position: absolute;
-  /* Quan trọng để bao phủ chat-bubble */
+
   top: 0;
   left: 0;
   inset: 0;
   backdrop-filter: blur(10px);
-  /* Làm mờ nền */
+
   background-color: rgba(0, 0, 0, 0.8);
-  /* Nền tối mờ */
+
   display: flex;
   justify-content: center;
   align-items: center;
-  /* Đảm bảo nó nằm trên tất cả các nội dung khác trong chat-bubble */
+
   opacity: 0;
   visibility: hidden;
   z-index: 6;
   transition: all 0.3s ease
-    /* Kế thừa border-radius từ parent #chat-bubble */
+
 }
 
 #chat-bubble:not(.expanded) .loading-overlay.active {
   opacity: 0;
-  /* Giữ opacity 0 ngay cả khi active nếu bubble chưa mở */
+
   visibility: hidden;
-  /* Đảm bảo ẩn hoàn toàn */
+
 }
 
-/* Khi loading-overlay có active class và chat-bubble ĐÃ EXPANDED */
 #chat-bubble.expanded .loading-overlay.active {
   opacity: 1;
-  /* Hiện loading overlay với opacity 1 */
+
   visibility: visible;
-  /* Hiện loading overlay */
+
 }
 
 .loading-overlay.active {
   opacity: 1;
   visibility: visible;
 }
-
 
 @keyframes animate {
   0% {
@@ -1695,8 +1546,6 @@ body {
     text-shadow: none;
   }
 }
-
-
 
 .scroll-to-bottom-btn {
   position: absolute;
@@ -1745,28 +1594,9 @@ body {
   transform: translate(-0.5px, 3px);
 }
 
-
 body.no-scroll {
   overflow-y: hidden;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 @keyframes fall-1 {
   0% {
@@ -1818,22 +1648,6 @@ body.no-scroll {
     opacity: 0;
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 .background {
   position: fixed;
@@ -1898,7 +1712,6 @@ body.no-scroll {
   transform: scale(1.2) translate(-10px, -10px);
 }
 
-/* Trạng thái khi panel mở rộng */
 .expanded-panel.active {
   width: 300px;
   height: 383px;
@@ -1909,7 +1722,6 @@ body.no-scroll {
   background: rgba(255, 255, 255, 0.5);
 }
 
-/* Icon bên trong panel */
 .panel-icon {
   position: absolute;
   top: 50%;
@@ -1925,12 +1737,10 @@ body.no-scroll {
   transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 4.2);
 }
 
-/* Ẩn icon khi panel mở rộng */
 .expanded-panel.active+.panel-icon {
   opacity: 0;
 }
 
-/* Nội dung panel - ẩn khi chưa mở rộng */
 .panel-content {
   position: absolute;
   top: 50%;
@@ -1947,13 +1757,11 @@ body.no-scroll {
   transition: all 0.5s ease;
 }
 
-/* Hiện nội dung khi panel mở rộng */
 .expanded-panel.active .panel-content {
   opacity: 1;
   visibility: visible;
 }
 
-/* Header của panel mở rộng */
 .panel-header {
   position: relative;
   left: 10px;
@@ -1965,7 +1773,6 @@ body.no-scroll {
   box-sizing: border-box;
 }
 
-/* CSS cho phần tử văn bản */
 .panel-header .setting-text {
   font-size: 17px;
   color: var(--pannel-text-color);
@@ -1977,7 +1784,6 @@ body.no-scroll {
   text-shadow: 0px 0px 2px rgba(255, 255, 255, 0.5);
 }
 
-/* CSS cho công tắc bật/tắt Apple-style */
 .switch {
   position: relative;
   display: inline-block;
@@ -2029,7 +1835,6 @@ input:checked+.slider:before {
   transform: translateX(22px);
 }
 
-/* Bo tròn slider */
 .slider.round {
   border-radius: 28px;
 }
@@ -2061,7 +1866,7 @@ input:checked+.slider:before {
   border: none;
   box-sizing: border-box;
   object-fit: cover;
-  /* Hardware acceleration */
+
   transform: translateZ(0);
   will-change: box-shadow;
 }
