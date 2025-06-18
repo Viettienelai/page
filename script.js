@@ -1457,46 +1457,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Mảng chứa các đường dẫn ảnh nền (giữ lại để các hàm khác sử dụng)
     const backgroundImages = [
-        {
-            src:
-                "https://res.cloudinary.com/dxwwkauuj/image/upload/v1749755201/wxsmp3khl4rxetoll3mx.webp",
-            segmentColor: "rgb(255, 213, 0)"
-        },
-        {
-            src:
-                "https://res.cloudinary.com/dxwwkauuj/image/upload/v1749752086/hgvojcdwc3gafgerqva4.webp",
-            segmentColor: "rgb(57, 162, 255)"
-        },
-        {
-            src:
-                "https://res.cloudinary.com/dxwwkauuj/image/upload/v1749752086/zi3eumhtq0be5mmeciii.webp",
-            segmentColor: "rgb(255, 138, 120)"
-        },
-        {
-            src:
-                "https://res.cloudinary.com/dxwwkauuj/image/upload/v1749752086/oqqf3ctq28yl8mz7bpja.webp",
-            segmentColor: "rgb(255, 200, 0)"
-        },
-        {
-            src:
-                "https://res.cloudinary.com/dxwwkauuj/image/upload/v1749752088/xyy466nsxhehepuuon7j.webp",
-            segmentColor: "rgb(255, 135, 141)"
-        },
-        {
-            src:
-                "https://res.cloudinary.com/dxwwkauuj/image/upload/v1749752087/o7bleciiuuqpzxkwnbad.webp",
-            segmentColor: "rgb(255, 83, 92)"
-        },
-        {
-            src:
-                "https://res.cloudinary.com/dxwwkauuj/image/upload/v1749754674/yjcbwpkqobft3m5ecmy9.webp",
-            segmentColor: "rgb(233, 135, 255)"
-        },
-        {
-            src:
-                "https://res.cloudinary.com/dxwwkauuj/image/upload/v1750090674/abgbkz88zhtuswjogaz5.webp",
-            segmentColor: "rgb(255, 230, 0)"
-        }
+        { src: "https://res.cloudinary.com/dxwwkauuj/image/upload/v1749752088/xyy466nsxhehepuuon7j.webp", segmentColor: "rgb(255, 135, 141)" },
+        { src: "https://res.cloudinary.com/dxwwkauuj/image/upload/v1749752086/hgvojcdwc3gafgerqva4.webp", segmentColor: "rgb(57, 162, 255)" },
+        { src: "https://res.cloudinary.com/dxwwkauuj/image/upload/v1749752086/zi3eumhtq0be5mmeciii.webp", segmentColor: "rgb(255, 138, 120)" },
+        { src: "https://res.cloudinary.com/dxwwkauuj/image/upload/v1749752086/oqqf3ctq28yl8mz7bpja.webp", segmentColor: "rgb(255, 200, 0)" },
+        { src: "https://res.cloudinary.com/dxwwkauuj/image/upload/v1749752087/o7bleciiuuqpzxkwnbad.webp", segmentColor: "rgb(255, 83, 92)" },
+        { src: "https://res.cloudinary.com/dxwwkauuj/image/upload/v1749754674/yjcbwpkqobft3m5ecmy9.webp", segmentColor: "rgb(233, 135, 255)" },
+        { src: "https://res.cloudinary.com/dxwwkauuj/image/upload/v1750090674/abgbkz88zhtuswjogaz5.webp", segmentColor: "rgb(255, 230, 0)" }
     ];
 
     // Index ban đầu được lấy từ script trong <head>
@@ -1524,11 +1491,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Áp dụng styling dựa trên index
         switch (index) {
-            case 0:
-                img.style.width = "100vw";
-                img.style.height = "100vh";
-                img.style.objectFit = "cover";
-                break;
             case 1:
                 img.style.height = "100vh";
                 img.style.position = "absolute";
@@ -1548,23 +1510,18 @@ document.addEventListener("DOMContentLoaded", () => {
                 img.style.left = "0";
                 break;
             case 4:
-                img.style.width = "100vw";
-                img.style.height = "100vh";
-                img.style.objectFit = "cover";
-                break;
-            case 5:
                 img.style.position = "absolute";
                 img.style.top = "0";
                 img.style.right = "0";
                 img.style.width = "100vw";
                 break;
-            case 6:
+            case 5:
                 img.style.height = "100vh";
                 img.style.position = "absolute";
                 img.style.top = "0";
                 img.style.left = "0";
                 break;
-            case 7:
+            case 6:
                 img.style.height = "100vh";
                 img.style.position = "absolute";
                 img.style.top = "0";
@@ -1848,4 +1805,47 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // --- BẮT ĐẦU KHỞI TẠO TOÀN BỘ SCRIPT ---
     initialize();
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const bg = document.querySelector('.background');
+const bgCC = document.querySelector('#background-changer-container-1');
+const clC = document.querySelector('#clock-container');
+const cl = document.querySelector('#clock');
+const bC2 = document.querySelector('#bar-container-2')
+const bmC = document.querySelector('#bookmark-container');
+
+const circles = [bg, bgCC, clC, cl, bC2, bmC];
+
+circles.forEach(circle => {
+    circle.style.transition = 'transform 0.2s ease-out';
+});
+
+document.addEventListener('mousemove', (e) => {
+    const mouseX = e.clientX;
+    const mouseY = e.clientY;
+
+    // Di chuyển các circles
+    circles.forEach((circle, index) => {
+        const speed = (index + 1) * 0.005; // Tốc độ khác nhau cho mỗi circle
+        const x = (mouseX - window.innerWidth / 2) * speed;
+        const y = (mouseY - window.innerHeight / 2) * speed;
+
+        circle.style.transform = `translate(${x}px, ${y}px)`;
+    });
 });
