@@ -781,20 +781,20 @@ body {
   transform: scale(1.1);
 }
 
-#chat-bubble-glass-effect-1 {
+.bubble-glass-effect {
   position: absolute;
   border-radius: inherit;
   inset: 0;
+}
+
+.bubble-glass-effect.bb1 {
   backdrop-filter: blur(0px);
   filter: url(#glass-distortion);
   z-index: 0;
 }
 
-#chat-bubble-glass-effect-2 {
-  position: absolute;
-  border-radius: inherit;
+.bubble-glass-effect.bb2 {
   z-index: 1;
-  inset: 0;
   backdrop-filter: blur(2px);
   background: rgba(255, 255, 255, 0.2);
   box-shadow:
