@@ -1713,35 +1713,3 @@ document.addEventListener('mousemove', (e) => {
         circle.style.transform = `translate(${x}px, ${y}px)`;
     });
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-const cursorOutline = document.querySelector('.cursor-outline');
-window.addEventListener('mousemove', function (e) {
-    const posX = e.clientX;
-    const posY = e.clientY;
-    cursorOutline.animate({
-        left: `${posX}px`,
-        top: `${posY}px`
-    }, {
-        duration: 400,
-        fill: "forwards"
-    });
-});
