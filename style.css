@@ -375,6 +375,7 @@ body {
 }
 
 #bookmark-container {
+  width: 880px;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -478,89 +479,6 @@ body {
   font-weight: 600;
   color: #323232;
   white-space: nowrap;
-}
-
-@media (min-width: 1000px) {
-  .container {
-    width: 900px;
-    grid-template-columns: repeat(10, 1fr);
-  }
-
-  .bookmark-item a {
-    width: 87.012496948px;
-  }
-}
-
-@media (min-width: 900px) and (max-width: 999px) {
-  .container {
-    width: 800px;
-  }
-
-  .bookmark-item a {
-    width: 152.4px;
-  }
-}
-
-@media (min-width: 800px) and (max-width: 899px) {
-  .container {
-    width: 700px;
-  }
-
-  .bookmark-item a {
-    width: 132.4px;
-  }
-}
-
-@media (min-width: 700px) and (max-width: 799px) {
-  .container {
-    width: 600px;
-  }
-
-  .bookmark-item a {
-    width: 112.4px;
-  }
-}
-
-@media (min-width: 600px) and (max-width: 699px) {
-  .container {
-    width: 500px;
-  }
-
-  .bookmark-item a {
-    width: 92.4px;
-  }
-
-  #area {
-    scale: 0.9;
-  }
-}
-
-@media (min-width: 500px) and (max-width: 599px) {
-  .container {
-    width: 400px;
-  }
-
-  .bookmark-item a {
-    width: 72.4px;
-  }
-
-  #area {
-    scale: 0.6;
-  }
-}
-
-@media (max-width: 499px) {
-  .container {
-    width: 350px;
-  }
-
-  .bookmark-item a {
-    width: 63.6px;
-  }
-
-  #area {
-    scale: 0.57;
-  }
 }
 
 @keyframes moveDown {
