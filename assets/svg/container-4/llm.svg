@@ -1,0 +1,24 @@
+<svg viewBox="53 55 470 470" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M287.5 229 86 344.5 287.5 460 489 344.5z" stroke="url(#llm-a)" stroke-width="59"
+        stroke-linejoin="round" />
+    <path d="M287.5 116 86 231.5 287.5 347 489 231.5z" stroke="url(#llm-b)" stroke-width="59"
+        stroke-linejoin="round" />
+    <path d="m86 344 202-115" stroke="url(#llm-c)" stroke-width="59" stroke-linejoin="bevel" />
+    <defs>
+        <linearGradient id="llm-a" x1="60" y1="341" x2="429.5" y2="344"
+            gradientUnits="userSpaceOnUse">
+            <stop stop-color="#F9D100" />
+            <stop offset="1" stop-color="#F97700" />
+        </linearGradient>
+        <linearGradient id="llm-b" x1="513.5" y1="231" x2="143.5" y2="231"
+            gradientUnits="userSpaceOnUse">
+            <stop stop-color="#F9D100" />
+            <stop offset="1" stop-color="#F97700" />
+        </linearGradient>
+        <linearGradient id="llm-c" x1="60" y1="344" x2="428.987" y2="341.811"
+            gradientUnits="userSpaceOnUse">
+            <stop stop-color="#F9D100" />
+            <stop offset="1" stop-color="#F97700" />
+        </linearGradient>
+    </defs>
+</svg>

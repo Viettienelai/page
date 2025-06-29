@@ -161,7 +161,6 @@ document.addEventListener('DOMContentLoaded', function () {
     updateSearchUI(defaultEngineUrl);
 });
 
-
 // Segment mappings for digits 0-9
 const digitSegments = {
     0: ['top', 'top-right', 'top-left', 'bot', 'bot-right', 'bot-left'],
@@ -176,11 +175,34 @@ const digitSegments = {
     9: ['top', 'top-left', 'top-right', 'between', 'bot-right', 'bot']
 };
 
-// Biến toàn cục để lưu màu phân đoạn hiện tại
-let currentSegmentColor = 'rgb(0, 0, 0)'; // Màu mặc định ban đầu
+// Global variable to store current segment color
+let currentSegmentColor = 'rgb(0, 0, 0)'; // Default color
+let svgDocument = null;
+
+// Function to initialize SVG access
+function initializeSVG() {
+    const svgObject = document.getElementById('clock-svg');
+    
+    svgObject.addEventListener('load', function() {
+        try {
+            svgDocument = svgObject.contentDocument;
+            if (svgDocument) {
+                console.log('SVG loaded successfully');
+                updateClock(); // Initial update after SVG loads
+            }
+        } catch (error) {
+            console.error('Error accessing SVG document:', error);
+        }
+    });
+}
 
 // Function to update the clock
 function updateClock() {
+    if (!svgDocument) {
+        console.log('SVG not loaded yet');
+        return;
+    }
+
     // Get Vietnam time (UTC+7)
     const now = new Date();
     const vietnamTime = new Date(now.getTime() + 7 * 60 * 60 * 1000);
@@ -203,14 +225,16 @@ function updateClock() {
 
 // Function to update a single digit
 function updateDigit(prefix, digit) {
+    if (!svgDocument) return;
+
     const segments = ['top', 'top-right', 'top-left', 'between', 'bot', 'bot-right', 'bot-left'];
     const activeSegments = digitSegments[digit] || [];
 
     segments.forEach(segment => {
-        const element = document.getElementById(`${prefix}-${segment}`);
+        const element = svgDocument.getElementById(`${prefix}-${segment}`);
         if (element) {
             if (activeSegments.includes(segment)) {
-                // Sử dụng màu từ biến currentSegmentColor
+                // Use color from currentSegmentColor variable
                 element.style.fill = currentSegmentColor;
                 element.style.transition = 'fill 0.3s ease';
             } else {
@@ -221,8 +245,19 @@ function updateDigit(prefix, digit) {
     });
 }
 
-setInterval(updateClock, 1000);
-updateClock();
+// Function to change segment color (you can call this from outside)
+function changeSegmentColor(newColor) {
+    currentSegmentColor = newColor;
+    updateClock(); // Re-render with new color
+}
+
+// Initialize when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    initializeSVG();
+    
+    // Start the clock update interval
+    setInterval(updateClock, 1000);
+});
 
 
 
