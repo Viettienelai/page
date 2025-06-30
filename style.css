@@ -354,8 +354,8 @@ body {
 }
 
 .option-icon {
-  width: 25px;
-  height: 25px;
+  width: 26px;
+  height: 26px;
   margin-right: 20px;
 }
 
@@ -471,6 +471,15 @@ body {
 }
 
 .bookmark-avatar {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bookmark-avatar svg {
   position: relative;
   width: 50px;
   height: 50px;
@@ -591,9 +600,7 @@ body {
   align-items: center;
   text-align: center;
   opacity: 0;
-
   transform: translateY(-20px);
-
   height: 90px;
   width: 90px;
   position: static;
@@ -621,6 +628,11 @@ body {
   position: static;
   top: 0;
   z-index: auto;
+}
+
+.popup-bookmarks-grid .bookmark-item .popup-bookmark-avatar svg {
+  width: 45px;
+  height: 47px;
 }
 
 .popup-bookmarks-grid .bookmark-item .bookmark-name {
@@ -1883,6 +1895,8 @@ input:checked+.slider:before {
 
 .cursor-dot {
   position: fixed;
+  left: 0;
+  top: 0;
   width: 12px;
   height: 12px;
   border-radius: 50%;

@@ -15,7 +15,7 @@ const engineData = {
             <path d="M23 12.245c0-.905-.075-1.565-.236-2.25h-10.54v4.083h6.186c-.124 1.014-.797 2.542-2.294 3.569l-.021.136 3.332 2.53.23.022C21.779 18.417 23 15.593 23 12.245" fill="#4285F4" />
             <path d="M12.225 23c3.03 0 5.574-.978 7.433-2.665l-3.542-2.688c-.948.648-2.22 1.1-3.891 1.1a6.745 6.745 0 0 1-6.386-4.572l-.132.011-3.465 2.628-.045.124C4.043 20.531 7.835 23 12.225 23" fill="#34A853" />
             <path d="M5.84 14.175A6.7 6.7 0 0 1 5.463 12c0-.758.138-1.491.361-2.175l-.006-.147-3.508-2.67-.115.054A10.8 10.8 0 0 0 1 12c0 1.772.436 3.447 1.197 4.938z" fill="#FBBC05" />
-            <path d="M12.225 5.253c2.108 0 3.529.892 4.34 1.638l3.167-3.031C17.787 2.088 15.255 1 12.225 1 7.834 1 4.043 3.469 2.197 7.062l3.63 2.763a6.77 6.77 0 0 1 6.398-4.572" fill="#EB4335" />
+            <path d="M12.225 5.253c2.108 0 3.529.892 4.34 1.638l3.167-3.031C17.787 2.088 15.255 1 12.225 1 7.834 1 4.043 3.469 2.197 7.062l3.63 2.763a6.77 6.77 0 0 1 6.398-4.572" fill="red" />
         `
     },
     "https://paulgo.io/search": {
@@ -175,33 +175,11 @@ const digitSegments = {
     9: ['top', 'top-left', 'top-right', 'between', 'bot-right', 'bot']
 };
 
-// Global variable to store current segment color
-let currentSegmentColor = 'rgb(0, 0, 0)'; // Default color
-let svgDocument = null;
-
-// Function to initialize SVG access
-function initializeSVG() {
-    const svgObject = document.getElementById('clock-svg');
-    
-    svgObject.addEventListener('load', function() {
-        try {
-            svgDocument = svgObject.contentDocument;
-            if (svgDocument) {
-                console.log('SVG loaded successfully');
-                updateClock(); // Initial update after SVG loads
-            }
-        } catch (error) {
-            console.error('Error accessing SVG document:', error);
-        }
-    });
-}
+// Biến toàn cục để lưu màu phân đoạn hiện tại
+let currentSegmentColor = 'rgb(0, 0, 0)'; // Màu mặc định ban đầu
 
 // Function to update the clock
 function updateClock() {
-    if (!svgDocument) {
-        console.log('SVG not loaded yet');
-        return;
-    }
 
     // Get Vietnam time (UTC+7)
     const now = new Date();
@@ -225,13 +203,13 @@ function updateClock() {
 
 // Function to update a single digit
 function updateDigit(prefix, digit) {
-    if (!svgDocument) return;
 
     const segments = ['top', 'top-right', 'top-left', 'between', 'bot', 'bot-right', 'bot-left'];
     const activeSegments = digitSegments[digit] || [];
 
     segments.forEach(segment => {
-        const element = svgDocument.getElementById(`${prefix}-${segment}`);
+        const element = document.getElementById(`${prefix}-${segment}`);
+
         if (element) {
             if (activeSegments.includes(segment)) {
                 // Use color from currentSegmentColor variable
@@ -244,21 +222,8 @@ function updateDigit(prefix, digit) {
         }
     });
 }
-
-// Function to change segment color (you can call this from outside)
-function changeSegmentColor(newColor) {
-    currentSegmentColor = newColor;
-    updateClock(); // Re-render with new color
-}
-
-// Initialize when page loads
-document.addEventListener('DOMContentLoaded', function() {
-    initializeSVG();
-    
-    // Start the clock update interval
-    setInterval(updateClock, 1000);
-});
-
+setInterval(updateClock, 1000);
+updateClock();
 
 
 
