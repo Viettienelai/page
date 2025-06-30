@@ -1748,3 +1748,124 @@ document.addEventListener('mousemove', (e) => {
         circle.style.transform = `translate(${x}px, ${y}px)`;
     });
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Get cursor elements
+const jellyCursor = document.getElementById('jelly-cursor');
+const cursorDot = document.getElementById('cursor-dot');
+
+// Cursor state
+const pos = {
+    x: 0,
+    y: 0
+};
+const vel = {
+    x: 0,
+    y: 0
+};
+let cursorMoved = false;
+
+// GSAP quick setters
+let setters = {};
+
+// Initialize GSAP setters
+function initSetters() {
+    setters.x = gsap.quickSetter(jellyCursor, 'x', 'px');
+    setters.y = gsap.quickSetter(jellyCursor, 'y', 'px');
+    setters.r = gsap.quickSetter(jellyCursor, 'rotate', 'deg');
+    setters.sx = gsap.quickSetter(jellyCursor, 'scaleX');
+    setters.sy = gsap.quickSetter(jellyCursor, 'scaleY');
+    setters.width = gsap.quickSetter(jellyCursor, 'width', 'px');
+}
+
+// Calculate scale based on velocity
+function getScale(diffX, diffY) {
+    const distance = Math.sqrt(Math.pow(diffX, 2) + Math.pow(diffY, 2));
+    return Math.min(distance / 735, 0.35);
+}
+
+// Calculate angle based on velocity
+function getAngle(diffX, diffY) {
+    return (Math.atan2(diffY, diffX) * 180) / Math.PI;
+}
+
+// Animation loop
+function loop() {
+    if (!setters.width || !setters.sx || !setters.sy || !setters.r) return;
+
+    // Calculate angle and scale based on velocity
+    const rotation = getAngle(vel.x, vel.y);
+    const scale = getScale(vel.x, vel.y);
+
+    // Apply transformations to jellyCursor
+    setters.x(pos.x);
+    setters.y(pos.y);
+    setters.width(50 + scale * 300);
+    setters.r(rotation);
+    setters.sx(1 + scale);
+    setters.sy(1 - scale * 2);
+
+    // Lấy phần tử g1
+    const jellyGlassG1 = jellyCursor.querySelector('.g1');
+    if (jellyGlassG1) {
+        // Áp dụng phép xoay ngược lại cho g1
+        gsap.set(jellyGlassG1, { rotation: -rotation }); // Đặt phép xoay ngược lại
+    }
+}
+
+
+// Mouse move handler
+function handleMouseMove(e) {
+    if (!cursorMoved) {
+        cursorMoved = true;
+    }
+    const x = e.clientX;
+    const y = e.clientY;
+
+    // Update cursor dot position immediately
+    cursorDot.style.left = x + 'px';
+    cursorDot.style.top = y + 'px';
+
+    // Animate jelly cursor position
+    gsap.to(pos, {
+        x: x,
+        y: y,
+        duration: 1.5,
+        ease: 'elastic.out(1, 0.5)',
+        onUpdate: () => {
+            vel.x = (x - pos.x) * 1.2;
+            vel.y = (y - pos.y) * 1.2;
+        }
+    });
+}
+
+// Initialize
+initSetters();
+
+// Add event listeners
+window.addEventListener('mousemove', handleMouseMove);
+
+// Start animation loop
+gsap.ticker.add(loop);
+
+// Cleanup on page unload
+window.addEventListener('beforeunload', () => {
+    gsap.ticker.remove(loop);
+    window.removeEventListener('mousemove', handleMouseMove);
+});
