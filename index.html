@@ -3,71 +3,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ViệtTiến┇ᴱᴸᴬᴵ</title>
     <link rel="stylesheet" href="style.css">
-    <script>
-        // --- Dữ liệu và các hàm cần thiết để chạy ngay lập tức ---
-        const backgroundImages = [
-            { src: "https://res.cloudinary.com/dxwwkauuj/image/upload/v1749752088/xyy466nsxhehepuuon7j.webp", segmentColor: "rgb(255, 135, 141)" },
-            { src: "https://res.cloudinary.com/dxwwkauuj/image/upload/v1749752086/hgvojcdwc3gafgerqva4.webp", segmentColor: "rgb(57, 162, 255)" },
-            { src: "https://res.cloudinary.com/dxwwkauuj/image/upload/v1749752086/zi3eumhtq0be5mmeciii.webp", segmentColor: "rgb(255, 138, 120)" },
-            { src: "https://res.cloudinary.com/dxwwkauuj/image/upload/v1749752086/oqqf3ctq28yl8mz7bpja.webp", segmentColor: "rgb(255, 200, 0)" },
-            { src: "https://res.cloudinary.com/dxwwkauuj/image/upload/v1750240831/srvzqt7oiqeoqrvazcyo.webp", segmentColor: "rgb(255, 83, 92)" },
-            { src: "https://res.cloudinary.com/dxwwkauuj/image/upload/v1749754674/yjcbwpkqobft3m5ecmy9.webp", segmentColor: "rgb(233, 135, 255)" },
-            { src: "https://res.cloudinary.com/dxwwkauuj/image/upload/v1750090674/abgbkz88zhtuswjogaz5.webp", segmentColor: "rgb(255, 230, 0)" },
-        ];
-
-        const STORAGE_KEYS = {
-            BACKGROUND_INDEX: 'selectedBackgroundIndex',
-            AUTO_CHANGE: 'autoChangeEnabled',
-        };
-
-        function calculateTimeBasedIndex() {
-            const now = new Date();
-            const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-            const minutesSinceStartOfDay = Math.floor((now - startOfDay) / (1000 * 60));
-            return Math.floor(minutesSinceStartOfDay / 5) % backgroundImages.length;
-        }
-
-        // --- Logic xác định ảnh nền ban đầu ---
-        let initialIndex = 0;
-        try {
-            const savedAutoChange = localStorage.getItem(STORAGE_KEYS.AUTO_CHANGE);
-            if (savedAutoChange === 'false') {
-                const savedIndex = localStorage.getItem(STORAGE_KEYS.BACKGROUND_INDEX);
-                initialIndex = savedIndex !== null ? parseInt(savedIndex, 10) : calculateTimeBasedIndex();
-            } else {
-                initialIndex = calculateTimeBasedIndex();
-            }
-        } catch (e) {
-            initialIndex = 0; // Fallback an toàn
-        }
-
-        window.initialBackgroundIndex = initialIndex;
-
-        const initialImage = backgroundImages[initialIndex];
-        const initialImageSrc = initialImage.src;
-        const backgroundClass = `background-active-${initialIndex}`;
-
-
-        const finalImgSizingRule = finalImgCssRules[backgroundClass] || finalImgCssRules['background-active-0'];
-        const preloadContainerSizingRule = preloadContainerCssRules[backgroundClass] || preloadContainerCssRules['background-active-0'];
-
-        document.write(`
-            <link rel="preload" as="image" href="${initialImageSrc}" />
-            <style>
-                /* 1. Áp dụng các quy tắc ĐÚNG cho div.preload */
-                .background.preload ${preloadContainerSizingRule}
-
-                /* Luôn áp dụng ảnh nền cho div.preload */
-                .background.preload {
-                    background-image: url('${initialImageSrc}');
-                }
-
-                /* 2. Chuẩn bị sẵn quy tắc cho thẻ <img> chính thức */
-                .${backgroundClass} ${finalImgSizingRule}
-            </style>
-        `);
-        // *** KẾT THÚC PHẦN SỬA ĐỔI ***
-    </script>
 </head>
 
 <body>
@@ -634,7 +569,7 @@
 
             <div class="container-glass-effect bmg2">
                 <div class="bookmark-item">
-                    <a href="#" id="google-bookmark" onclick="openGooglePopup(event)">
+                    <a href="#" id="google-bookmark">
                         <div class="bookmark-avatar">
                             <svg>
                                 <use href="assets/svg/sprite.svg#google"></use>

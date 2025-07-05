@@ -55,8 +55,7 @@ body {
 }
 
 .clock-glass-effect.cl1 {
-  backdrop-filter: blur(0px);
-  filter: url(#glass-distortion);
+  backdrop-filter: blur(0px) url(#glass-distortion);
   z-index: 0;
 }
 
@@ -90,6 +89,7 @@ body {
 #clock-svg {
   pointer-events: none;
 }
+
 .separator {
   position: absolute;
   width: 15px;
@@ -200,8 +200,7 @@ body {
   position: absolute;
   inset: 0;
   border-radius: 25px;
-  backdrop-filter: blur(0px);
-  filter: url(#glass-distortion);
+  backdrop-filter: blur(0px) url(#glass-distortion);
   z-index: 1;
 }
 
@@ -294,8 +293,7 @@ body {
 #search-options-glass-effect-1 {
   position: absolute;
   inset: 0;
-  backdrop-filter: blur(0px);
-  filter: url(#glass-distortion);
+  backdrop-filter: blur(0px) url(#glass-distortion);
   z-index: 0;
 }
 
@@ -425,8 +423,7 @@ body {
 
 .container-glass-effect.bmg1 {
   position: absolute;
-  backdrop-filter: blur(5px);
-  filter: url(#glass-distortion);
+  backdrop-filter: blur(5px) url(#glass-distortion);
   z-index: 1;
 }
 
@@ -562,8 +559,7 @@ body {
 }
 
 .popup-glass-effect.pg1 {
-  backdrop-filter: blur(0px);
-  filter: url(#glass-distortion);
+  backdrop-filter: blur(0px) url(#glass-distortion);
   z-index: 2;
 }
 
@@ -714,8 +710,7 @@ body {
 }
 
 .bubble-glass-effect.bb1 {
-  backdrop-filter: blur(0px);
-  filter: url(#glass-distortion);
+  backdrop-filter: blur(0px) url(#glass-distortion);
   z-index: 0;
 }
 
@@ -1605,8 +1600,7 @@ body.no-scroll {
   border-radius: 24px;
   z-index: 0;
   inset: 0;
-  backdrop-filter: blur(0px);
-  filter: url(#glass-distortion);
+  backdrop-filter: blur(0px) url(#glass-distortion);
 }
 
 .expanded-panel {
@@ -1620,7 +1614,6 @@ body.no-scroll {
   z-index: 1;
   inset: 0;
   backdrop-filter: blur(5px);
-  background: rgba(255, 255, 255, .3);
   box-shadow:
     inset 10px 10px 7px -7px rgba(255, 255, 255, 1),
     inset -12px -12px 10px -8px rgba(255, 255, 255, .7),
@@ -1640,11 +1633,8 @@ body.no-scroll {
 .expanded-panel.active {
   width: 300px;
   height: 383px;
+  background: rgba(255, 255, 255, .3);
   cursor: default;
-}
-
-.expanded-panel:not(.active) {
-  background: rgba(255, 255, 255, 0.5);
 }
 
 .panel-icon {
@@ -1711,27 +1701,17 @@ body.no-scroll {
 
 .switch {
   position: relative;
-  display: inline-block;
   width: 50px;
   height: 28px;
-}
-
-.switch input {
-  opacity: 0;
-  width: 0px;
-  height: 0px;
 }
 
 .slider {
   position: absolute;
   cursor: pointer;
-  top: 0px;
-  left: 0px;
-  right: 0px;
-  bottom: 0px;
+  inset: 0;
   background-color: #ccc;
   border: 1px solid rgba(143, 143, 143, 0.2);
-  -webkit-transition: .3s;
+  box-sizing: border-box;
   transition: .3s;
 }
 
@@ -1741,7 +1721,7 @@ body.no-scroll {
   height: 20px;
   width: 20px;
   left: 4px;
-  bottom: 3.4px;
+  bottom: 3.2px;
   background-color: white;
   -webkit-transition: .3s;
   transition: .3s;
@@ -1749,15 +1729,11 @@ body.no-scroll {
 
 input:checked+.slider {
   background-color: #63e667;
-  box-shadow:
-    0 0 5px #00ff08,
-    0 0 20px #00ff08;
+  box-shadow: 0 0 20px #00ff08;
 }
 
 input:checked+.slider:before {
-  -webkit-transform: translateX(22px);
-  -ms-transform: translateX(22px);
-  transform: translateX(22px);
+  transform: translateX(21px);
 }
 
 .slider.round {
@@ -1876,8 +1852,7 @@ input:checked+.slider:before {
 .jelly-glass.g1 {
   position: absolute;
   inset: 0;
-  backdrop-filter: blur(0px);
-  filter: url(#glass-distortion);
+  backdrop-filter: blur(0px) url(#glass-distortion);
   border-radius: 50px;
   z-index: 0;
 }
@@ -1902,8 +1877,8 @@ input:checked+.slider:before {
   border-radius: 50%;
   pointer-events: none;
   transform: translate(-50%, -50%);
-  background: whitesmoke;
-  box-shadow: 
+  background: white;
+  box-shadow:
     0 0 6px rgba(0, 0, 0, 0.2),
     0 0 20px rgba(0, 0, 0, 0.1);
   z-index: 1000;
