@@ -482,6 +482,12 @@ body {
   height: 50px;
 }
 
+.bookmark-avatar img {
+  position: relative;
+  width: 50px;
+  height: 50px;
+}
+
 .bookmark-name {
   position: relative;
   font-size: 12px;
