@@ -1313,13 +1313,11 @@ document.addEventListener('DOMContentLoaded', function () {
 document.addEventListener("DOMContentLoaded", () => {
     // Lấy các phần tử cần thiết từ DOM
     const expandedPanel = document.getElementById("expandedPanel");
-    const autoChangeToggle = document.getElementById("autoChangeToggle");
     const backgroundGrid = document.querySelector(".background-grid");
     const mainBackground = document.getElementById("mainBackground");
     const backgroundContainer = document.getElementById("backgroundContainer");
-    const settingText = document.getElementById("settingText");
 
-    // Mảng chứa các đường dẫn ảnh nền (giữ lại để các hàm khác sử dụng)
+    // Mảng chứa các đường dẫn ảnh nền
     const backgroundImages = [
         { src: "https://res.cloudinary.com/dxwwkauuj/image/upload/v1749752088/xyy466nsxhehepuuon7j.webp", segmentColor: "rgb(255, 135, 141)" },
         { src: "https://res.cloudinary.com/dxwwkauuj/image/upload/v1749752086/hgvojcdwc3gafgerqva4.webp", segmentColor: "rgb(57, 162, 255)" },
@@ -1330,16 +1328,9 @@ document.addEventListener("DOMContentLoaded", () => {
         { src: "https://res.cloudinary.com/dxwwkauuj/image/upload/v1750090674/abgbkz88zhtuswjogaz5.webp", segmentColor: "rgb(255, 230, 0)" }
     ];
 
-    // Index ban đầu được lấy từ script trong <head>
-    let currentBackgroundIndex = window.initialBackgroundIndex || 0;
-
-    const STORAGE_KEYS = {
-        BACKGROUND_INDEX: "selectedBackgroundIndex",
-        AUTO_CHANGE: "autoChangeEnabled",
-        LAST_CHANGE_TIME: "lastBackgroundChangeTime"
-    };
-    let autoChangeInterval;
-    let userLastSelectedTime = null;
+    // Chọn random index khi load trang
+    let currentBackgroundIndex = Math.floor(Math.random() * backgroundImages.length);
+    
     let isExpanded = false;
 
     // --- HÀM ÁP DỤNG STYLING CHO ẢNH DỰA TRÊN INDEX ---
@@ -1399,9 +1390,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // --- KHỞI TẠO BAN ĐẦU (TỐI ƯU HÓA) ---
+    // --- KHỞI TẠO BAN ĐẦU ---
     function initialize() {
-        // *** FIX: Cập nhật currentSegmentColor ngay từ đầu ***
+        // Cập nhật currentSegmentColor với ảnh được chọn random
         if (typeof currentSegmentColor !== "undefined") {
             currentSegmentColor = backgroundImages[currentBackgroundIndex].segmentColor;
             // Cập nhật clock ngay lập tức với màu mới
@@ -1435,22 +1426,12 @@ document.addEventListener("DOMContentLoaded", () => {
             console.error("Failed to load the main image.");
         };
 
-        // Cập nhật trạng thái của nút gạt
-        const savedAutoChange = localStorage.getItem("autoChangeEnabled");
-        autoChangeToggle.checked = savedAutoChange !== "false"; // Mặc định là bật
-        updateSettingText(autoChangeToggle.checked);
-
         // Khởi tạo các phần còn lại của UI
         initializeBackgroundOptions();
         preloadOtherImages();
-
-        // Bắt đầu auto change nếu được bật
-        if (autoChangeToggle.checked) {
-            startAutoChange();
-        }
     }
 
-    // --- HÀM PRELOAD CÁC ẢNH CÒN LẠI (SAU KHI TẢI XONG ẢNH CHÍNH) ---
+    // --- HÀM PRELOAD CÁC ẢNH CÒN LẠI ---
     function preloadOtherImages() {
         setTimeout(() => {
             backgroundImages.forEach((imageData, index) => {
@@ -1463,13 +1444,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // --- HÀM CHỌN HÌNH NỀN ---
-    function selectBackground(index, isUserSelected = false) {
+    function selectBackground(index) {
         if (typeof currentSegmentColor !== "undefined") {
             currentSegmentColor = backgroundImages[index].segmentColor;
             if (typeof updateClock === "function") {
                 updateClock();
             }
         }
+        
+        // Cập nhật UI để highlight thumbnail được chọn
         document.querySelectorAll(".background-option").forEach((option) => {
             option.classList.remove("selected");
         });
@@ -1507,29 +1490,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         currentBackgroundIndex = index;
-        if (isUserSelected) {
-            saveState();
-        }
-    }
-
-    // --- HÀM LƯU TRẠNG THÁI ---
-    function saveState() {
-        try {
-            localStorage.setItem(
-                STORAGE_KEYS.BACKGROUND_INDEX,
-                currentBackgroundIndex.toString()
-            );
-            localStorage.setItem(
-                STORAGE_KEYS.AUTO_CHANGE,
-                autoChangeToggle.checked.toString()
-            );
-            localStorage.setItem(
-                STORAGE_KEYS.LAST_CHANGE_TIME,
-                Date.now().toString()
-            );
-        } catch (error) {
-            console.error("Error saving state:", error);
-        }
     }
 
     // --- HÀM KHỞI TẠO CÁC LỰA CHỌN ẢNH ---
@@ -1551,89 +1511,21 @@ document.addEventListener("DOMContentLoaded", () => {
             optionDiv.appendChild(img);
             backgroundGrid.appendChild(optionDiv);
 
+            // Event listener cho việc click chọn thumbnail
             optionDiv.addEventListener("click", (event) => {
                 event.stopPropagation();
-                selectBackground(index, true);
-                if (autoChangeToggle.checked) {
-                    userLastSelectedTime = Date.now();
-                    stopAutoChange();
-                    startAutoChange();
-                }
-                saveState();
+                selectBackground(index);
             });
         });
+        
+        // Highlight thumbnail được chọn ban đầu (random)
         const selectedOption = document.getElementById(
             `background-option-${currentBackgroundIndex}`
         );
         if (selectedOption) selectedOption.classList.add("selected");
     }
 
-    // --- CÁC HÀM XỬ LÝ AUTO CHANGE ---
-    function calculateTimeBasedIndex() {
-        const now = new Date();
-        const startOfDay = new Date(
-            now.getFullYear(),
-            now.getMonth(),
-            now.getDate()
-        );
-        const minutesSinceStartOfDay = Math.floor((now - startOfDay) / (1000 * 60));
-        return Math.floor(minutesSinceStartOfDay / 5) % backgroundImages.length;
-    }
-
-    function moveToNextBackground() {
-        if (autoChangeToggle.checked) {
-            let nextIndex;
-            if (userLastSelectedTime && Date.now() - userLastSelectedTime < 300000) {
-                // 5 phút
-                nextIndex = (currentBackgroundIndex + 1) % backgroundImages.length;
-            } else {
-                nextIndex = calculateTimeBasedIndex();
-                userLastSelectedTime = null;
-            }
-            selectBackground(nextIndex, false);
-            saveState();
-        }
-    }
-
-    function getTimeUntilNextChange() {
-        const now = new Date();
-        const secondsInCurrentCycle =
-            (now.getMinutes() % 5) * 60 + now.getSeconds();
-        const remainingSeconds = 5 * 60 - secondsInCurrentCycle;
-        return remainingSeconds * 1000;
-    }
-
-    function startAutoChange() {
-        stopAutoChange();
-        let delay = getTimeUntilNextChange();
-
-        if (userLastSelectedTime && Date.now() - userLastSelectedTime < 300000) {
-            delay = 300000 - (Date.now() - userLastSelectedTime);
-        }
-
-        setTimeout(() => {
-            moveToNextBackground();
-            autoChangeInterval = setInterval(moveToNextBackground, 300000); // 5 phút
-        }, delay);
-
-        updateSettingText(true);
-        saveState();
-    }
-
-    function stopAutoChange() {
-        if (autoChangeInterval) {
-            clearInterval(autoChangeInterval);
-            autoChangeInterval = null;
-        }
-        updateSettingText(false);
-        saveState();
-    }
-
     // --- CÁC HÀM TIỆN ÍCH CHO UI ---
-    function updateSettingText(isOn) {
-        settingText.textContent = isOn ? "Change after 5 mins" : "Remain constant";
-    }
-
     function togglePanel() {
         isExpanded = !isExpanded;
         expandedPanel.classList.toggle("active", isExpanded);
@@ -1649,15 +1541,6 @@ document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener("click", (event) => {
         if (!expandedPanel.contains(event.target) && isExpanded) {
             togglePanel();
-        }
-    });
-
-    autoChangeToggle.addEventListener("change", (event) => {
-        event.stopPropagation();
-        if (autoChangeToggle.checked) {
-            startAutoChange();
-        } else {
-            stopAutoChange();
         }
     });
 

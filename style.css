@@ -1638,7 +1638,7 @@ body.no-scroll {
 
 .expanded-panel.active {
   width: 300px;
-  height: 383px;
+  height: 340px;
   background: rgba(255, 255, 255, .3);
   cursor: default;
 }
@@ -1681,73 +1681,6 @@ body.no-scroll {
 .expanded-panel.active .panel-content {
   opacity: 1;
   visibility: visible;
-}
-
-.panel-header {
-  position: relative;
-  left: 10px;
-  width: 280px;
-  display: flex;
-  justify-content: space-between;
-  padding: 15px 20px 0px 15px;
-  align-items: center;
-  box-sizing: border-box;
-}
-
-.panel-header .setting-text {
-  font-size: 17px;
-  color: var(--pannel-text-color);
-  font-weight: bold;
-  line-height: 28px;
-  width: 170px;
-  height: 28px;
-  white-space: nowrap;
-  text-shadow: 0px 0px 2px rgba(255, 255, 255, 0.5);
-}
-
-.switch {
-  position: relative;
-  width: 50px;
-  height: 28px;
-}
-
-.slider {
-  position: absolute;
-  cursor: pointer;
-  inset: 0;
-  background-color: #ccc;
-  border: 1px solid rgba(143, 143, 143, 0.2);
-  box-sizing: border-box;
-  transition: .3s;
-}
-
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 20px;
-  width: 20px;
-  left: 4px;
-  bottom: 3.2px;
-  background-color: white;
-  -webkit-transition: .3s;
-  transition: .3s;
-}
-
-input:checked+.slider {
-  background-color: #63e667;
-  box-shadow: 0 0 20px #00ff08;
-}
-
-input:checked+.slider:before {
-  transform: translateX(21px);
-}
-
-.slider.round {
-  border-radius: 28px;
-}
-
-.slider.round:before {
-  border-radius: 50%;
 }
 
 .background-grid {
